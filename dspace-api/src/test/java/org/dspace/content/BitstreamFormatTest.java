@@ -8,7 +8,8 @@
 package org.dspace.content;
 
 import java.sql.SQLException;
-import mockit.NonStrictExpectations;
+import mockit.Expectations;
+import mockit.Mocked;
 import org.apache.log4j.Logger;
 import org.dspace.core.Context;
 import org.junit.*;
@@ -192,13 +193,13 @@ public class BitstreamFormatTest extends AbstractUnitTest
      * Test of create method, of class BitstreamFormat.
      */
     @Test
-    public void testCreateAdmin() throws SQLException,AuthorizeException
+    public void testCreateAdmin(@Mocked AuthorizeManager authorizeManager) throws SQLException,AuthorizeException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin((Context)any); result = true;
+                minTimes = 0;
             }
         };
         
@@ -214,13 +215,13 @@ public class BitstreamFormatTest extends AbstractUnitTest
      * Test of create method, of class BitstreamFormat.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateNotAdmin() throws SQLException,AuthorizeException
+    public void testCreateNotAdmin(@Mocked AuthorizeManager authorizeManager) throws SQLException,AuthorizeException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin((Context)any); result = false;
+                minTimes = 0;
             }
         };
 
@@ -449,14 +450,14 @@ public class BitstreamFormatTest extends AbstractUnitTest
      * Test of update method, of class BitstreamFormat.
      */
     @Test(expected=AuthorizeException.class)
-    public void testUpdateNotAdmin() throws SQLException, AuthorizeException
+    public void testUpdateNotAdmin(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException
     {
 
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin((Context)any); result = false;
+                minTimes = 0;
             }
         };
 
@@ -468,14 +469,14 @@ public class BitstreamFormatTest extends AbstractUnitTest
      * Test of update method, of class BitstreamFormat.
      */
     @Test
-    public void testUpdateAdmin() throws SQLException, AuthorizeException
+    public void testUpdateAdmin(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException
     {
 
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin((Context)any); result = true;
+                minTimes = 0;
             }
         };
 
@@ -491,14 +492,14 @@ public class BitstreamFormatTest extends AbstractUnitTest
      * Test of delete method, of class BitstreamFormat.
      */
     @Test(expected=AuthorizeException.class)
-    public void testDeleteNotAdmin() throws SQLException, AuthorizeException
+    public void testDeleteNotAdmin(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException
     {
 
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin((Context)any); result = false;
+                minTimes = 0;
             }
         };
 
@@ -510,15 +511,14 @@ public class BitstreamFormatTest extends AbstractUnitTest
      * Test of delete method, of class BitstreamFormat.
      */
     @Test
-    public void testDeleteAdmin() throws SQLException, AuthorizeException
+    public void testDeleteAdmin(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException
     {
 
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
-            BitstreamFormat unknown;
             {
                 AuthorizeManager.isAdmin((Context)any); result = true;                
+                minTimes = 0;
             }
         };
 
@@ -531,14 +531,14 @@ public class BitstreamFormatTest extends AbstractUnitTest
      * Test of delete method, of class BitstreamFormat.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testDeleteUnknown() throws SQLException, AuthorizeException
+    public void testDeleteUnknown(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException
     {
 
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin((Context)any); result = true;
+                minTimes = 0;
             }
         };
         
@@ -560,7 +560,6 @@ public class BitstreamFormatTest extends AbstractUnitTest
     /**
      * Test of setExtensions method, of class BitstreamFormat.
      */
-    @Test
     public void setExtensions(String[] exts)
     {
         assertThat("setExtensions 0", bf.getExtensions()[0], equalTo("xml"));

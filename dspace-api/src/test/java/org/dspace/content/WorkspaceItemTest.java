@@ -9,7 +9,8 @@ package org.dspace.content;
 
 import org.dspace.core.Constants;
 import org.dspace.authorize.AuthorizeManager;
-import mockit.NonStrictExpectations;
+import mockit.Expectations;
+import mockit.Mocked;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.dspace.authorize.AuthorizeException;
@@ -107,14 +108,14 @@ public class WorkspaceItemTest extends AbstractUnitTest
      * Test of create method, of class WorkspaceItem.
      */
     @Test
-    public void testCreateAuth() throws Exception
+    public void testCreateAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -141,14 +142,14 @@ public class WorkspaceItemTest extends AbstractUnitTest
      * Test of create method, of class WorkspaceItem.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateNoAuth() throws Exception
+    public void testCreateNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.ADD); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -317,14 +318,14 @@ public class WorkspaceItemTest extends AbstractUnitTest
      * Test of deleteWrapper method, of class WorkspaceItem.
      */
     @Test
-    public void testDeleteWrapperAuth() throws Exception
+    public void testDeleteWrapperAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Item) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -341,14 +342,14 @@ public class WorkspaceItemTest extends AbstractUnitTest
      * Test of deleteWrapper method, of class WorkspaceItem.
      */
     @Test(expected=AuthorizeException.class)
-    public void testDeleteWrapperNoAuth() throws Exception
+    public void testDeleteWrapperNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Item) any,
                         Constants.WRITE); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 

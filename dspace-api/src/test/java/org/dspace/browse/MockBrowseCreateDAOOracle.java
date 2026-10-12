@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import mockit.Mock;
-import mockit.MockClass;
+import mockit.MockUp;
 import org.apache.log4j.Logger;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
@@ -30,8 +30,7 @@ import org.dspace.storage.rdbms.TableRowIterator;
  * Mocks some methods of BrowseCreateDAOOracle to enable compatibility with H2
  * @author pvillega
  */
-@MockClass(realClass=BrowseCreateDAOOracle.class)
-public class MockBrowseCreateDAOOracle
+public class MockBrowseCreateDAOOracle extends MockUp<BrowseCreateDAOOracle>
 {
 
     /** log4j category */
@@ -1101,7 +1100,6 @@ public class MockBrowseCreateDAOOracle
      *
      * @return
      */
-    @Mock
     private String getValueColumnDefinition()
     {
         if (getValueColumnMaxBytes() < 1 || getValueColumnMaxBytes() > 4000)
@@ -1118,7 +1116,6 @@ public class MockBrowseCreateDAOOracle
      *
      * @return
      */
-    @Mock
     private String getSortColumnDefinition()
     {
         return " VARCHAR2(" + getSortColumnMaxBytes() + ") ";
@@ -1132,7 +1129,6 @@ public class MockBrowseCreateDAOOracle
      *
      * @return
      */
-    @Mock
     private int getValueColumnMaxBytes()
     {
         checkContext();
@@ -1156,7 +1152,6 @@ public class MockBrowseCreateDAOOracle
      *
      * @return
      */
-    @Mock
     private int getSortColumnMaxBytes()
     {
         checkContext();
@@ -1177,7 +1172,6 @@ public class MockBrowseCreateDAOOracle
      *
      * @return
      */
-    @Mock
     private boolean isValueColumnClob()
     {
         if (getValueColumnMaxBytes() < 1)
@@ -1199,7 +1193,6 @@ public class MockBrowseCreateDAOOracle
      * @return
      * @throws SQLException
      */
-    @Mock
     private int[] getAllCommunityIDs(int itemId) throws SQLException
     {
         List<Integer> commIdList = new ArrayList<Integer>();
@@ -1253,7 +1246,6 @@ public class MockBrowseCreateDAOOracle
      * @return
      * @throws SQLException
      */
-    @Mock
     private Integer getParentCommunityID(int commId) throws SQLException
     {
         TableRowIterator tri = null;
@@ -1286,7 +1278,6 @@ public class MockBrowseCreateDAOOracle
      * @param pos
      * @return
      */
-    @Mock
     private boolean isFirstOccurrence(int[] ids, int pos)
     {
         if (pos < 0 || pos >= ids.length)

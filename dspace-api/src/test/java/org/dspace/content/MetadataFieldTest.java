@@ -8,7 +8,8 @@
 package org.dspace.content;
 
 import org.dspace.authorize.AuthorizeManager;
-import mockit.NonStrictExpectations;
+import mockit.Expectations;
+import mockit.Mocked;
 import java.sql.SQLException;
 import org.dspace.AbstractUnitTest;
 import org.apache.log4j.Logger;
@@ -187,13 +188,13 @@ public class MetadataFieldTest extends AbstractUnitTest
      * Test of create method, of class MetadataField.
      */
     @Test
-    public void testCreateAuth() throws Exception
+    public void testCreateAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin(context); result = true;
+                minTimes = 0;
             }
         };
 
@@ -213,13 +214,13 @@ public class MetadataFieldTest extends AbstractUnitTest
      * Test of create method, of class MetadataField.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateNoAuth() throws Exception
+    public void testCreateNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin(context); result = false;
+                minTimes = 0;
             }
         };
 
@@ -237,13 +238,13 @@ public class MetadataFieldTest extends AbstractUnitTest
      * Test of create method, of class MetadataField.
      */
     @Test(expected=NonUniqueMetadataException.class)
-    public void testCreateRepeated() throws Exception
+    public void testCreateRepeated(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin(context); result = true;
+                minTimes = 0;
             }
         };
 
@@ -317,13 +318,13 @@ public class MetadataFieldTest extends AbstractUnitTest
      * Test of update method, of class MetadataField.
      */
     @Test
-    public void testUpdateAuth() throws Exception
+    public void testUpdateAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin(context); result = true;
+                minTimes = 0;
             }
         };
 
@@ -344,13 +345,13 @@ public class MetadataFieldTest extends AbstractUnitTest
      * Test of update method, of class MetadataField.
      */
     @Test(expected=AuthorizeException.class)
-    public void testUpdateNoAuth() throws Exception
+    public void testUpdateNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin(context); result = false;
+                minTimes = 0;
             }
         };
 
@@ -368,13 +369,13 @@ public class MetadataFieldTest extends AbstractUnitTest
      * Test of update method, of class MetadataField.
      */
     @Test(expected=NonUniqueMetadataException.class)
-    public void testUpdateRepeated() throws Exception
+    public void testUpdateRepeated(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin(context); result = true;
+                minTimes = 0;
             }
         };
 
@@ -394,13 +395,13 @@ public class MetadataFieldTest extends AbstractUnitTest
      * Test of delete method, of class MetadataField.
      */
     @Test
-    public void testDeleteAuth() throws Exception
+    public void testDeleteAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin(context); result = true;
+                minTimes = 0;
             }
         };
 
@@ -423,13 +424,13 @@ public class MetadataFieldTest extends AbstractUnitTest
      * Test of delete method, of class MetadataField.
      */
     @Test(expected=AuthorizeException.class)
-    public void testDeleteNoAuth() throws Exception
+    public void testDeleteNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin(context); result = false;
+                minTimes = 0;
             }
         };
 

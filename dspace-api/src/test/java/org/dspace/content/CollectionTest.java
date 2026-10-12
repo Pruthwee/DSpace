@@ -18,6 +18,7 @@ import org.junit.*;
 import static org.junit.Assert.* ;
 import static org.hamcrest.CoreMatchers.*;
 import mockit.*;
+import mockit.Mocked;
 import org.dspace.app.util.AuthorizeUtil;
 import org.dspace.authorize.AuthorizeManager;
 import org.dspace.core.ConfigurationManager;
@@ -294,18 +295,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of setLogo method, of class Collection.
      */
     @Test
-    public void testSetLogoAuth() throws Exception
+    public void testSetLogoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD, true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE, true); result = true;
+                        minTimes = 0;
                  AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE, true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -321,18 +324,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of setLogo method, of class Collection.
      */
     @Test
-    public void testSetLogoAuth2() throws Exception
+    public void testSetLogoAuth2(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = true;
+                        minTimes = 0;
                  AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -348,18 +353,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of setLogo method, of class Collection.
      */
     @Test
-    public void testSetLogoAuth3() throws Exception
+    public void testSetLogoAuth3(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                  AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -375,18 +382,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of setLogo method, of class Collection.
      */
     @Test
-    public void testSetLogoAuth4() throws Exception
+    public void testSetLogoAuth4(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                  AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -402,18 +411,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of setLogo method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testSetLogoNoAuth() throws Exception
+    public void testSetLogoNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -426,14 +437,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of createWorkflowGroup method, of class Collection.
      */
     @Test
-    public void testCreateWorkflowGroupAuth() throws Exception
+    public void testCreateWorkflowGroupAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageWorkflowsGroup((Context) any, (Collection) any);
                     result = null;
+                    minTimes = 0;
             }
         };
 
@@ -446,14 +457,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of createWorkflowGroup method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateWorkflowGroupNoAuth() throws Exception
+    public void testCreateWorkflowGroupNoAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageWorkflowsGroup((Context) any, (Collection) any);
                     result = new AuthorizeException();
+                    minTimes = 0;
             }
         };
 
@@ -492,14 +503,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of createSubmitters method, of class Collection.
      */
     @Test
-    public void testCreateSubmittersAuth() throws Exception
+    public void testCreateSubmittersAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageSubmittersGroup((Context) any, (Collection) any);
                     result = null;
+                    minTimes = 0;
             }
         };
 
@@ -511,14 +522,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of createSubmitters method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateSubmittersNoAuth() throws Exception
+    public void testCreateSubmittersNoAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageSubmittersGroup((Context) any, (Collection) any);
                     result = new AuthorizeException();
+                    minTimes = 0;
             }
         };
 
@@ -530,14 +541,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of removeSubmitters method, of class Collection.
      */
     @Test
-    public void testRemoveSubmittersAuth() throws Exception
+    public void testRemoveSubmittersAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageSubmittersGroup((Context) any, (Collection) any);
                     result = null;
+                    minTimes = 0;
             }
         };
 
@@ -549,14 +560,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of removeSubmitters method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testRemoveSubmittersNoAuth() throws Exception
+    public void testRemoveSubmittersNoAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageSubmittersGroup((Context) any, (Collection) any);
                     result = new AuthorizeException();
+                    minTimes = 0;
             }
         };
 
@@ -577,14 +588,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of createAdministrators method, of class Collection.
      */
     @Test
-    public void testCreateAdministratorsAuth() throws Exception
+    public void testCreateAdministratorsAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageAdminGroup((Context) any, (Collection) any);
                     result = null;
+                    minTimes = 0;
             }
         };
 
@@ -596,14 +607,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of createAdministrators method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateAdministratorsNoAuth() throws Exception
+    public void testCreateAdministratorsNoAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageAdminGroup((Context) any, (Collection) any);
                     result = new AuthorizeException();
+                    minTimes = 0;
             }
         };
 
@@ -615,14 +626,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of removeAdministrators method, of class Collection.
      */
     @Test
-    public void testRemoveAdministratorsAuth() throws Exception
+    public void testRemoveAdministratorsAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeRemoveAdminGroup((Context) any, (Collection) any);
                     result = null;
+                    minTimes = 0;
             }
         };
 
@@ -634,14 +645,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of removeAdministrators method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testRemoveAdministratorsNoAuth() throws Exception
+    public void testRemoveAdministratorsNoAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeRemoveAdminGroup((Context) any, (Collection) any);
                     result = new AuthorizeException();
+                    minTimes = 0;
             }
         };
 
@@ -714,14 +725,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of createTemplateItem method, of class Collection.
      */
     @Test
-    public void testCreateTemplateItemAuth() throws Exception
+    public void testCreateTemplateItemAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageTemplateItem((Context) any, (Collection) any);
                     result = null;
+                    minTimes = 0;
             }
         };
 
@@ -733,14 +744,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of createTemplateItem method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateTemplateItemNoAuth() throws Exception
+    public void testCreateTemplateItemNoAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageTemplateItem((Context) any, (Collection) any);
                     result = new AuthorizeException();
+                    minTimes = 0;
             }
         };
 
@@ -752,14 +763,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of removeTemplateItem method, of class Collection.
      */
     @Test
-    public void testRemoveTemplateItemAuth() throws Exception
+    public void testRemoveTemplateItemAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageTemplateItem((Context) any, (Collection) any);
                     result = null;
+                    minTimes = 0;
             }
         };
 
@@ -771,14 +782,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of removeTemplateItem method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testRemoveTemplateItemNoAuth() throws Exception
+    public void testRemoveTemplateItemNoAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageTemplateItem((Context) any, (Collection) any);
                     result = new AuthorizeException();
+                    minTimes = 0;
             }
         };
 
@@ -790,14 +801,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of addItem method, of class Collection.
      */
     @Test
-    public void testAddItemAuth() throws Exception
+    public void testAddItemAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -819,14 +830,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of addItem method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testAddItemNoAuth() throws Exception
+    public void testAddItemNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.ADD); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -839,16 +850,17 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of removeItem method, of class Collection.
      */
     @Test
-    public void testRemoveItemAuth() throws Exception
+    public void testRemoveItemAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.REMOVE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -872,16 +884,17 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of removeItem method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testRemoveItemNoAuth() throws Exception
+    public void testRemoveItemNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.REMOVE); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -896,18 +909,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of update method, of class Collection.
      */
     @Test
-    public void testUpdateAuth() throws Exception
+    public void testUpdateAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -919,18 +934,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of update method, of class Collection.
      */
     @Test
-    public void testUpdateAuth2() throws Exception
+    public void testUpdateAuth2(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -942,18 +959,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of update method, of class Collection.
      */
     @Test
-    public void testUpdateAuth3() throws Exception
+    public void testUpdateAuth3(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -965,18 +984,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of update method, of class Collection.
      */
     @Test
-    public void testUpdateAuth4() throws Exception
+    public void testUpdateAuth4(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -988,18 +1009,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of update method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testUpdateNoAuth() throws Exception
+    public void testUpdateNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -1011,18 +1034,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanAuth() throws Exception
+    public void testCanEditBooleanAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1033,18 +1058,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanAuth2() throws Exception
+    public void testCanEditBooleanAuth2(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1055,18 +1082,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanAuth3() throws Exception
+    public void testCanEditBooleanAuth3(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1077,18 +1106,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanAuth4() throws Exception
+    public void testCanEditBooleanAuth4(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1099,18 +1130,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanNoAuth() throws Exception
+    public void testCanEditBooleanNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -1121,18 +1154,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanAuth_boolean() throws Exception
+    public void testCanEditBooleanAuth_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1143,18 +1178,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanAuth2_boolean() throws Exception
+    public void testCanEditBooleanAuth2_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1165,18 +1202,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanAuth3_boolean() throws Exception
+    public void testCanEditBooleanAuth3_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1187,18 +1226,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanAuth4_boolean() throws Exception
+    public void testCanEditBooleanAuth4_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1209,18 +1250,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanAuth5_boolean() throws Exception
+    public void testCanEditBooleanAuth5_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,false); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,false); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,false); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1231,18 +1274,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanAuth6_boolean() throws Exception
+    public void testCanEditBooleanAuth6_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,false); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,false); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,false); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1253,18 +1298,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanAuth7_boolean() throws Exception
+    public void testCanEditBooleanAuth7_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,false); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,false); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,false); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1275,18 +1322,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanAuth8_boolean() throws Exception
+    public void testCanEditBooleanAuth8_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,false); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,false); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,false); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1297,18 +1346,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanNoAuth_boolean() throws Exception
+    public void testCanEditBooleanNoAuth_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -1319,18 +1370,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditBooleanNoAuth2_boolean() throws Exception
+    public void testCanEditBooleanNoAuth2_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,false); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,false); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,false); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -1341,18 +1394,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditAuth_0args() throws Exception
+    public void testCanEditAuth_0args(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1364,18 +1419,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditAuth2_0args() throws Exception
+    public void testCanEditAuth2_0args(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1387,18 +1444,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditAuth3_0args() throws Exception
+    public void testCanEditAuth3_0args(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1410,18 +1469,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditAuth4_0args() throws Exception
+    public void testCanEditAuth4_0args(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1433,18 +1494,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCanEditNoAuth_0args() throws Exception
+    public void testCanEditNoAuth_0args(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -1456,18 +1519,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditAuth_boolean() throws Exception
+    public void testCanEditAuth_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1479,18 +1544,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditAuth2_boolean() throws Exception
+    public void testCanEditAuth2_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1502,18 +1569,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditAuth3_boolean() throws Exception
+    public void testCanEditAuth3_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1525,18 +1594,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditAuth4_boolean() throws Exception
+    public void testCanEditAuth4_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1548,18 +1619,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditAuth5_boolean() throws Exception
+    public void testCanEditAuth5_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,false); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,false); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,false); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1571,18 +1644,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditAuth6_boolean() throws Exception
+    public void testCanEditAuth6_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,false); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,false); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,false); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1594,18 +1669,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditAuth7_boolean() throws Exception
+    public void testCanEditAuth7_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,false); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,false); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,false); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1617,18 +1694,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test
-    public void testCanEditAuth8_boolean() throws Exception
+    public void testCanEditAuth8_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,false); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,false); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,false); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1640,18 +1719,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCanEditNoAuth_boolean() throws Exception
+    public void testCanEditNoAuth_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,false); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,false); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,false); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -1664,18 +1745,20 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCanEditNoAuth2_boolean() throws Exception
+    public void testCanEditNoAuth2_boolean(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD,true); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE,true); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -1688,17 +1771,17 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of delete method, of class Collection.
      */
     @Test
-    public void testDeleteAuth() throws Exception
+    public void testDeleteAuth(@Mocked AuthorizeUtil authorizeUtil, @Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authUtil;
-            AuthorizeManager authManager;
             {
                 AuthorizeUtil.authorizeManageTemplateItem((Context) any, (Collection) any);
                  result = null;
+                 minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE, anyBoolean); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1711,17 +1794,17 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of delete method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testDeleteNoAuth() throws Exception
+    public void testDeleteNoAuth(@Mocked AuthorizeUtil authorizeUtil, @Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authUtil;
-            AuthorizeManager authManager;
             {
                 AuthorizeUtil.authorizeManageTemplateItem((Context) any, (Collection) any);
                  result = new AuthorizeException();
+                 minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE, anyBoolean); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1734,17 +1817,17 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      * Test of delete method, of class Collection.
      */
     @Test(expected=AuthorizeException.class)
-    public void testDeleteNoAuth2() throws Exception
+    public void testDeleteNoAuth2(@Mocked AuthorizeUtil authorizeUtil, @Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authUtil;
-            AuthorizeManager authManager;
             {
                 AuthorizeUtil.authorizeManageTemplateItem((Context) any, (Collection) any);
                  result = null;
+                 minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Collection) any,
                         Constants.WRITE, anyBoolean); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -1768,14 +1851,14 @@ public class CollectionTest extends AbstractDSpaceObjectTest
      */
     @Test
     @SuppressWarnings("ObjectEqualsNull")
-    public void testEquals() throws SQLException, AuthorizeException
+    public void testEquals(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Collection) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
             }
         };
 

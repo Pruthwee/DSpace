@@ -10,7 +10,6 @@ package org.dspace.eperson;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import mockit.UsingMocksAndStubs;
 import org.apache.commons.codec.DecoderException;
 import org.dspace.MockConfigurationManager;
 import org.dspace.core.Constants;
@@ -27,7 +26,6 @@ import static org.junit.Assert.*;
  *
  * @author mwood
  */
-@UsingMocksAndStubs(value={MockDatabaseManager.class, MockConfigurationManager.class})
 public class EPersonTest
 {
     private static TableRow row1;
@@ -44,6 +42,10 @@ public class EPersonTest
     public static void setUpClass()
             throws Exception
     {
+        // Initialize JMockit mocks that were previously declared via @UsingMocksAndStubs
+        new MockDatabaseManager();
+        new MockConfigurationManager();
+
         // Build a TableRow for an EPerson to wrap
         final ArrayList<String> epersonColumns = new ArrayList<String>();
         epersonColumns.add("eperson_id");

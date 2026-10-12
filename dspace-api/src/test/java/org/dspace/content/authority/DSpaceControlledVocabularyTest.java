@@ -8,7 +8,6 @@
 package org.dspace.content.authority;
 
 import java.io.IOException;
-import mockit.UsingMocksAndStubs;
 import org.dspace.MockConfigurationManager;
 import org.dspace.core.PluginManager;
 import static org.junit.Assert.assertEquals;
@@ -20,7 +19,6 @@ import org.junit.*;
  *
  * @author mwood
  */
-@UsingMocksAndStubs(value=MockConfigurationManager.class)
 public class DSpaceControlledVocabularyTest
 {
     public DSpaceControlledVocabularyTest()
@@ -31,6 +29,7 @@ public class DSpaceControlledVocabularyTest
     public static void setUpClass()
             throws Exception
     {
+        new MockConfigurationManager();
     }
 
     @AfterClass

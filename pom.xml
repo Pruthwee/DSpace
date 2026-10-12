@@ -24,6 +24,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lucene.version>3.5.0</lucene.version>
+        <jmockit.version>1.49</jmockit.version>
         <!-- 'root.basedir' is the path to the root [dspace-src] dir. It must be redefined by each child POM,
              as it is used to reference the LICENSE_HEADER and *.properties file(s) in that directory. -->
         <root.basedir>${basedir}</root.basedir>
@@ -37,10 +38,9 @@
               <plugin>
                   <!-- DSpace requires Java 1.6 or higher -->
                   <artifactId>maven-compiler-plugin</artifactId>
-                  <version>2.3.2</version>
+                  <version>3.11.0</version>
                   <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <release>8</release>
                   </configuration>
               </plugin>
               <plugin>
@@ -63,7 +63,7 @@
                      But, because of a Maven bug, we must force a specific version:
                      http://jira.codehaus.org/browse/MNG-2742
                      Once the bug is fixed, we should put open-ended range in dspace-pom -->
-                <version>2.1.1</version>
+                <version>3.3.2</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <archive>
@@ -77,7 +77,7 @@
              <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.2.5</version>
                 <!-- tests whose name starts by Abstract will be ignored -->
                 <configuration>
                     <excludes>
@@ -88,7 +88,7 @@
                     <debugForkedProcess>true</debugForkedProcess>
                     -->
                     <!-- required when running JMockit under Java 1.5 -->
-                    <argLine>-javaagent:"${settings.localRepository}"/org/dspace/dependencies/jmockit/dspace-jmockit/0.999.4/dspace-jmockit-0.999.4.jar</argLine>
+                    <argLine>-javaagent:"${settings.localRepository}"/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar</argLine>
                 </configuration>
              </plugin>
              <plugin>
@@ -874,13 +874,13 @@
          <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.1</version>
+            <version>4.13.2</version>
             <scope>test</scope>
          </dependency>
          <dependency>
-            <groupId>org.dspace.dependencies.jmockit</groupId>
-            <artifactId>dspace-jmockit</artifactId>
-            <version>0.999.4</version>
+            <groupId>org.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
+            <version>${jmockit.version}</version>
             <scope>test</scope>
          </dependency>
          <dependency>

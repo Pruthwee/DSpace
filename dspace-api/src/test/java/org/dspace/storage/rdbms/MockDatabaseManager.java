@@ -8,7 +8,7 @@
 package org.dspace.storage.rdbms;
 
 import mockit.Mock;
-import mockit.MockClass;
+import mockit.MockUp;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -61,8 +61,7 @@ import org.dspace.core.Context;
  *
  * @author pvillega
  */
-@MockClass(realClass = DatabaseManager.class)
-public class MockDatabaseManager
+public class MockDatabaseManager extends MockUp<DatabaseManager>
 {
     /** log4j category */
     private static Logger log = Logger.getLogger(DatabaseManager.class);
@@ -1349,7 +1348,6 @@ public class MockDatabaseManager
      * @exception SQLException
      *                If a database error occurs
      */
-    @Mock
     private static void execute(Connection connection, String sql, Collection<ColumnInfo> columns, TableRow row) throws SQLException
     {
         PreparedStatement statement = null;
@@ -1380,7 +1378,6 @@ public class MockDatabaseManager
         }
     }
 
-    @Mock
     private static int executeUpdate(Connection connection, String sql, Collection<ColumnInfo> columns, TableRow row) throws SQLException
     {
         PreparedStatement statement = null;
@@ -1420,7 +1417,6 @@ public class MockDatabaseManager
      * @exception SQLException
      *                If a database error occurs
      */
-    @Mock
     private static Map<String, ColumnInfo> getColumnInfoInternal(String table) throws SQLException
     {
         String ctable = canonicalize(table);
@@ -1448,7 +1444,6 @@ public class MockDatabaseManager
      *                If there is a problem retrieving information from the
      *                RDBMS.
      */
-    @Mock
     private static Map<String, ColumnInfo> retrieveColumnInfo(String table) throws SQLException
     {
         Connection connection = null;
@@ -1546,7 +1541,6 @@ public class MockDatabaseManager
     /**
      * Initialize the DatabaseManager.
      */
-    @Mock
     private static synchronized void initialize() throws SQLException
     {
         if (initialized)
@@ -1808,7 +1802,6 @@ public class MockDatabaseManager
         }
     }
 
-    @Mock
     private static void loadParameters(PreparedStatement statement, Collection<ColumnInfo> columns, TableRow row) throws SQLException
     {
         int count = 0;

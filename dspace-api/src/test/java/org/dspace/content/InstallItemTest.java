@@ -8,6 +8,7 @@
 package org.dspace.content;
 
 import mockit.*;
+import mockit.Mocked;
 
 import org.dspace.authorize.AuthorizeManager;
 import org.dspace.core.Constants;
@@ -100,16 +101,17 @@ public class InstallItemTest extends AbstractUnitTest
      * Test of installItem method (with an invalid handle), of class InstallItem.
      */
     @Test(expected=SQLException.class)
-    public void testInstallItem_invalidHandle() throws Exception
+    public void testInstallItem_invalidHandle(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
         //Default to Full-Admin rights
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.isAdmin((Context) any); result = true;
+                minTimes = 0;
             }
         };
 

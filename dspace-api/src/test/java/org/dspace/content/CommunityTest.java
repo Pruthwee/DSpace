@@ -18,6 +18,7 @@ import org.junit.*;
 import static org.junit.Assert.* ;
 import static org.hamcrest.CoreMatchers.*;
 import mockit.*;
+import mockit.Mocked;
 import org.apache.log4j.Logger;
 import org.dspace.app.util.AuthorizeUtil;
 import org.dspace.authorize.AuthorizeManager;
@@ -105,17 +106,18 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of create method, of class Community.
      */
     @Test
-    public void testCreateAuth() throws Exception
+    public void testCreateAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
 
         //Default to Community-Admin Rights (but not full Admin rights)
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
                 AuthorizeManager.isAdmin((Context) any); result = false;
+                minTimes = 0;
             }
         };
 
@@ -133,16 +135,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of create method, of class Community.
      */
     @Test
-    public void testCreateAuth2() throws Exception
+    public void testCreateAuth2(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
         //Default to Admin Rights, but NOT Community Admin Rights
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.isAdmin((Context) any); result = true;
+                minTimes = 0;
             }
         };
 
@@ -165,16 +168,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of create method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateNoAuth() throws Exception
+    public void testCreateNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
         //Default to NO Admin Rights, and NO Community Admin Rights
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.isAdmin((Context) any); result = false;
+                minTimes = 0;
             }
         };
 
@@ -188,16 +192,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of create method (with specified valid handle), of class Community.
      */
     @Test
-    public void testCreateWithValidHandle() throws Exception
+    public void testCreateWithValidHandle(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
         //Default to Community Admin Rights, but NO full-Admin rights
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.isAdmin((Context) any); result = true;
+                minTimes = 0;
             }
         };
 
@@ -215,16 +220,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of create method (with specified invalid handle), of class Community.
      */
     @Test(expected=IllegalStateException.class)
-    public void testCreateWithInvalidHandle() throws Exception
+    public void testCreateWithInvalidHandle(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
         //Default to Community Admin Rights, but NO full-Admin rights
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.isAdmin((Context) any); result = true;
+                minTimes = 0;
             }
         };
 
@@ -241,16 +247,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of create method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateNoAuth2() throws Exception
+    public void testCreateNoAuth2(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
         //Default to Community Admin Rights, but NO full-Admin rights
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
                 AuthorizeManager.isAdmin((Context) any); result = false;
+                minTimes = 0;
             }
         };
 
@@ -395,18 +402,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of setLogo method, of class Community.
      */
     @Test
-    public void testSetLogoAuth() throws Exception
+    public void testSetLogoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = true;
+                        minTimes = 0;
                  AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -422,18 +431,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of setLogo method, of class Community.
      */
     @Test
-    public void testSetLogoAuth2() throws Exception
+    public void testSetLogoAuth2(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = true;
+                        minTimes = 0;
                  AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -449,18 +460,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of setLogo method, of class Community.
      */
     @Test
-    public void testSetLogoAuth3() throws Exception
+    public void testSetLogoAuth3(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = false;
+                        minTimes = 0;
                  AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -476,18 +489,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of setLogo method, of class Community.
      */
     @Test
-    public void testSetLogoAuth4() throws Exception
+    public void testSetLogoAuth4(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = false;
+                        minTimes = 0;
                  AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -503,18 +518,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of setLogo method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testSetLogoNoAuth() throws Exception
+    public void testSetLogoNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -527,16 +544,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of update method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testUpdateNoAuth() throws Exception
+    public void testUpdateNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = new AuthorizeException();
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -549,16 +567,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of update method, of class Community.
      */
     @Test
-    public void testUpdateAuth() throws Exception
+    public void testUpdateAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -570,14 +589,14 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of createAdministrators method, of class Community.
      */
     @Test
-    public void testCreateAdministratorsAuth() throws Exception
+    public void testCreateAdministratorsAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageAdminGroup((Context) any, (Community) any);
                 result = null;                
+                minTimes = 0;
             }
         };
 
@@ -590,14 +609,14 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of createAdministrators method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateAdministratorsNoAuth() throws Exception
+    public void testCreateAdministratorsNoAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageAdminGroup((Context) any, (Community) any);
                 result = new AuthorizeException();
+                minTimes = 0;
             }
         };
 
@@ -610,14 +629,14 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of removeAdministrators method, of class Community.
      */
     @Test
-    public void testRemoveAdministratorsAuth() throws Exception
+    public void testRemoveAdministratorsAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeManageAdminGroup((Context) any, (Community) any);
                 result = null;
+                minTimes = 0;
             }
         };
 
@@ -632,14 +651,14 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of removeAdministrators method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testRemoveAdministratorsNoAuth() throws Exception
+    public void testRemoveAdministratorsNoAuth(@Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeUtil authManager;
             {
                 AuthorizeUtil.authorizeRemoveAdminGroup((Context) any, (Community) any);
                     result = new AuthorizeException();
+                    minTimes = 0;
             }
         };
 
@@ -661,16 +680,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of getCollections method, of class Community.
      */
     @Test
-    public void testGetCollections() throws Exception
+    public void testGetCollections(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-         new NonStrictExpectations()
+         new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -688,16 +708,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of getSubcommunities method, of class Community.
      */
     @Test
-    public void testGetSubcommunities() throws Exception
+    public void testGetSubcommunities(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
             }
         };
 
@@ -716,16 +737,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of getParentCommunity method, of class Community.
      */
     @Test
-    public void testGetParentCommunity() throws Exception 
+    public void testGetParentCommunity(@Mocked AuthorizeManager authorizeManager) throws Exception 
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
             }
         };
 
@@ -742,16 +764,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of getAllParents method, of class Community.
      */
     @Test
-    public void testGetAllParents() throws Exception
+    public void testGetAllParents(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
             }
         };
 
@@ -770,14 +793,14 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of createCollection method, of class Community.
      */
     @Test
-    public void testCreateCollectionAuth() throws Exception
+    public void testCreateCollectionAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -791,14 +814,14 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of createCollection method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateCollectionNoAuth() throws Exception
+    public void testCreateCollectionNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -810,14 +833,14 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of addCollection method, of class Community.
      */
     @Test
-    public void testAddCollectionAuth() throws Exception
+    public void testAddCollectionAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -831,14 +854,14 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of addCollection method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testAddCollectionNoAuth() throws Exception
+    public void testAddCollectionNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -851,16 +874,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of createSubcommunity method, of class Community.
      */
     @Test
-    public void testCreateSubcommunityAuth() throws Exception
+    public void testCreateSubcommunityAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
             }
         };
 
@@ -874,16 +898,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of createSubcommunity method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateSubcommunityNoAuth() throws Exception
+    public void testCreateSubcommunityNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = new AuthorizeException();
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
             }
         };
 
@@ -895,17 +920,19 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of addSubcommunity method, of class Community.
      */
     @Test
-    public void testAddSubcommunityAuth() throws Exception
+    public void testAddSubcommunityAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
                 AuthorizeManager.isAdmin((Context) any); result = true;
+                minTimes = 0;
             }
         };
 
@@ -920,16 +947,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of addSubcommunity method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testAddSubcommunityNoAuth() throws Exception
+    public void testAddSubcommunityNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = new AuthorizeException();
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
             }
         };
 
@@ -942,19 +970,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of removeCollection method, of class Community.
      */
     @Test
-    public void testRemoveCollectionAuth() throws Exception
+    public void testRemoveCollectionAuth(@Mocked AuthorizeManager authorizeManager, @Mocked AuthorizeUtil authorizeUtil) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
-            AuthorizeUtil authUtil;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.REMOVE); result = null;
+                        minTimes = 0;
                 AuthorizeUtil.authorizeManageTemplateItem((Context) any, (Collection) any);
                         result = null;
+                        minTimes = 0;
             }
         };
 
@@ -973,16 +1002,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of removeCollection method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testRemoveCollectionNoAuth() throws Exception
+    public void testRemoveCollectionNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.REMOVE); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -1000,19 +1030,22 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of removeSubcommunity method, of class Community.
      */
     @Test
-    public void testRemoveSubcommunityAuth() throws Exception
+    public void testRemoveSubcommunityAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.REMOVE); result = null;
+                        minTimes = 0;
                 AuthorizeManager.isAdmin((Context) any); result = true;
+                minTimes = 0;
             }
         };
 
@@ -1031,16 +1064,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of delete method, of class Community.
      */
     @Test
-    public void testDeleteAuth() throws Exception
+    public void testDeleteAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.DELETE); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.REMOVE); result = false;
+                        minTimes = 0;
             }
         };
 
@@ -1054,16 +1088,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of delete method, of class Community.
      */
     @Test
-    public void testDeleteAuth2() throws Exception
+    public void testDeleteAuth2(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.DELETE); result = null;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.REMOVE); result = true;
+                        minTimes = 0;
             }
         };
 
@@ -1077,16 +1112,17 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of delete method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testDeleteNoAuth() throws Exception
+    public void testDeleteNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.DELETE); result = new AuthorizeException();
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.REMOVE); result = false;
+                        minTimes = 0;
             }
         };
 
@@ -1100,13 +1136,13 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      */
     @Test
     @SuppressWarnings("ObjectEqualsNull")
-    public void testEquals() throws SQLException, AuthorizeException
+    public void testEquals(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.isAdmin((Context) any); result = true;
+                minTimes = 0;
             }
         };
 
@@ -1129,18 +1165,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Community.
      */
     @Test
-    public void testCanEditBooleanAuth() throws Exception
+    public void testCanEditBooleanAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1151,18 +1189,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Community.
      */
     @Test
-    public void testCanEditBooleanAuth2() throws Exception
+    public void testCanEditBooleanAuth2(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1173,18 +1213,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Community.
      */
     @Test
-    public void testCanEditBooleanAuth3() throws Exception
+    public void testCanEditBooleanAuth3(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1195,18 +1237,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Community.
      */
     @Test
-    public void testCanEditBooleanAuth4() throws Exception
+    public void testCanEditBooleanAuth4(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1217,18 +1261,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of canEditBoolean method, of class Community.
      */
     @Test
-    public void testCanEditBooleanNoAuth() throws Exception
+    public void testCanEditBooleanNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -1239,18 +1285,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of canEdit method, of class Community.
      */
     @Test
-    public void testCanEditAuth() throws Exception
+    public void testCanEditAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1261,18 +1309,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of canEdit method, of class Community.
      */
     @Test
-    public void testCanEditAuth1() throws Exception
+    public void testCanEditAuth1(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1283,18 +1333,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of canEdit method, of class Community.
      */
     @Test
-    public void testCanEditAuth2() throws Exception
+    public void testCanEditAuth2(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = true;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -1305,18 +1357,20 @@ public class CommunityTest extends AbstractDSpaceObjectTest
      * Test of canEdit method, of class Community.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCanEditNoAuth() throws Exception
+    public void testCanEditNoAuth(@Mocked AuthorizeManager authorizeManager) throws Exception
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                  AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.WRITE); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeActionBoolean((Context) any, (Community) any,
                         Constants.ADD); result = false;
+                        minTimes = 0;
                 AuthorizeManager.authorizeAction((Context) any, (Community) any,
                         Constants.WRITE); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 

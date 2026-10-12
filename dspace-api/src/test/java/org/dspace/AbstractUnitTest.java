@@ -19,8 +19,6 @@ import java.util.TimeZone;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import mockit.UsingMocksAndStubs;
-
 import org.apache.log4j.Logger;
 import org.dspace.administer.MetadataImporter;
 import org.dspace.administer.RegistryImportException;
@@ -52,7 +50,6 @@ import org.xml.sax.SAXException;
  *
  * @author pvillega
  */
-@UsingMocksAndStubs({MockDatabaseManager.class, MockBrowseCreateDAOOracle.class})
 public class AbstractUnitTest
 {
     /** log4j category */
@@ -97,6 +94,10 @@ public class AbstractUnitTest
     @BeforeClass
     public static void initOnce()
     {
+        // Initialize JMockit mocks that were previously declared via @UsingMocksAndStubs
+        new MockDatabaseManager();
+        new MockBrowseCreateDAOOracle();
+
         try
         {
             //set a standard time zone for the tests

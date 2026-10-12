@@ -11,7 +11,8 @@ import java.util.Iterator;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.authorize.AuthorizeManager;
-import mockit.NonStrictExpectations;
+import mockit.Expectations;
+import mockit.Mocked;
 import java.io.FileInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -193,14 +194,14 @@ public class BundleTest extends AbstractDSpaceObjectTest
      * Test of getBitstreamByName method, of class Bundle.
      */
     @Test
-    public void testGetBitstreamByName() throws FileNotFoundException, SQLException, IOException, AuthorizeException
+    public void testGetBitstreamByName(@Mocked AuthorizeManager authorizeManager) throws FileNotFoundException, SQLException, IOException, AuthorizeException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bundle) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -223,14 +224,14 @@ public class BundleTest extends AbstractDSpaceObjectTest
      * Test of getBitstreams method, of class Bundle.
      */
     @Test
-    public void testGetBitstreams() throws FileNotFoundException, SQLException, IOException, AuthorizeException
+    public void testGetBitstreams(@Mocked AuthorizeManager authorizeManager) throws FileNotFoundException, SQLException, IOException, AuthorizeException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bundle) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -265,14 +266,14 @@ public class BundleTest extends AbstractDSpaceObjectTest
      * Test of createBitstream method, of class Bundle.
      */
     @Test(expected=AuthorizeException.class)
-    public void testCreateBitstreamNoAuth() throws FileNotFoundException, AuthorizeException, SQLException, IOException
+    public void testCreateBitstreamNoAuth(@Mocked AuthorizeManager authorizeManager) throws FileNotFoundException, AuthorizeException, SQLException, IOException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bundle) any,
                         Constants.ADD); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
@@ -286,14 +287,14 @@ public class BundleTest extends AbstractDSpaceObjectTest
      * Test of createBitstream method, of class Bundle.
      */
     @Test
-    public void testCreateBitstreamAuth() throws FileNotFoundException, AuthorizeException, SQLException, IOException
+    public void testCreateBitstreamAuth(@Mocked AuthorizeManager authorizeManager) throws FileNotFoundException, AuthorizeException, SQLException, IOException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bundle) any,
                         Constants.ADD); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -310,15 +311,15 @@ public class BundleTest extends AbstractDSpaceObjectTest
      * Test of registerBitstream method, of class Bundle.
      */
     @Test(expected=AuthorizeException.class)
-    public void testRegisterBitstreamNoAuth() throws AuthorizeException, IOException, SQLException 
+    public void testRegisterBitstreamNoAuth(@Mocked AuthorizeManager authorizeManager) throws AuthorizeException, IOException, SQLException 
     {
 
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bundle) any, Constants.ADD);
                 result = new AuthorizeException();
+                minTimes = 0;
             }
         };
 
@@ -332,15 +333,15 @@ public class BundleTest extends AbstractDSpaceObjectTest
      * Test of registerBitstream method, of class Bundle.
      */
     @Test
-    public void testRegisterBitstreamAuth() throws AuthorizeException, IOException, SQLException 
+    public void testRegisterBitstreamAuth(@Mocked AuthorizeManager authorizeManager) throws AuthorizeException, IOException, SQLException 
     {
 
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bundle) any, Constants.ADD);
                 result = null;
+                minTimes = 0;
             }
         };
 
@@ -358,14 +359,14 @@ public class BundleTest extends AbstractDSpaceObjectTest
      * Test of addBitstream method, of class Bundle.
      */
     @Test(expected=AuthorizeException.class)
-    public void testAddBitstreamNoAuth() throws SQLException, AuthorizeException
+    public void testAddBitstreamNoAuth(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bundle) any, Constants.ADD);
                 result = new AuthorizeException();
+                minTimes = 0;
             }
         };
 
@@ -379,14 +380,14 @@ public class BundleTest extends AbstractDSpaceObjectTest
      * Test of addBitstream method, of class Bundle.
      */
     @Test
-    public void testAddBitstreamAuth() throws SQLException, AuthorizeException, FileNotFoundException, IOException
+    public void testAddBitstreamAuth(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException, FileNotFoundException, IOException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bundle) any, Constants.ADD);
                 result = null;
+                minTimes = 0;
             }
         };
 
@@ -404,14 +405,14 @@ public class BundleTest extends AbstractDSpaceObjectTest
      * Test of removeBitstream method, of class Bundle.
      */
     @Test(expected=AuthorizeException.class)
-    public void testRemoveBitstreamNoAuth() throws SQLException, AuthorizeException, IOException
+    public void testRemoveBitstreamNoAuth(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException, IOException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bundle) any, Constants.REMOVE);
                 result = new AuthorizeException();
+                minTimes = 0;
             }
         };
 
@@ -426,14 +427,14 @@ public class BundleTest extends AbstractDSpaceObjectTest
      * Test of removeBitstream method, of class Bundle.
      */
     @Test
-    public void testRemoveBitstreamAuth() throws SQLException, AuthorizeException, IOException
+    public void testRemoveBitstreamAuth(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException, IOException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bundle) any, Constants.REMOVE);
                 result = null;
+                minTimes = 0;
             }
         };
 

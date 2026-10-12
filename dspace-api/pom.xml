@@ -89,9 +89,21 @@
                     http://stackoverflow.com/questions/3872355/how-to-convert-file-separator-in-maven
             -->
             <plugin>
-                <groupId>org.codehaus.gmaven</groupId>
-                <artifactId>gmaven-plugin</artifactId>
-                <version>1.4</version>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>1.13.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy</artifactId>
+                        <version>3.0.9</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-ant</artifactId>
+                        <version>3.0.9</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <id>setproperty</id>
@@ -100,10 +112,9 @@
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <source>
-                            pom.properties['agnostic.build.dir']=project.build.directory.replace('\\','/');
-                            println("Initializing Maven property 'agnostic.build.dir' to: " + project.properties['agnostic.build.dir']);
-                            </source>
+                            <scripts>
+                                <script>${basedir}/src/test/scripts/setproperty.groovy</script>
+                            </scripts>
                         </configuration>
                     </execution>
                 </executions>
@@ -348,8 +359,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.dspace.dependencies.jmockit</groupId>
-            <artifactId>dspace-jmockit</artifactId>
+            <groupId>org.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

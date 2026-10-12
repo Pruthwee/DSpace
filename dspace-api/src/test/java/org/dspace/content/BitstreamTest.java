@@ -16,6 +16,7 @@ import org.junit.*;
 import static org.junit.Assert.* ;
 import static org.hamcrest.CoreMatchers.*;
 import mockit.*;
+import mockit.Mocked;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.AuthorizeManager;
@@ -363,15 +364,15 @@ public class BitstreamTest extends AbstractDSpaceObjectTest
      * Test of update method, of class Bitstream.
      */
     @Test(expected=AuthorizeException.class)
-    public void testUpdateNotAdmin() throws SQLException, AuthorizeException
+    public void testUpdateNotAdmin(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException
     {
 
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bitstream) any,
                         Constants.WRITE); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
         //TODO: we need to verify the update, how?
@@ -382,15 +383,15 @@ public class BitstreamTest extends AbstractDSpaceObjectTest
      * Test of update method, of class Bitstream.
      */
     @Test
-    public void testUpdateAdmin() throws SQLException, AuthorizeException
+    public void testUpdateAdmin(@Mocked AuthorizeManager authorizeManager) throws SQLException, AuthorizeException
     {
 
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bitstream) any,
                         Constants.WRITE); result = null;
+                        minTimes = 0;
             }
         };
         //TODO: we need to verify the update, how?
@@ -423,15 +424,15 @@ public class BitstreamTest extends AbstractDSpaceObjectTest
      * Test of retrieve method, of class Bitstream.
      */
     @Test
-    public void testRetrieveCanRead() throws IOException, SQLException,
+    public void testRetrieveCanRead(@Mocked AuthorizeManager authorizeManager) throws IOException, SQLException,
             AuthorizeException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bitstream) any,
                         Constants.READ); result = null;
+                        minTimes = 0;
             }
         };
 
@@ -442,15 +443,15 @@ public class BitstreamTest extends AbstractDSpaceObjectTest
      * Test of retrieve method, of class Bitstream.
      */
     @Test(expected=AuthorizeException.class)
-    public void testRetrieveNoRead() throws IOException, SQLException,
+    public void testRetrieveNoRead(@Mocked AuthorizeManager authorizeManager) throws IOException, SQLException,
             AuthorizeException
     {
-        new NonStrictExpectations()
+        new Expectations()
         {
-            AuthorizeManager authManager;
             {
                 AuthorizeManager.authorizeAction((Context) any, (Bitstream) any,
                         Constants.READ); result = new AuthorizeException();
+                        minTimes = 0;
             }
         };
 
