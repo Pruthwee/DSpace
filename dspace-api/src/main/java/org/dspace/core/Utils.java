@@ -20,7 +20,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.rmi.dgc.VMID;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -38,6 +37,7 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.Random;
 import java.util.StringTokenizer;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -82,7 +82,8 @@ public final class Utils {
 
     private static final Random random = new Random();
 
-    private static final VMID vmid = new VMID();
+    /** Per-JVM unique token (replaces java.rmi.dgc.VMID: no RMI is used); only feeds the hash in generateKey(). */
+    private static final String vmid = UUID.randomUUID().toString();
 
     // for parseISO8601Date
     private static final DateTimeFormatter[] parseFmt = {

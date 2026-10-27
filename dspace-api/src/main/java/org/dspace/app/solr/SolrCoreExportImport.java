@@ -204,10 +204,17 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
     }
 
     /**
+     * Elapsed milliseconds since the given {@link System#nanoTime()} reading (monotonic clock).
+     */
+    private static long elapsedMillis(long startNanos) {
+        return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNanos);
+    }
+
+    /**
      * Export complete SOLR core data to files using date ranges instead of pagination
      */
     private void exportCore() throws Exception {
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         String solrUrl = configurationService.getProperty("solr.server");
         String fullCoreName = getFullCoreName(coreName);
         String baseUrl = solrUrl + "/" + fullCoreName;
@@ -235,7 +242,7 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
         List<CompletableFuture<Void>> futures = new ArrayList<>();
 
-        long processingStart = System.currentTimeMillis();
+        long processingStart = System.nanoTime();
         for (int i = 0; i < dateRanges.size(); i++) {
             final int rangeIndex = i;
             final DateRange range = dateRanges.get(i);
@@ -255,7 +262,7 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
         // Wait for all ranges to complete
         handler.logInfo("Waiting for " + futures.size() + " export tasks to complete...");
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-        long processingTime = System.currentTimeMillis() - processingStart;
+        long processingTime = elapsedMillis(processingStart);
 
         executor.shutdown();
         if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
@@ -263,7 +270,7 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
             executor.shutdownNow();
         }
 
-        long totalTime = System.currentTimeMillis() - startTime;
+        long totalTime = elapsedMillis(startTime);
         handler.logInfo("Export completed in " + totalTime + " ms");
     }
 
@@ -386,7 +393,7 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
      * Export data for a specific date range
      */
     private void exportDateRange(String baseUrl, int rangeIndex, DateRange range) throws Exception {
-        long rangeStart = System.currentTimeMillis();
+        long rangeStart = System.nanoTime();
         Thread currentThread = Thread.currentThread();
 
         handler.logInfo("Thread '" + currentThread.getName() + "' exporting range " + rangeIndex +
@@ -415,9 +422,9 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
                 .GET()
                 .build();
 
-        long queryStart = System.currentTimeMillis();
+        long queryStart = System.nanoTime();
         HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
-        long queryTime = System.currentTimeMillis() - queryStart;
+        long queryTime = elapsedMillis(queryStart);
 
         if (response.statusCode() != 200) {
             throw new RuntimeException("SOLR export failed with status: " + response.statusCode());
@@ -428,15 +435,15 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
         Path filePath = Paths.get(directory, filename);
 
         log.debug("Thread '{}' writing to file: {}", currentThread.getName(), filename);
-        long writeStart = System.currentTimeMillis();
+        long writeStart = System.nanoTime();
 
         try (InputStream inputStream = response.body();
              FileOutputStream outputStream = new FileOutputStream(filePath.toFile())) {
             inputStream.transferTo(outputStream);
         }
 
-        long writeTime = System.currentTimeMillis() - writeStart;
-        long totalTime = System.currentTimeMillis() - rangeStart;
+        long writeTime = elapsedMillis(writeStart);
+        long totalTime = elapsedMillis(rangeStart);
 
         handler.logInfo("Thread '" + currentThread.getName() + "' completed range " + rangeIndex +
                         " in " + totalTime + " ms (query: " + queryTime + "ms, write: " + writeTime + "ms)");
@@ -464,7 +471,7 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
      * Import SOLR core data from files using direct HTTP calls
      */
     private void importCore() throws Exception {
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         String solrUrl = configurationService.getProperty("solr.server");
         String fullCoreName = getFullCoreName(coreName);
         String baseUrl = solrUrl + "/" + fullCoreName;
@@ -488,7 +495,7 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
         List<CompletableFuture<Void>> futures = new ArrayList<>();
 
-        long processingStart = System.currentTimeMillis();
+        long processingStart = System.nanoTime();
         for (File file : files) {
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
                 try {
@@ -505,7 +512,7 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
         // Wait for all imports to complete
         handler.logInfo("Waiting for " + futures.size() + " import tasks to complete...");
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-        long processingTime = System.currentTimeMillis() - processingStart;
+        long processingTime = elapsedMillis(processingStart);
 
         executor.shutdown();
         if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
@@ -515,11 +522,11 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
 
         // Final commit
         handler.logInfo("Performing final SOLR commit...");
-        long commitStart = System.currentTimeMillis();
+        long commitStart = System.nanoTime();
         commitToSolr(baseUrl);
-        long commitTime = System.currentTimeMillis() - commitStart;
+        long commitTime = elapsedMillis(commitStart);
 
-        long totalTime = System.currentTimeMillis() - startTime;
+        long totalTime = elapsedMillis(startTime);
         handler.logInfo("Import completed in " + totalTime + " ms (processing: " + processingTime +
                 "ms, commit: " + commitTime + "ms)");
     }
@@ -528,7 +535,7 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
      * Import a single file using HTTP POST to SOLR
      */
     private void importFile(String baseUrl, File file) throws Exception {
-        long fileStart = System.currentTimeMillis();
+        long fileStart = System.nanoTime();
         Thread currentThread = Thread.currentThread();
 
         handler.logInfo("Thread '" + currentThread.getName() + "' importing file: " + file.getName() +
@@ -544,16 +551,16 @@ public class SolrCoreExportImport extends DSpaceRunnable<SolrCoreExportImportScr
                 .POST(HttpRequest.BodyPublishers.ofFile(file.toPath()))
                 .build();
 
-        long uploadStart = System.currentTimeMillis();
+        long uploadStart = System.nanoTime();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        long uploadTime = System.currentTimeMillis() - uploadStart;
+        long uploadTime = elapsedMillis(uploadStart);
 
         if (response.statusCode() != 200) {
             throw new RuntimeException("SOLR import failed for file " + file.getName() +
                     " with status: " + response.statusCode() + " - " + response.body());
         }
 
-        long totalTime = System.currentTimeMillis() - fileStart;
+        long totalTime = elapsedMillis(fileStart);
         handler.logInfo("Thread '" + currentThread.getName() + "' completed import of '" + file.getName() +
                         "' in " + totalTime + " ms (upload: " + uploadTime + "ms)");
     }

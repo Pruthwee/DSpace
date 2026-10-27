@@ -19,6 +19,9 @@
     <properties>
         <!-- This is the path to the root [dspace-src] directory. -->
         <root.basedir>${basedir}/..</root.basedir>
+        <!-- AWS SDK for Java v2: newest stable version printed by the Maven Central lookup in this job
+             (https://repo1.maven.org/maven2/software/amazon/awssdk/bom/maven-metadata.xml, <latest>2.57.4) -->
+        <aws.sdk.version>2.57.4</aws.sdk.version>
     </properties>
 
     <!--
@@ -728,7 +731,7 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.49.4</version>
+            <version>${aws.sdk.version}</version>
             <exclusions>
               <exclusion>
                 <groupId>software.amazon.awssdk</groupId>
@@ -747,6 +750,34 @@
                 <artifactId>apache5-client</artifactId>
               </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- AWS Systems Manager Parameter Store (cloud-readiness remediation:
+             configuration values read at run time). Like the S3 dependency above they exclude
+             the Apache and Netty HTTP clients and use the lightweight URL connection client. -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>ssm</artifactId>
+            <version>${aws.sdk.version}</version>
+            <exclusions>
+              <exclusion>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>netty-nio-client</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>apache-client</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>apache5-client</artifactId>
+              </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>url-connection-client</artifactId>
+            <version>${aws.sdk.version}</version>
         </dependency>
 
         <dependency>

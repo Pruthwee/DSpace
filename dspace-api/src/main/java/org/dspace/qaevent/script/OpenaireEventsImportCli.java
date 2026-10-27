@@ -9,6 +9,7 @@ package org.dspace.qaevent.script;
 
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.utils.DSpace;
 
 /**
@@ -34,6 +35,7 @@ public class OpenaireEventsImportCli extends OpenaireEventsImport {
         if (commandLine.hasOption('h')) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("Import Notification event json file", getScriptConfiguration().getOptions());
+            GracefulShutdown.register();
             System.exit(0);
         }
 

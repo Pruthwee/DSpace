@@ -34,6 +34,8 @@ public class ImportFileUtil {
     public static final String FTP = "FTP";
     private static final Logger log = LogManager.getLogger(ImportFileUtil.class);
     private static final String LOCAL = "LOCAL";
+    private static final int CONNECT_TIMEOUT_MS = 5000;
+    private static final int READ_TIMEOUT_MS = 30000;
     private static final String HTTP_PREFIX = "http:";
 
     private static final String HTTPS_PREFIX = "https:";
@@ -195,7 +197,10 @@ public class ImportFileUtil {
 
     protected InputStream openStream(URL url) {
         try {
-            return url.openStream();
+            URLConnection urlConnection = url.openConnection();
+            urlConnection.setConnectTimeout(CONNECT_TIMEOUT_MS);
+            urlConnection.setReadTimeout(READ_TIMEOUT_MS);
+            return urlConnection.getInputStream();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -211,6 +216,8 @@ public class ImportFileUtil {
             return Optional.empty();
         }
         URLConnection urlConnection = urlObject.openConnection();
+        urlConnection.setConnectTimeout(CONNECT_TIMEOUT_MS);
+        urlConnection.setReadTimeout(READ_TIMEOUT_MS);
         InputStream inputStream = urlConnection.getInputStream();
         if (inputStream == null) {
             logError(

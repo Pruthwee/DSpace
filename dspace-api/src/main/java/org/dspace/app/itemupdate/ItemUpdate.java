@@ -28,6 +28,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Item;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
@@ -179,6 +180,7 @@ public class ItemUpdate {
                 pr("  deleting bitstreams: ItemUpdate -e jsmith@mit.edu -s sourcedir -D ORIGINAL ");
                 pr("");
 
+                GracefulShutdown.register();
                 System.exit(0);
             }
 
@@ -196,6 +198,7 @@ public class ItemUpdate {
 
             if (!line.hasOption('s')) { // item specific changes from archive dir
                 pr("Missing source archive option");
+                GracefulShutdown.register();
                 System.exit(1);
             }
             String sourcedir = line.getOptionValue('s');
@@ -256,6 +259,7 @@ public class ItemUpdate {
                 String[] filterNames = line.getOptionValues('D');
                 if ((filterNames != null) && (filterNames.length > 1)) {
                     pr("Error: Only one filter can be a used at a time.");
+                    GracefulShutdown.register();
                     System.exit(1);
                 }
 
@@ -284,6 +288,7 @@ public class ItemUpdate {
                                 .newInstance();  //unfortunate cast, an erasure consequence
                     } catch (Exception e) {
                         pr("Error:  Failure instantiating bitstream filter class: " + filterClassname);
+                        GracefulShutdown.register();
                         System.exit(1);
                     }
 
@@ -299,6 +304,7 @@ public class ItemUpdate {
                         } catch (Exception e) {
                             pr("Error:  Failure finding properties file for bitstream filter class: " +
                                    filterPropertiesName);
+                            GracefulShutdown.register();
                             System.exit(1);
                         }
                     }
@@ -323,6 +329,7 @@ public class ItemUpdate {
 
             if (!iu.actionMgr.hasActions()) {
                 pr("Error - an action must be specified");
+                GracefulShutdown.register();
                 System.exit(1);
             } else {
                 pr("Actions to be performed: ");
@@ -360,6 +367,7 @@ public class ItemUpdate {
             pr("End.");
 
         }
+        GracefulShutdown.register();
         System.exit(status);
     }
 

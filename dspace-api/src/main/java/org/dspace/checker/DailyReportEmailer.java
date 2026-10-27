@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.checker.factory.CheckerServiceFactory;
 import org.dspace.checker.service.SimpleReporterService;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.core.Context;
 import org.dspace.core.Email;
 import org.dspace.core.Utils;
@@ -128,6 +129,7 @@ public class DailyReportEmailer {
             line = parser.parse(options, args);
         } catch (ParseException e) {
             log.fatal(e);
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -144,6 +146,7 @@ public class DailyReportEmailer {
             System.out.println(" - Send bitstream not to be processed email report: checker-emailer -n");
             System.out.println(" - Send unchecked bitstream email report: checker-emailer -u");
             System.out.println("\nDefault (no arguments) is equivalent to 'checker-emailer -a'\n");
+            GracefulShutdown.register();
             System.exit(0);
         }
 

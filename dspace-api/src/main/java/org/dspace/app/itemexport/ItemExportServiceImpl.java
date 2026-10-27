@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -40,6 +42,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.itemexport.service.ItemExportService;
+import org.dspace.cloud.CloudConfig;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
 import org.dspace.content.Collection;
@@ -93,6 +97,16 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ItemExportServiceImpl implements ItemExportService {
     protected final int SUBDIR_LIMIT = 0;
+
+    private static ExecutorService exportExecutor;
+
+    private static synchronized ExecutorService getExportExecutor() {
+        if (exportExecutor == null) {
+            exportExecutor = Executors.newFixedThreadPool(CloudConfig.getInt("DSPACE_ITEMEXPORT_THREADS", 4));
+            GracefulShutdown.onShutdown(exportExecutor::shutdown);
+        }
+        return exportExecutor;
+    }
 
     @Autowired(required = true)
     protected BitstreamService bitstreamService;
@@ -669,7 +683,7 @@ public class ItemExportServiceImpl implements ItemExportService {
 
         // if we have any items to process then kick off anonymous thread
         if (itemsMap.size() > 0) {
-            Thread go = new Thread() {
+            Runnable go = new Runnable() {
                 @Override
                 public void run() {
                     Context context = new Context();
@@ -741,8 +755,7 @@ public class ItemExportServiceImpl implements ItemExportService {
 
             };
 
-            go.isDaemon();
-            go.start();
+            getExportExecutor().execute(go);
         } else {
             Locale supportedLocale = I18nUtil.getEPersonLocale(eperson);
             emailErrorMessage(eperson, I18nUtil.getMessage("org.dspace.app.itemexport.no-result", supportedLocale));

@@ -34,6 +34,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.lang3.StringUtils;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.core.Context;
 import org.dspace.core.LogHelper;
 import org.dspace.core.Utils;
@@ -381,6 +382,7 @@ public class LogAnalyser {
         // Analyze the command.
         if (cmd.hasOption("help")) {
             LogAnalyser.usage();
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -495,6 +497,7 @@ public class LogAnalyser {
                     br = new BufferedReader(fr);
                 } catch (IOException e) {
                     System.out.println("Failed to read log file " + logFiles[i].toString());
+                    GracefulShutdown.register();
                     System.exit(0);
                 }
 
@@ -822,6 +825,7 @@ public class LogAnalyser {
             out.flush();
         } catch (IOException e) {
             System.out.println("Unable to write to output file " + outFile);
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -843,6 +847,7 @@ public class LogAnalyser {
         // if log dir is not a directory throw and error and exit
         if (!logs.isDirectory()) {
             System.out.println("Passed log directory is not a directory");
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -982,6 +987,7 @@ public class LogAnalyser {
             br = new BufferedReader(fr);
         } catch (IOException e) {
             System.out.println("Failed to read config file: " + configFile);
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -1078,6 +1084,7 @@ public class LogAnalyser {
             parsedDate = LocalDate.parse(date, formatter);
         } catch (DateTimeParseException e) {
             System.out.println("The date is not in the correct format");
+            GracefulShutdown.register();
             System.exit(0);
         }
         return parsedDate;

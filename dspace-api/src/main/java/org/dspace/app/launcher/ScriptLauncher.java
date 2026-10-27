@@ -20,6 +20,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.XMLUtils;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.scripts.DSpaceRunnable;
@@ -92,6 +93,7 @@ public class ScriptLauncher {
         if (args.length < 1) {
             System.err.println("You must provide at least one command argument");
             display(commandConfigs);
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -106,6 +108,7 @@ public class ScriptLauncher {
             kernelImpl = null;
         }
 
+        GracefulShutdown.register();
         System.exit(status);
 
     }
@@ -343,6 +346,7 @@ public class ScriptLauncher {
             System.err.println("Unable to load the launcher configuration file: [dspace]/config/launcher.xml");
             System.err.println(e.getMessage());
             e.printStackTrace();
+            GracefulShutdown.register();
             System.exit(1);
         }
         return doc;

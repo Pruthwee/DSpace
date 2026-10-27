@@ -102,3 +102,19 @@ body table.table {
 .embedded-resource-title:after {
   content: "\"";
 }
+/* Loading skeleton shown in #browser until the HAL Browser renders into it */
+.hal-skeleton { padding: 20px 0; }
+.hal-skeleton-line {
+  height: 16px;
+  margin-bottom: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%);
+  background-size: 200% 100%;
+  animation: hal-skeleton-pulse 1.4s ease-in-out infinite;
+}
+.hal-skeleton-title { width: 40%; height: 28px; }
+.hal-skeleton-short { width: 60%; }
+@keyframes hal-skeleton-pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

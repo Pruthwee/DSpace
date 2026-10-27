@@ -26,6 +26,7 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.core.Context;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
@@ -77,12 +78,14 @@ public class Groomer {
             if (!(ex instanceof MissingOptionException)) {
                 new HelpFormatter().printHelp(USAGE, options);
             }
+            GracefulShutdown.register();
             System.exit(1);
         }
 
         // Help the user
         if (null == command || command.hasOption('h') || command.hasOption('?')) {
             new HelpFormatter().printHelp(USAGE, options);
+            GracefulShutdown.register();
             System.exit(0);
         } else if (command.hasOption('a')) {
             // Scan for disused accounts
@@ -105,6 +108,7 @@ public class Groomer {
     private static void aging(CommandLine command) throws SQLException {
         if (!command.hasOption('b')) {
             System.err.println("A last login date is required.");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -113,6 +117,7 @@ public class Groomer {
             before = LocalDate.parse(command.getOptionValue('b'));
         } catch (DateTimeParseException ex) {
             System.err.println(ex.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
 

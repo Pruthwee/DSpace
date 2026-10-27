@@ -16,6 +16,7 @@ import java.util.UUID;
 import org.dspace.authorize.factory.AuthorizeServiceFactory;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.authorize.service.ResourcePolicyService;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
 import org.dspace.content.Collection;
@@ -95,6 +96,7 @@ public class PolicySet {
                           groupID, isReplace, false, filter);
 
         c.complete();
+        GracefulShutdown.register();
         System.exit(0);
     }
 

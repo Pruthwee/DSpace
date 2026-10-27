@@ -14,10 +14,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.CloudConfig;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.core.Context;
@@ -157,6 +161,12 @@ public class HarvestScheduler implements Runnable {
 
     protected void scheduleLoop() {
         long i = 0;
+        // bounded pool for the individual harvest runs (replaces one new Thread per harvest)
+        ExecutorService harvestExecutor = Executors.newFixedThreadPool(
+            Math.max(1, CloudConfig.getInt("DSPACE_HARVEST_THREADS", maxActiveThreads)));
+        GracefulShutdown.onShutdown(harvestExecutor::shutdown);
+        // On SIGTERM (ECS/EKS) ask the scheduler loop to stop cleanly instead of being killed mid-harvest
+        GracefulShutdown.onShutdown(() -> setInterrupt(HARVESTER_INTERRUPT_STOP));
         while (true) {
             try {
                 mainContext = new Context();
@@ -178,6 +188,7 @@ public class HarvestScheduler implements Runnable {
                         case HARVESTER_INTERRUPT_STOP:
                             interrupt = HARVESTER_INTERRUPT_NONE;
                             status = HARVESTER_STATUS_STOPPED;
+                            harvestExecutor.shutdown();
                             return;
                         default:
                             break;
@@ -209,8 +220,8 @@ public class HarvestScheduler implements Runnable {
                     synchronized (HarvestScheduler.class) {
                         activeThreads++;
                     }
-                    Thread activeThread = new Thread(harvestThreads.pop());
-                    activeThread.start();
+                    HarvestThread activeThread = harvestThreads.pop();
+                    harvestExecutor.execute(activeThread);
                     log.info("Thread started: " + activeThread.toString());
 
                     /* Wait while the number of threads running is greater than or equal to max */

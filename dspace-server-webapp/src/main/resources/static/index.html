@@ -12,6 +12,7 @@
 -->
 <!doctype html>
 <head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:">
     <meta charset="utf-8">
     <title>The HAL Browser (customized for DSpace)</title>
     <link rel="stylesheet" media="screen" href="webjars/bootstrap/dist/css/bootstrap.min.css" />
@@ -45,7 +46,16 @@
     </div>
 </nav>
 
-<div id="browser" class="container-fluid"></div>
+<div id="browser" class="container-fluid" aria-busy="true">
+    <!-- Loading skeleton: removed/replaced as soon as the HAL Browser renders into #browser -->
+    <div class="hal-skeleton" role="status" aria-live="polite">
+        <span class="sr-only">Loading&hellip;</span>
+        <div class="hal-skeleton-line hal-skeleton-title"></div>
+        <div class="hal-skeleton-line"></div>
+        <div class="hal-skeleton-line"></div>
+        <div class="hal-skeleton-line hal-skeleton-short"></div>
+    </div>
+</div>
 
 <script id="location-bar-template" type="text/template">
     <form>
@@ -324,11 +334,5 @@ Content-Type: application/json
 <script src="webjars/json-editor__json-editor/2.15.2/dist/jsoneditor.js"></script>
 <script src="js/vendor/CustomPostForm.js"></script>
 
-<script>
-    var browser = new HAL.Browser({
-        container: $('#browser'),
-        entryPoint: window.location.pathname + 'api'
-    });
-    Backbone.history.start();
-</script>
+<script src="js/hal/browser-init.js"></script>
 </body>

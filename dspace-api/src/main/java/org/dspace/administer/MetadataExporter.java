@@ -21,6 +21,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataSchema;
 import org.dspace.content.factory.ContentServiceFactory;
@@ -91,6 +92,7 @@ public class MetadataExporter {
             file = line.getOptionValue('f');
         } else {
             usage();
+            GracefulShutdown.register();
             System.exit(0);
         }
 

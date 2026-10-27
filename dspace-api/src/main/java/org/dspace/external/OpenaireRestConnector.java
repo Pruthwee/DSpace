@@ -35,6 +35,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.client.DSpaceHttpClientFactory;
 import org.dspace.app.util.Util;
+import org.dspace.cloud.CloudConfig;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -55,7 +56,7 @@ public class OpenaireRestConnector {
      * Openaire API Url
      *  and can be configured with: openaire.api.url
      */
-    private String url = "https://api.openaire.eu";
+    private String url = CloudConfig.get("DSPACE_OPENAIRE_API_URL", "https://api.openaire.eu");
 
     /**
      * Boolean with token usage definition true if we want to use a token

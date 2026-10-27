@@ -43,6 +43,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.util.XMLUtils;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
@@ -195,12 +196,14 @@ public class StructBuilder {
         } catch (ParseException ex) {
             System.err.println(ex.getMessage());
             usage(options);
+            GracefulShutdown.register();
             System.exit(1);
         }
 
         // If the user asked for help, give it and exit.
         if (line.hasOption('h') || line.hasOption('?')) {
             giveHelp(options);
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -208,6 +211,7 @@ public class StructBuilder {
         // Must be import or export.
         if (!(line.hasOption('f') || line.hasOption('x'))) {
             giveHelp(options);
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -234,6 +238,7 @@ public class StructBuilder {
             context.setCurrentUser(ePersonService.findByEmail(context, eperson));
         } catch (SQLException ex) {
             System.err.format("That user could not be found:  %s%n", ex.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -247,6 +252,7 @@ public class StructBuilder {
                 } else {
                     System.out.println("The handle provided for the -p option does not resolve to a community. " +
                         parentID + " is an object of type: " + Constants.typeText[dso.getType()]);
+                    GracefulShutdown.register();
                     System.exit(0);
                 }
             } else {
@@ -256,6 +262,7 @@ public class StructBuilder {
                     parent = community;
                 } else {
                     System.out.println("The value provided for -p is not a valid community ID or handle: " + parentID);
+                    GracefulShutdown.register();
                     System.exit(0);
                 }
             }
@@ -269,6 +276,7 @@ public class StructBuilder {
             String input = line.getOptionValue('f');
             if (null == input) {
                 usage(options);
+                GracefulShutdown.register();
                 System.exit(1);
             }
 
@@ -288,6 +296,7 @@ public class StructBuilder {
             // save changes from import
             context.complete();
         }
+        GracefulShutdown.register();
         System.exit(0);
     }
 
@@ -316,9 +325,11 @@ public class StructBuilder {
             document = loadXML(input);
         } catch (IOException ex) {
             System.err.format("The input document could not be read:  %s%n", ex.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         } catch (SAXException ex) {
             System.err.format("The input document could not be parsed:  %s%n", ex.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -328,6 +339,7 @@ public class StructBuilder {
             validate(document);
         } catch (XPathExpressionException ex) {
             System.err.format("The input document is invalid:  %s%n", ex.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -345,6 +357,7 @@ public class StructBuilder {
                         System.err.printf("The input document contains handle %s,"
                                 + " which is in use already. Aborting...%n",
                                 identifier);
+                        GracefulShutdown.register();
                         System.exit(1);
                     }
                 }
@@ -377,9 +390,11 @@ public class StructBuilder {
             elements = handleCommunities(context, first, parent, keepHandles);
         } catch (TransformerException ex) {
             System.err.format("Input content not understood:  %s%n", ex.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         } catch (AuthorizeException ex) {
             System.err.format("Not authorized:  %s%n", ex.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -397,6 +412,7 @@ public class StructBuilder {
         } catch (IOException e) {
             System.out.printf("Unable to write to output file %s:  %s%n",
                     output, e.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
     }
@@ -487,6 +503,7 @@ public class StructBuilder {
         } catch (SQLException ex) {
             System.out.printf("Unable to get the list of top-level communities:  %s%n",
                     ex.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -502,6 +519,7 @@ public class StructBuilder {
         } catch (IOException e) {
             System.out.printf("Unable to write to output file %s:  %s%n",
                     output, e.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
     }
@@ -553,6 +571,7 @@ public class StructBuilder {
         if (first.getLength() == 0) {
             err.append("-There are no top level communities in the source document.");
             System.out.println(err.toString());
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -564,6 +583,7 @@ public class StructBuilder {
 
         if (trip) {
             System.out.println(err.toString());
+            GracefulShutdown.register();
             System.exit(1);
         }
     }

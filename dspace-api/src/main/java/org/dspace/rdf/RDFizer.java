@@ -28,6 +28,7 @@ import org.apache.commons.lang3.Strings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.logging.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
@@ -482,6 +483,7 @@ public class RDFizer {
             System.err.println();
             System.err.println(ex.getMessage());
             log.fatal(ex);
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -502,6 +504,7 @@ public class RDFizer {
                 System.err.print("s");
             }
             System.err.println(": " + argumentsLine + ".");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -524,6 +527,7 @@ public class RDFizer {
             usage(options);
             System.err.println("\n\nYou cannot use the options --delete <handle> "
                                    + "and --delete-all together.");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -532,6 +536,7 @@ public class RDFizer {
             usage(options);
             System.err.println("\n\nYou cannot use the option --convert-all "
                                    + "together with --delete or --delete-all.");
+            GracefulShutdown.register();
             System.exit(1);
         }
         if (line.hasOption("identifiers")
@@ -539,6 +544,7 @@ public class RDFizer {
             usage(options);
             System.err.println("\n\nYou cannot use the option --identifiers <handle> "
                                    + "together with --delete or --delete-all.");
+            GracefulShutdown.register();
             System.exit(1);
         }
         if (line.hasOption("stdout")
@@ -546,6 +552,7 @@ public class RDFizer {
             usage(options);
             System.err.println("\n\nYou cannot use the option --stdout together "
                                    + "with --delete or --deleta-all.");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -553,6 +560,7 @@ public class RDFizer {
         // process help first to prevent further evaluation of given options.
         if (line.hasOption('h')) {
             usage(options);
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -591,14 +599,17 @@ public class RDFizer {
                                            + "occurred. Canceled pending actions.");
                     System.err.println(ex.getMessage());
                     ex.printStackTrace(System.err);
+                    GracefulShutdown.register();
                     System.exit(1);
                 }
             }
+            GracefulShutdown.register();
             System.exit(0);
         }
 
         if (line.hasOption("delete-all")) {
             this.deleteAll();
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -626,10 +637,12 @@ public class RDFizer {
                                            + "occurred. Canceled pending actions.");
                     System.err.println(ex.getMessage());
                     ex.printStackTrace(System.err);
+                    GracefulShutdown.register();
                     System.exit(1);
                 }
             }
             report("Conversion ended.");
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -642,12 +655,15 @@ public class RDFizer {
                                        + "occurred. Canceled pending actions.");
                 System.err.println(ex.getMessage());
                 ex.printStackTrace(System.err);
+                GracefulShutdown.register();
                 System.exit(1);
             }
+            GracefulShutdown.register();
             System.exit(0);
         }
 
         usage(options);
+        GracefulShutdown.register();
         System.exit(0);
     }
 
@@ -661,6 +677,7 @@ public class RDFizer {
                                    + "occurred. Canceled pending actions.");
             System.err.println(ex.getMessage());
             ex.printStackTrace(System.err);
+            GracefulShutdown.register();
             System.exit(1);
         } catch (IllegalStateException ex) {
             log.error(ex);

@@ -9,6 +9,7 @@ package org.dspace.app.suggestion.runnable;
 
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.scripts.configuration.ScriptConfiguration;
 import org.dspace.utils.DSpace;
 
@@ -51,6 +52,7 @@ public class PublicationLoaderRunnableCli extends PublicationLoaderRunnable {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("Imports suggestions from external providers for publication claim",
                                 getScriptConfiguration().getOptions());
+            GracefulShutdown.register();
             System.exit(0);
         }
     }

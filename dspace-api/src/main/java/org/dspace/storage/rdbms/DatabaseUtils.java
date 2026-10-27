@@ -18,6 +18,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +30,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.core.Context;
 import org.dspace.discovery.IndexingService;
 import org.dspace.discovery.SearchServiceException;
@@ -97,6 +99,7 @@ public class DatabaseUtils {
             System.out.println("Valid actions: 'test', 'info', 'migrate', 'repair', 'skip', 'validate', " +
                     "'update-sequences' or 'clean'");
             System.out.println("\nOr, type 'database help' for more information.\n");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -128,6 +131,7 @@ public class DatabaseUtils {
                         System.err.println(" - " + sqle);
                         System.err.println("\nPlease see the DSpace documentation for assistance.\n");
                         sqle.printStackTrace(System.err);
+                        GracefulShutdown.register();
                         System.exit(1);
                     }
                     break;
@@ -163,6 +167,7 @@ public class DatabaseUtils {
                     } catch (SQLException e) {
                         System.err.println("Info exception:");
                         e.printStackTrace(System.err);
+                        GracefulShutdown.register();
                         System.exit(1);
                     }
                     break;
@@ -224,10 +229,12 @@ public class DatabaseUtils {
                             updateDatabase(dataSource, connection);
                         }
                         System.out.println("Done.");
+                        GracefulShutdown.register();
                         System.exit(0);
                     } catch (SQLException e) {
                         System.err.println("Migration exception:");
                         e.printStackTrace(System.err);
+                        GracefulShutdown.register();
                         System.exit(1);
                     }
                     break;
@@ -240,10 +247,12 @@ public class DatabaseUtils {
                                 "FlywayDB... (Check dspace logs for details)");
                         flyway.repair();
                         System.out.println("Done.");
+                        GracefulShutdown.register();
                         System.exit(0);
                     } catch (SQLException | FlywayException e) {
                         System.err.println("Repair exception:");
                         e.printStackTrace(System.err);
+                        GracefulShutdown.register();
                         System.exit(1);
                     }
                     break;
@@ -281,6 +290,7 @@ public class DatabaseUtils {
                     } catch (IOException e) {
                         System.err.println("Exception when attempting to skip migration:");
                         e.printStackTrace(System.err);
+                        GracefulShutdown.register();
                         System.exit(1);
                     }
                     break;
@@ -294,10 +304,12 @@ public class DatabaseUtils {
                         flyway.validate();
                         System.out.println("No errors thrown. Validation succeeded. (Check dspace logs for more " +
                                                "details)");
+                        GracefulShutdown.register();
                         System.exit(0);
                     } catch (SQLException | FlywayException e) {
                         System.err.println("Validation exception:");
                         e.printStackTrace(System.err);
+                        GracefulShutdown.register();
                         System.exit(1);
                     }
                     break;
@@ -311,6 +323,7 @@ public class DatabaseUtils {
                         System.out.println(
                             "\nIn order to run a 'clean' you first must enable it in your DSpace config by " +
                                 "specifying 'db.cleanDisabled=false'.\n");
+                        GracefulShutdown.register();
                         System.exit(1);
                     }
 
@@ -331,6 +344,7 @@ public class DatabaseUtils {
                             System.out.println("Scrubbing database clean... (Check dspace logs for details)");
                             cleanDatabase(flyway, dataSource);
                             System.out.println("Done.");
+                            GracefulShutdown.register();
                             System.exit(0);
                         } else {
                             System.out.println("No action performed.");
@@ -338,6 +352,7 @@ public class DatabaseUtils {
                     } catch (SQLException e) {
                         System.err.println("Clean exception:");
                         e.printStackTrace(System.err);
+                        GracefulShutdown.register();
                         System.exit(1);
                     }
                     break;
@@ -352,7 +367,9 @@ public class DatabaseUtils {
                             String s = IOUtils.toString(sqlstream, StandardCharsets.UTF_8);
                             if (!s.isEmpty()) {
                                 System.out.println("Running " + sqlfile);
-                                connection.createStatement().execute(s);
+                                try (Statement statement = connection.createStatement()) {
+                                    statement.execute(s);
+                                }
                                 System.out.println("update-sequences complete");
                             } else {
                                 System.err.println(sqlfile + " contains no SQL to execute");
@@ -391,6 +408,7 @@ public class DatabaseUtils {
                         "(WARNING there is no going back!). " +
                         "Requires 'db.cleanDisabled=false' setting in config.");
                     System.out.println("");
+                    GracefulShutdown.register();
                     System.exit(0);
                     break;
             }
@@ -398,6 +416,7 @@ public class DatabaseUtils {
         } catch (Exception e) {
             System.err.println("Caught exception:");
             e.printStackTrace(System.err);
+            GracefulShutdown.register();
             System.exit(1);
         }
     }

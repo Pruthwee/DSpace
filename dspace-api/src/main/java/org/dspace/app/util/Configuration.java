@@ -14,6 +14,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 
@@ -46,6 +47,7 @@ public class Configuration {
      */
     public static void main(String[] argv) {
         int exitCode = runConfiguration(argv);
+        GracefulShutdown.register();
         System.exit(exitCode);
     }
 

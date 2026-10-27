@@ -9,8 +9,10 @@ package org.dspace.app.itemimport;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.List;
@@ -33,6 +35,8 @@ import org.dspace.storage.secure.SecureFileAccess;
  * @author Francesco Pio Scognamiglio (francescopio.scognamiglio at 4science.com)
  */
 public class ItemImportCLI extends ItemImport {
+    private static final int CONNECT_TIMEOUT_MS = 5000;
+    private static final int READ_TIMEOUT_MS = 30000;
 
     @Override
     protected void validate(Context context) {
@@ -131,8 +135,8 @@ public class ItemImportCLI extends ItemImport {
                 sourcedir = itemImportService.unzip(myZipFile, workDir.getAbsolutePath());
             } else {
                 // manage zip via remote url
-                Optional<InputStream> optionalFileStream = Optional.ofNullable(new URL(zipfilename).openStream());
-                Optional<InputStream> validationFileStream = Optional.ofNullable(new URL(zipfilename).openStream());
+                Optional<InputStream> optionalFileStream = Optional.ofNullable(openRemoteStream(zipfilename));
+                Optional<InputStream> validationFileStream = Optional.ofNullable(openRemoteStream(zipfilename));
                 try {
                     if (optionalFileStream.isPresent()) {
                         // validate zip file via url
@@ -166,6 +170,13 @@ public class ItemImportCLI extends ItemImport {
                 }
             }
         }
+    }
+
+    private static InputStream openRemoteStream(String url) throws IOException {
+        URLConnection connection = new URL(url).openConnection();
+        connection.setConnectTimeout(CONNECT_TIMEOUT_MS);
+        connection.setReadTimeout(READ_TIMEOUT_MS);
+        return connection.getInputStream();
     }
 
     @Override

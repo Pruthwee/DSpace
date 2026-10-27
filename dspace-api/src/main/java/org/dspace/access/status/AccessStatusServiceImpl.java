@@ -9,7 +9,7 @@ package org.dspace.access.status;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
@@ -67,7 +67,7 @@ public class AccessStatusServiceImpl implements AccessStatusService {
 
             forever_date = LocalDate.of(year, month, day)
                     .atStartOfDay()
-                    .atZone(ZoneId.systemDefault())
+                    .atZone(ZoneOffset.UTC)
                     .toLocalDate();
 
             itemCalculationType = getAccessStatusCalculationType("access.status.for-user.item");

@@ -32,6 +32,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.statistics.LogAnalyser;
 import org.dspace.app.statistics.LogLine;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Context;
 import org.dspace.handle.factory.HandleServiceFactory;
@@ -281,6 +282,7 @@ public class ClassicDSpaceLogConverter {
         HelpFormatter myhelp = new HelpFormatter();
         myhelp.printHelp("ClassicDSpaceLogConverter\n", options);
         System.err.println("\n\tClassicDSpaceLogConverter -i infilename -o outfilename -v (for verbose output)");
+        GracefulShutdown.register();
         System.exit(exitCode);
     }
 
@@ -313,6 +315,7 @@ public class ClassicDSpaceLogConverter {
             line = parser.parse(options, args);
         } catch (ParseException pe) {
             System.err.println("Error parsing command line arguments: " + pe.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
             return;
         }
@@ -338,6 +341,7 @@ public class ClassicDSpaceLogConverter {
             LogAnalyser.readConfig();
         } catch (IOException ioe) {
             System.err.println("Unable to read config file: " + LogAnalyser.getConfigFile());
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -355,6 +359,7 @@ public class ClassicDSpaceLogConverter {
             String[] children = dir.list(filter);
             if (null == children) {
                 System.err.println(sample + " could not be used to find a directory of log files.");
+                GracefulShutdown.register();
                 System.exit(1);
             } else if (children.length <= 0) {
                 System.err.println(sample + " matched no files.");

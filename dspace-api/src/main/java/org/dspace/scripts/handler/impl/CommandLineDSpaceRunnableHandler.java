@@ -19,6 +19,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.core.Context;
 import org.dspace.scripts.handler.DSpaceRunnableHandler;
 
@@ -61,6 +62,7 @@ public class CommandLineDSpaceRunnableHandler implements DSpaceRunnableHandler {
             log.error(e.getMessage(), e);
         }
 
+        GracefulShutdown.register();
         System.exit(1);
     }
 

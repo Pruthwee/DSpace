@@ -30,6 +30,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataSchemaEnum;
 import org.dspace.content.MetadataValue;
@@ -247,6 +248,7 @@ public class ReportGenerator {
 
         if (cmd.hasOption("help")) {
             usage();
+            GracefulShutdown.register();
             System.exit(0);
         }
 

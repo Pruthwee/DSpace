@@ -17,6 +17,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
 import org.apache.bcel.generic.ClassGen;
+import org.dspace.cloud.GracefulShutdown;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -66,6 +67,7 @@ public class PathsClassLoaderTest {
             classFile.deleteOnExit();
         } catch (IOException e) {
             System.err.println(e.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -83,6 +85,7 @@ public class PathsClassLoaderTest {
             cg.getJavaClass().dump(classFile);
         } catch (IOException e) {
             System.err.println(e.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -106,6 +109,7 @@ public class PathsClassLoaderTest {
             jar.close();
         } catch (IOException e) {
             System.err.println(e.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
     }

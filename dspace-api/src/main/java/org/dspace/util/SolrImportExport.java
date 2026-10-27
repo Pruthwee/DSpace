@@ -44,6 +44,7 @@ import org.apache.solr.client.solrj.response.RangeFacet;
 import org.apache.solr.common.luke.FieldFlag;
 import org.apache.solr.common.params.CoreAdminParams;
 import org.apache.solr.common.params.FacetParams;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 
@@ -706,6 +707,7 @@ public class SolrImportExport {
         System.out.println("\tsolr-export-statistics  [-a export]  [-i statistics]");
         System.out.println("\tsolr-import-statistics  [-a import]  [-i statistics]");
         System.out.println("\tsolr-reindex-statistics [-a reindex] [-i statistics]");
+        GracefulShutdown.register();
         System.exit(exitCode);
     }
 }

@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -61,6 +62,9 @@ import org.dspace.utils.DSpace;
  * allow the registration of files (bitstreams) into DSpace.
  */
 public class ItemImport extends DSpaceRunnable<ItemImportScriptConfiguration> {
+
+    private static final int CONNECT_TIMEOUT_MS = 5000;
+    private static final int READ_TIMEOUT_MS = 30000;
 
     public static String TEMP_DIR = "importSAF";
     public static String MAPFILE_FILENAME = "mapfile";
@@ -329,6 +333,19 @@ public class ItemImport extends DSpaceRunnable<ItemImportScriptConfiguration> {
     }
 
     /**
+     * Open a stream on a remote URL, with connect and read timeouts.
+     * @param url the remote URL
+     * @return the input stream of the connection
+     * @throws IOException if the connection cannot be opened
+     */
+    private static InputStream openRemoteStream(String url) throws IOException {
+        URLConnection connection = new URL(url).openConnection();
+        connection.setConnectTimeout(CONNECT_TIMEOUT_MS);
+        connection.setReadTimeout(READ_TIMEOUT_MS);
+        return connection.getInputStream();
+    }
+
+    /**
      * Read the ZIP archive in SAF format
      * @param context
      * @param itemImportService
@@ -344,8 +361,8 @@ public class ItemImport extends DSpaceRunnable<ItemImportScriptConfiguration> {
                 validationFileStream = handler.getFileStream(context, zipfilename);
             } else {
                 // manage zip via remote url
-                optionalFileStream = Optional.ofNullable(new URL(zipfilename).openStream());
-                validationFileStream = Optional.ofNullable(new URL(zipfilename).openStream());
+                optionalFileStream = Optional.ofNullable(openRemoteStream(zipfilename));
+                validationFileStream = Optional.ofNullable(openRemoteStream(zipfilename));
             }
 
             if (validationFileStream.isPresent()) {

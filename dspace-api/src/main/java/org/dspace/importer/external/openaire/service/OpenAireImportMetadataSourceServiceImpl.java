@@ -21,6 +21,7 @@ import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Response;
 import org.dspace.app.util.XMLUtils;
+import org.dspace.cloud.CloudConfig;
 import org.dspace.content.Item;
 import org.dspace.importer.external.datamodel.ImportRecord;
 import org.dspace.importer.external.datamodel.Query;
@@ -188,7 +189,7 @@ public class OpenAireImportMetadataSourceServiceImpl extends AbstractImportMetad
         Client client = ClientBuilder.newClient();
         if (baseAddress == null) {
             baseAddress = configurationService.getProperty("openaire.search.url",
-                                                           "https://api.openaire.eu/search/publications");
+                CloudConfig.get("DSPACE_OPENAIRE_SEARCH_URL", "https://api.openaire.eu/search/publications"));
         }
         if (queryParam == null) {
             queryParam = "title";

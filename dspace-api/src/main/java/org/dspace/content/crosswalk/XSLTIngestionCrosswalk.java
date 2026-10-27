@@ -20,6 +20,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.XMLUtils;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
@@ -274,6 +275,7 @@ public class XSLTIngestionCrosswalk
     public static void main(String[] argv) throws Exception {
         if (argv.length < 2) {
             System.err.println("Usage:  java XSLTIngestionCrosswalk [-l] <crosswalk-name> <input-file>");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -289,6 +291,7 @@ public class XSLTIngestionCrosswalk
                                                                               IngestionCrosswalk.class, argv[i]);
         if (xwalk == null) {
             System.err.println("Error, cannot find an IngestionCrosswalk plugin for: \"" + argv[i] + "\"");
+            GracefulShutdown.register();
             System.exit(1);
         }
 

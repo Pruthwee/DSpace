@@ -35,6 +35,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Options;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.core.Context;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
@@ -80,6 +81,7 @@ public class LoadLastLogin {
             if (!(ex instanceof MissingOptionException)) {
                 new HelpFormatter().printHelp(USAGE, options);
             }
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -87,6 +89,7 @@ public class LoadLastLogin {
             System.out.println("Load users' last_active dates into the database from DSpace logs.");
             System.out.println();
             new HelpFormatter().printHelp(USAGE, options);
+            GracefulShutdown.register();
             System.exit(0);
         }
 

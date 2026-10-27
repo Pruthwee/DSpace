@@ -16,6 +16,7 @@ import org.apache.lucene.index.SegmentInfos;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.dspace.cloud.GracefulShutdown;
 
 /**
  * This utility class simply determines the version of a given Solr/Lucene index,
@@ -50,12 +51,14 @@ public class IndexVersion {
             System.out.println("        1 if index dir version > version-to-compare");
             System.out
                 .println("\nOptionally, passing just '-v' will return the version of Solr/Lucene in use by DSpace.");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
         // If "-v" passed on commandline, just return the current version of Solr/Lucene
         if (argv[0].equalsIgnoreCase("-v")) {
             System.out.println(getLatestVersion());
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -73,6 +76,7 @@ public class IndexVersion {
             System.out.println(argv[0]);
             System.out.println("Please pass in the full path of the Solr/Lucene Index directory to analyze");
             System.out.println("(e.g. [dspace.dir]/solr/statistics/data/index/)\n");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -94,6 +98,7 @@ public class IndexVersion {
             // Otherwise, we'll just print the version of this index directory
             System.out.println(indexVersion);
         }
+        GracefulShutdown.register();
         System.exit(0);
     }
 

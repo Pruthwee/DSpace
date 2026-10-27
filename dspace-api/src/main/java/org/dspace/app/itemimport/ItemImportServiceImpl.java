@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -46,6 +47,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.xml.parsers.DocumentBuilder;
@@ -74,6 +77,8 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.authorize.service.ResourcePolicyService;
+import org.dspace.cloud.CloudConfig;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Bitstream;
 import org.dspace.content.BitstreamFormat;
 import org.dspace.content.Bundle;
@@ -140,7 +145,12 @@ import org.xml.sax.SAXException;
  * allow the registration of files (bitstreams) into DSpace.
  */
 public class ItemImportServiceImpl implements ItemImportService, InitializingBean {
+    private static final int CONNECT_TIMEOUT_MS = 5000;
+    private static final int READ_TIMEOUT_MS = 30000;
+
     private final Logger log = LogManager.getLogger();
+
+    private static ExecutorService uiImportExecutor;
 
     private DSpaceRunnableHandler handler;
 
@@ -2129,7 +2139,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
         final String theInputType = inputType;
         final String theResumeDir = resumeDir;
 
-        Thread go = new Thread() {
+        Runnable go = new Runnable() {
             @Override
             public void run() {
                 Context context = new Context();
@@ -2207,7 +2217,10 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
                         byte[] b = new byte[2048];
                         int length;
 
-                        InputStream is = new URL(theFilePath).openStream();
+                        URLConnection connection = new URL(theFilePath).openConnection();
+                        connection.setConnectTimeout(CONNECT_TIMEOUT_MS);
+                        connection.setReadTimeout(READ_TIMEOUT_MS);
+                        InputStream is = connection.getInputStream();
                         while ((length = is.read(b)) != -1) {
                             os.write(b, 0, length);
                         }
@@ -2282,9 +2295,16 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
 
         };
 
-        go.isDaemon();
-        go.start();
+        getUiImportExecutor().execute(go);
 
+    }
+
+    private static synchronized ExecutorService getUiImportExecutor() {
+        if (uiImportExecutor == null) {
+            uiImportExecutor = Executors.newFixedThreadPool(CloudConfig.getInt("DSPACE_ITEMIMPORT_UI_THREADS", 4));
+            GracefulShutdown.onShutdown(uiImportExecutor::shutdown);
+        }
+        return uiImportExecutor;
     }
 
     @Override

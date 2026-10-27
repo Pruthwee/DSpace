@@ -17,6 +17,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.lang3.StringUtils;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
 import org.dspace.eperson.EPerson;
@@ -84,6 +85,7 @@ public final class CreateAdministrator {
         } catch (Exception e) {
 
             System.out.println(e.getMessage() + "\nTry \"dspace create-administrator -h\" to print help information.");
+            GracefulShutdown.register();
             System.exit(1);
 
         }

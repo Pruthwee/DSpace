@@ -26,6 +26,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
+import org.dspace.cloud.GracefulShutdown;
 
 /**
  * Repair various problems in a statistics core export CSV.
@@ -55,11 +56,13 @@ public class RepairDump {
             command = new DefaultParser().parse(options, args);
         } catch (ParseException ex) {
             System.err.println(ex.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
 
         if (command.hasOption("h")) {
             giveHelp(options);
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -85,6 +88,7 @@ public class RepairDump {
             }
             if (uidIndex < 0) {
                 System.err.println("Error:  input contains no 'uid' column.");
+                GracefulShutdown.register();
                 System.exit(1);
             }
 

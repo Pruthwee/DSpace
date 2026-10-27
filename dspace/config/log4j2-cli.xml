@@ -96,6 +96,15 @@
         <!-- Block passwords from being exposed in Axis logs. (DEBUG exposes passwords in Basic Auth) -->
         <Logger name='org.apache.axis.handlers.http.HTTPAuthHandler'
                 level='INFO'/>
+        <!-- AWS SDK: never log request/response wire data, headers, secrets or parameter values -->
+        <Logger name='software.amazon.awssdk'
+                level='WARN'/>
+        <Logger name='software.amazon.awssdk.request'
+                level='WARN'/>
+        <Logger name='org.apache.http.wire'
+                level='WARN'/>
+        <Logger name='org.apache.http.headers'
+                level='WARN'/>
         <!-- Anything not a part of DSpace -->
         <Root level='${loglevel.other}'>
             <AppenderRef ref='A1'/>

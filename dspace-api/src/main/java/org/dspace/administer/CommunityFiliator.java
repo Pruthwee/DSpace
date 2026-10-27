@@ -19,6 +19,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Community;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CommunityService;
@@ -78,6 +79,7 @@ public class CommunityFiliator {
             System.out
                 .println("remove a relationship: CommunityFiliator -r -p parentID -c childID");
 
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -102,17 +104,20 @@ public class CommunityFiliator {
         if (command == null) {
             System.out
                 .println("Error - must run with either set or remove (run with -h flag for details)");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
         if ("set".equals(command) || "remove".equals(command)) {
             if (parentID == null) {
                 System.out.println("Error - a parentID must be specified (run with -h flag for details)");
+                GracefulShutdown.register();
                 System.exit(1);
             }
 
             if (childID == null) {
                 System.out.println("Error - a childID must be specified (run with -h flag for details)");
+                GracefulShutdown.register();
                 System.exit(1);
             }
         }
@@ -131,12 +136,14 @@ public class CommunityFiliator {
             if (parent == null) {
                 System.out.println("Error, parent community cannot be found: "
                                        + parentID);
+                GracefulShutdown.register();
                 System.exit(1);
             }
 
             if (child == null) {
                 System.out.println("Error, child community cannot be found: "
                                        + childID);
+                GracefulShutdown.register();
                 System.exit(1);
             }
 
@@ -174,6 +181,7 @@ public class CommunityFiliator {
         if (childDad != null) {
             System.out.println("Error, child community: " + child.getID()
                                    + " already a child of: " + childDad.getID());
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -182,6 +190,7 @@ public class CommunityFiliator {
         List<Community> parentDads = parent.getParentCommunities();
         if (parentDads.contains(child)) {
             System.out.println("Error, circular parentage - child is parent of parent");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -208,6 +217,7 @@ public class CommunityFiliator {
         List<Community> parentKids = parent.getSubcommunities();
         if (!parentKids.contains(child)) {
             System.out.println("Error, child community not a child of parent community");
+            GracefulShutdown.register();
             System.exit(1);
         }
 

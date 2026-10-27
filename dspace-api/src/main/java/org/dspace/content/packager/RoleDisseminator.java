@@ -17,12 +17,18 @@ import java.io.PipedOutputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.logging.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.CloudConfig;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
@@ -86,6 +92,8 @@ public class RoleDisseminator implements PackageDisseminator {
     public static final String GROUP_TYPE_WORKFLOW_STEP_2 = "WORKFLOW_STEP_2";
     public static final String GROUP_TYPE_WORKFLOW_STEP_3 = "WORKFLOW_STEP_3";
 
+    private static ExecutorService serializerExecutor;
+
     protected final EPersonService ePersonService = EPersonServiceFactory.getInstance().getEPersonService();
     protected final GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
 
@@ -135,9 +143,26 @@ public class RoleDisseminator implements PackageDisseminator {
         // Create a new Thread to push serialized objects into the pipe
         Serializer serializer = new Serializer(context, object, outStream,
                                                emitPasswords);
-        new Thread(serializer).start();
+        getSerializerExecutor().execute(serializer);
 
         return inStream;
+    }
+
+    /**
+     * Lazily create the bounded executor which runs the serializers.
+     *
+     * @return the executor for serializer tasks.
+     */
+    private static synchronized ExecutorService getSerializerExecutor() {
+        if (serializerExecutor == null) {
+            int threads = Math.max(1, CloudConfig.getInt("DSPACE_ROLE_SERIALIZER_THREADS", 16));
+            ThreadPoolExecutor executor = new ThreadPoolExecutor(threads, threads, 60L, TimeUnit.SECONDS,
+                                                                 new LinkedBlockingQueue<>());
+            executor.allowCoreThreadTimeOut(true);
+            GracefulShutdown.onShutdown(executor::shutdown);
+            serializerExecutor = executor;
+        }
+        return serializerExecutor;
     }
 
     /**

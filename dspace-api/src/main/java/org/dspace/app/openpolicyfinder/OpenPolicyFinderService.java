@@ -29,6 +29,7 @@ import org.dspace.app.client.DSpaceHttpClientFactory;
 import org.dspace.app.openpolicyfinder.v2.OpenPolicyFinderPublisherResponse;
 import org.dspace.app.openpolicyfinder.v2.OpenPolicyFinderResponse;
 import org.dspace.app.openpolicyfinder.v2.OpenPolicyFinderUtils;
+import org.dspace.cloud.CloudConfig;
 import org.dspace.services.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -73,7 +74,8 @@ public class OpenPolicyFinderService {
             log.warn("Configuration property 'sherpa.romeo.url' is deprecated. "
                 + "Please use 'openpolicyfinder.url' instead.");
         } else {
-            endpoint = "https://api.openpolicyfinder.jisc.ac.uk/retrieve";
+            endpoint = CloudConfig.get("DSPACE_OPENPOLICYFINDER_URL",
+                "https://api.openpolicyfinder.jisc.ac.uk/retrieve");
         }
 
         String newApiKey = configurationService.getProperty("openpolicyfinder.apikey");

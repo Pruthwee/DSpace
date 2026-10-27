@@ -20,6 +20,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.core.Context;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
@@ -92,12 +93,14 @@ public class CreateStatReport {
             startYear = Integer.parseInt(config.getProperty("start.year", "2005").trim());
         } catch (NumberFormatException nfe) {
             System.err.println("start.year is incorrectly set in dstat.cfg. Must be a number (e.g. 2005).");
+            GracefulShutdown.register();
             System.exit(0);
         }
         try {
             startMonth = Integer.parseInt(config.getProperty("start.month", "1").trim());
         } catch (NumberFormatException nfe) {
             System.err.println("start.month is incorrectly set in dstat.cfg. Must be a number between 1 and 12.");
+            GracefulShutdown.register();
             System.exit(0);
         }
         reportStartDate = LocalDate.of(startYear, startMonth, 1);
@@ -125,6 +128,7 @@ public class CreateStatReport {
 
         if (statAction == null) {
             usage();
+            GracefulShutdown.register();
             System.exit(0);
         }
 

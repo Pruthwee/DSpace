@@ -78,21 +78,15 @@ public class NewsServiceImpl implements NewsService {
 
         StringBuilder text = new StringBuilder();
 
-        try {
-            // retrieve existing news from file
-            FileInputStream fir = new FileInputStream(fileName);
-            InputStreamReader ir = new InputStreamReader(fir, "UTF-8");
-            BufferedReader br = new BufferedReader(ir);
-
+        // retrieve existing news from file
+        try (FileInputStream fir = new FileInputStream(fileName);
+             InputStreamReader ir = new InputStreamReader(fir, "UTF-8");
+             BufferedReader br = new BufferedReader(ir)) {
             String lineIn;
 
             while ((lineIn = br.readLine()) != null) {
                 text.append(lineIn);
             }
-
-            br.close();
-            ir.close();
-            fir.close();
         } catch (IOException e) {
             log.warn("news_read: {}", e::getLocalizedMessage);
         }

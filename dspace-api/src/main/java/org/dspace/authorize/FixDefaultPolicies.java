@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.dspace.authorize.factory.AuthorizeServiceFactory;
 import org.dspace.authorize.service.ResourcePolicyService;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
@@ -100,6 +101,7 @@ public class FixDefaultPolicies {
         }
 
         c.complete();
+        GracefulShutdown.register();
         System.exit(0);
     }
 

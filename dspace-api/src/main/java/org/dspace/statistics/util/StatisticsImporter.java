@@ -40,6 +40,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.common.SolrInputDocument;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
@@ -175,6 +176,7 @@ public class StatisticsImporter {
             } catch (SQLException e) {
                 System.err.println("Error retrieving items from DSpace database:");
                 e.printStackTrace();
+                GracefulShutdown.register();
                 System.exit(1);
             }
         }
@@ -390,10 +392,12 @@ public class StatisticsImporter {
             } catch (SolrServerException sse) {
                 System.err.println("Error committing statistics to solr server!");
                 sse.printStackTrace();
+                GracefulShutdown.register();
                 System.exit(1);
             } catch (IOException ioe) {
                 System.err.println("Error writing to solr server!");
                 ioe.printStackTrace();
+                GracefulShutdown.register();
                 System.exit(1);
             }
         }
@@ -410,6 +414,7 @@ public class StatisticsImporter {
         // print the help message
         HelpFormatter myhelp = new HelpFormatter();
         myhelp.printHelp("StatisticsImporter\n", options);
+        GracefulShutdown.register();
         System.exit(exitCode);
     }
 

@@ -18,6 +18,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.logging.log4j.Logger;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.factory.ContentServiceFactory;
@@ -68,11 +69,13 @@ public class TestLogicRunner {
             line = parser.parse(options, argv);
         } catch (ParseException ex) {
             System.out.println(ex.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
 
         if (line.hasOption("help")) {
             helpformater.printHelp("\nTest the DSpace logical item filters\n", options);
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -88,6 +91,7 @@ public class TestLogicRunner {
                 System.out.println(filter.getClass().toString());
             }
             System.out.println("See item-filters.xml spring config for filter names");
+            GracefulShutdown.register();
             System.exit(0);
         }
 
@@ -98,6 +102,7 @@ public class TestLogicRunner {
             filter = manager.getServiceByName(filterName, Filter.class);
             if (filter == null) {
                 System.out.println("Error loading filter: " + filterName);
+                GracefulShutdown.register();
                 System.exit(1);
             }
 

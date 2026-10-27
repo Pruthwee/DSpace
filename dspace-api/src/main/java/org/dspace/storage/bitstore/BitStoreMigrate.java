@@ -15,6 +15,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.core.Context;
 import org.dspace.storage.bitstore.factory.StorageServiceFactory;
 import org.dspace.storage.bitstore.service.BitstreamStorageService;
@@ -68,12 +69,14 @@ public class BitStoreMigrate {
                 line = parser.parse(options, argv);
             } catch (ParseException e) {
                 log.fatal(e);
+                GracefulShutdown.register();
                 System.exit(1);
             }
 
             // user asks for help
             if (line.hasOption('h')) {
                 printHelp(options);
+                GracefulShutdown.register();
                 System.exit(0);
             }
 
@@ -82,6 +85,7 @@ public class BitStoreMigrate {
 
             if (line.hasOption('p')) {
                 bitstreamStorageService.printStores(context);
+                GracefulShutdown.register();
                 System.exit(0);
             }
 
@@ -107,15 +111,18 @@ public class BitStoreMigrate {
                     .migrate(context, sourceAssetstore, destinationAssetstore, deleteOld, batchCommitSize);
             } else {
                 printHelp(options);
+                GracefulShutdown.register();
                 System.exit(0);
             }
 
             context.complete();
 
+            GracefulShutdown.register();
             System.exit(0);
         } catch (Exception e) {
             log.fatal("Caught exception:", e);
             System.out.println("Exception during BitStoreMigrate: " + e.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
     }

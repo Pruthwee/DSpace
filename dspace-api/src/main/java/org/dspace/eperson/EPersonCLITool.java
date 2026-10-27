@@ -26,6 +26,7 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.core.Context;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
@@ -89,6 +90,7 @@ public class EPersonCLITool {
     public static void main(String[] argv)
         throws ParseException, SQLException, AuthorizeException {
         int status = runCLITool(argv);
+        GracefulShutdown.register();
         System.exit(status);
     }
 

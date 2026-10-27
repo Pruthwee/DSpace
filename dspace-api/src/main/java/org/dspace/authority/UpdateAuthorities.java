@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import org.dspace.authority.factory.AuthorityServiceFactory;
 import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.factory.ContentServiceFactory;
@@ -71,6 +72,7 @@ public class UpdateAuthorities {
 
             UpdateAuthorities UpdateAuthorities = new UpdateAuthorities(c);
             if (processArgs(args, UpdateAuthorities) == 0) {
+                GracefulShutdown.register();
                 System.exit(0);
             }
             UpdateAuthorities.run();

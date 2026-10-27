@@ -25,6 +25,10 @@ import org.apache.logging.log4j.Logger;
 public class DSpaceContextListener implements ServletContextListener {
     private static Logger log = org.apache.logging.log4j.LogManager.getLogger(DSpaceContextListener.class);
 
+    private static final int CONNECT_TIMEOUT_MS = 5000;
+
+    private static final int READ_TIMEOUT_MS = 30000;
+
     /**
      * Initialize any resources required by the application.
      *
@@ -40,6 +44,8 @@ public class DSpaceContextListener implements ServletContextListener {
             if (osName != null && osName.toLowerCase().contains("windows")) {
                 URL url = new URL("http://localhost/");
                 URLConnection urlConn = url.openConnection();
+                urlConn.setConnectTimeout(CONNECT_TIMEOUT_MS);
+                urlConn.setReadTimeout(READ_TIMEOUT_MS);
                 urlConn.setDefaultUseCaches(false);
             }
         } catch (RuntimeException e) {

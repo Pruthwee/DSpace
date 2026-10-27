@@ -9,11 +9,14 @@ package org.dspace.app.rest.health;
 
 import static org.dspace.app.rest.configuration.ActuatorConfiguration.UP_WITH_ISSUES_STATUS;
 
+import java.util.concurrent.CompletableFuture;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.services.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -43,15 +46,34 @@ public class SEOHealthIndicator extends AbstractHealthIndicator {
     @Autowired
     private ConfigurationService configurationService;
 
-    private RestTemplate restTemplate = new RestTemplate();
+    /** Connect timeout of the checks, in milliseconds. */
+    private static final int CONNECT_TIMEOUT_MS = 5000;
+    /** Read timeout of the checks, in milliseconds. */
+    private static final int READ_TIMEOUT_MS = 30000;
+
+    private RestTemplate restTemplate = newRestTemplate();
+
+    private static RestTemplate newRestTemplate() {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(CONNECT_TIMEOUT_MS);
+        requestFactory.setReadTimeout(READ_TIMEOUT_MS);
+        return new RestTemplate(requestFactory);
+    }
 
     @Override
     protected void doHealthCheck(Health.Builder builder) {
         String baseUrl = configurationService.getProperty("dspace.ui.url");
 
-        boolean sitemapOk = checkUrl(baseUrl + "/sitemap_index.xml") || checkUrl(baseUrl + "/sitemap_index.html");
-        RobotsTxtStatus robotsTxtStatus = checkRobotsTxt(baseUrl + "/robots.txt");
-        boolean ssrOk = checkSSR(baseUrl);
+        // The three checks are independent blocking HTTP calls: run them concurrently, then join the results
+        CompletableFuture<Boolean> sitemapFuture = CompletableFuture.supplyAsync(
+            () -> checkUrl(baseUrl + "/sitemap_index.xml") || checkUrl(baseUrl + "/sitemap_index.html"));
+        CompletableFuture<RobotsTxtStatus> robotsFuture = CompletableFuture.supplyAsync(
+            () -> checkRobotsTxt(baseUrl + "/robots.txt"));
+        CompletableFuture<Boolean> ssrFuture = CompletableFuture.supplyAsync(() -> checkSSR(baseUrl));
+
+        boolean sitemapOk = sitemapFuture.join();
+        RobotsTxtStatus robotsTxtStatus = robotsFuture.join();
+        boolean ssrOk = ssrFuture.join();
 
         if (sitemapOk && robotsTxtStatus == RobotsTxtStatus.VALID && ssrOk) {
             builder.up()

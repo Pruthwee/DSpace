@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.launcher.ScriptLauncher;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.MetadataValueService;
@@ -52,6 +53,7 @@ public class UpdateHandlePrefix {
         // There should be two parameters
         if (args.length < 2) {
             System.out.println("\nUsage: update-handle-prefix <old handle> <new handle>\n");
+            GracefulShutdown.register();
             System.exit(1);
         } else {
             HandleService handleService = HandleServiceFactory.getInstance().getHandleService();

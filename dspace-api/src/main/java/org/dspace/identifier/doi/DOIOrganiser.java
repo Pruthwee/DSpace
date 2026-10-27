@@ -27,6 +27,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.help.HelpFormatter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.logic.Filter;
@@ -128,6 +129,7 @@ public class DOIOrganiser {
             context.complete();
         } catch (SQLException sqle) {
             System.err.println("Cannot save changes to database: " + sqle.getMessage());
+            GracefulShutdown.register();
             System.exit(-1);
         }
 
@@ -207,6 +209,7 @@ public class DOIOrganiser {
             line = parser.parse(options, args);
         } catch (ParseException ex) {
             LOG.fatal(ex);
+            GracefulShutdown.register();
             System.exit(1);
         }
 

@@ -16,6 +16,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.Logger;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Context;
@@ -76,6 +77,7 @@ public class RestartWorkflow {
             if (line.hasOption('h')) {
                 HelpFormatter myhelp = new HelpFormatter();
                 myhelp.printHelp("RestartWorkflow\n", options);
+                GracefulShutdown.register();
                 System.exit(0);
             }
             if (line.hasOption('n')) {
@@ -86,6 +88,7 @@ public class RestartWorkflow {
                 eperson = line.getOptionValue('e');
             } else {
                 System.out.println("The -e (eperson) option is mandatory !");
+                GracefulShutdown.register();
                 System.exit(1);
             }
 
@@ -101,6 +104,7 @@ public class RestartWorkflow {
 
             if (myEPerson == null) {
                 System.out.println("Error, eperson cannot be found: " + eperson);
+                GracefulShutdown.register();
                 System.exit(1);
             }
 
@@ -152,6 +156,7 @@ public class RestartWorkflow {
 
             System.out.println("All done, committing context");
             context.complete();
+            GracefulShutdown.register();
             System.exit(0);
         } catch (Exception e) {
             log.error("Error while sending all workflow items back to the workspace", e);

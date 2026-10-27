@@ -32,6 +32,7 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.SolrInputField;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
@@ -309,6 +310,7 @@ public class SolrUpgradePre6xStatistics {
         System.out.println(
                 "\t\tthe size of your statistics repositories.  Consider optimizing your solr repos when complete.");
 
+        GracefulShutdown.register();
         System.exit(exitCode);
     }
 

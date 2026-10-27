@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dspace.cloud.CloudConfig;
 import org.dspace.content.Item;
 import org.dspace.importer.external.datamodel.ImportRecord;
 import org.dspace.importer.external.datamodel.Query;
@@ -95,7 +96,8 @@ public class DataCiteImportMetadataSourceServiceImpl
         uriParameters.put("query", id);
         uriParameters.put("page[size]", "1");
         int timeoutMs = configurationService.getIntProperty("datacite.timeout", 180000);
-        String url = configurationService.getProperty("datacite.url", "https://api.datacite.org/dois/");
+        String url = configurationService.getProperty("datacite.url",
+            CloudConfig.get("DSPACE_DATACITE_URL", "https://api.datacite.org/dois/"));
         String responseString = liveImportClient.executeHttpGetRequest(timeoutMs, url, params);
         JsonNode jsonNode = convertStringJsonToJsonNode(responseString);
         if (jsonNode == null) {
@@ -146,7 +148,8 @@ public class DataCiteImportMetadataSourceServiceImpl
         }
 
         int timeoutMs = configurationService.getIntProperty("datacite.timeout", 180000);
-        String url = configurationService.getProperty("datacite.url", "https://api.datacite.org/dois/");
+        String url = configurationService.getProperty("datacite.url",
+            CloudConfig.get("DSPACE_DATACITE_URL", "https://api.datacite.org/dois/"));
         String responseString = liveImportClient.executeHttpGetRequest(timeoutMs, url, params);
         JsonNode jsonNode = convertStringJsonToJsonNode(responseString);
         if (jsonNode == null) {

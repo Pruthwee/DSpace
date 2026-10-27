@@ -24,6 +24,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.core.Email;
 import org.dspace.core.factory.CoreServiceFactory;
 import org.dspace.core.service.PluginService;
@@ -150,6 +151,7 @@ public class Report {
             cmdline = new DefaultParser().parse(options, args);
         } catch (ParseException e) {
             log.fatal("Invalid command line " + e.toString(), e);
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -214,6 +216,7 @@ public class Report {
                 } catch (IOException | MessagingException e) {
                     log.fatal("Error sending email:", e);
                     System.err.println("Error sending email:\n" + e.getMessage());
+                    GracefulShutdown.register();
                     System.exit(1);
                 }
             }

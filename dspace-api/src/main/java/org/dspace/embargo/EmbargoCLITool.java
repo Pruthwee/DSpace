@@ -21,6 +21,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.DCDate;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
@@ -106,17 +107,20 @@ public class EmbargoCLITool {
         } catch (ParseException e) {
             System.err.println("Command error: " + e.getMessage());
             new HelpFormatter().printHelp(EmbargoServiceImpl.class.getName(), options);
+            GracefulShutdown.register();
             System.exit(1);
         }
 
         if (line.hasOption('h')) {
             new HelpFormatter().printHelp(EmbargoServiceImpl.class.getName(), options);
+            GracefulShutdown.register();
             System.exit(0);
         }
 
         // sanity check, --lift and --check are mutually exclusive:
         if (line.hasOption('l') && line.hasOption('c')) {
             System.err.println("Command error: --lift and --check are mutually exclusive, try --help for assistance.");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -168,6 +172,7 @@ public class EmbargoCLITool {
                 }
             }
         }
+        GracefulShutdown.register();
         System.exit(status);
     }
 

@@ -32,6 +32,7 @@ import org.dspace.checker.LimitedDurationDispatcher;
 import org.dspace.checker.ResultsLogger;
 import org.dspace.checker.ResultsPruner;
 import org.dspace.checker.SimpleDispatcher;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Bitstream;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BitstreamService;
@@ -120,6 +121,7 @@ public final class ChecksumChecker {
             line = parser.parse(options, args);
         } catch (ParseException e) {
             LOG.fatal(e);
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -140,6 +142,7 @@ public final class ChecksumChecker {
             if (mutuallyExclusiveOpts > 1) {
                 System.err.println("Please use only one option of -l, -L, -d, -b, -i, or -c");
                 LOG.error("Please use only one option of -l, -L, -d, -b, -i, or -c");
+                GracefulShutdown.register();
                 System.exit(1);
             }
 
@@ -152,6 +155,7 @@ public final class ChecksumChecker {
                         .getDefaultPruner(context);
                 } catch (FileNotFoundException e) {
                     LOG.error("File not found", e);
+                    GracefulShutdown.register();
                     System.exit(1);
                 }
                 int count = rp.prune();
@@ -180,6 +184,7 @@ public final class ChecksumChecker {
                     } catch (NumberFormatException nfe) {
                         System.err.println("The following argument: " + ids[i]
                                                + " is not an UUID");
+                        GracefulShutdown.register();
                         System.exit(0);
                     }
                 }
@@ -197,6 +202,7 @@ public final class ChecksumChecker {
                                   + " as a duration");
                     LOG.fatal("Couldn't parse " + line.getOptionValue('d')
                                   + " as a duration: ", e);
+                    GracefulShutdown.register();
                     System.exit(0);
                 }
             } else if (line.hasOption('c')) {
@@ -256,6 +262,7 @@ public final class ChecksumChecker {
         System.out.println(" - Report all processing to checker.log (by default logs only errors): checker -v");
         System.out.println(" - Prune old results from the database: checker -p");
         System.out.println("\nDefault (no arguments) is equivalent to 'checker -c 1'\n");
+        GracefulShutdown.register();
         System.exit(0);
     }
 

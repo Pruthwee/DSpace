@@ -26,6 +26,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
@@ -518,6 +519,7 @@ public class XSLTDisseminationCrosswalk
         if (argv.length < 2 || argv.length > 3) {
             System.err.println("Usage:  java XSLTDisseminationCrosswalk <crosswalk-name> <handle> [output-file]");
             LOG.error("You started Dissemination Crosswalk Test/Export with a wrong number of parameters.");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -541,6 +543,7 @@ public class XSLTDisseminationCrosswalk
         if (xwalk == null) {
             System.err.format("Error: Cannot find a DisseminationCrosswalk plugin for: \"%s\"%n", xwalkname);
             LOG.error("Cannot find the Dissemination Crosswalk plugin.");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -553,17 +556,20 @@ public class XSLTDisseminationCrosswalk
         } catch (SQLException e) {
             System.err
                 .println("Error: A problem with the database connection occurred, check logs for further information.");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
         if (null == dso) {
             System.err.format("Can't find a DSpaceObject with the handle \"%s\"%n", handle);
+            GracefulShutdown.register();
             System.exit(1);
         }
 
         if (!xwalk.canDisseminate(dso)) {
             System.err.println("Dissemination Crosswalk can't disseminate this DSpaceObject.");
             LOG.error("Dissemination Crosswalk can't disseminate this DSpaceObject.");
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -584,6 +590,7 @@ public class XSLTDisseminationCrosswalk
             CharArrayWriter traceWriter = new CharArrayWriter(2048);
             e.printStackTrace(new PrintWriter(traceWriter));
             LOG.error(traceWriter::toString);
+            GracefulShutdown.register();
             System.exit(1);
         }
 
@@ -605,6 +612,7 @@ public class XSLTDisseminationCrosswalk
             CharArrayWriter traceWriter = new CharArrayWriter(2048);
             e.printStackTrace(new PrintWriter(traceWriter));
             LOG.error(traceWriter::toString);
+            GracefulShutdown.register();
             System.exit(1);
         }
 

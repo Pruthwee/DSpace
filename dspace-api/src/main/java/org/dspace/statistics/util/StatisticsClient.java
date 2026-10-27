@@ -18,6 +18,7 @@ import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.Logger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Get;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.statistics.factory.StatisticsServiceFactory;
 import org.dspace.statistics.service.SolrLoggerService;
@@ -45,6 +46,7 @@ public class StatisticsClient {
         // print the help message
         HelpFormatter myhelp = new HelpFormatter();
         myhelp.printHelp("StatisticsClient\n", options);
+        GracefulShutdown.register();
         System.exit(exitCode);
     }
 
@@ -112,6 +114,7 @@ public class StatisticsClient {
                                                  .getArrayProperty("solr-statistics.spiderips.urls");
             if ((urls == null) || (urls.length == 0)) {
                 System.err.println(" - Missing setting from dspace.cfg: solr.spiderips.urls");
+                GracefulShutdown.register();
                 System.exit(0);
             }
 
@@ -143,6 +146,7 @@ public class StatisticsClient {
         } catch (Exception e) {
             System.err.println(" - Error: " + e.getMessage());
             e.printStackTrace();
+            GracefulShutdown.register();
             System.exit(1);
         }
     }

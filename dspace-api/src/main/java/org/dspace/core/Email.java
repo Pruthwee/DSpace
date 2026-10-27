@@ -48,6 +48,7 @@ import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.resource.util.StringResourceRepository;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 
@@ -654,6 +655,7 @@ public class Email {
                 System.err.println(" - Error: cannot test email because mail.server.disabled is set to true");
                 System.err.println("\nPlease see the DSpace documentation for assistance.\n");
                 System.err.println("\n");
+                GracefulShutdown.register();
                 System.exit(1);
                 return;
             }
@@ -663,6 +665,7 @@ public class Email {
             System.err.format(" - Error: %s%n", ex);
             System.err.println("\nPlease see the DSpace documentation for assistance.\n");
             System.err.println("\n");
+            GracefulShutdown.register();
             System.exit(1);
         }
         System.out.println("\nEmail sent successfully!\n");

@@ -35,6 +35,7 @@ import org.apache.commons.cli.help.HelpFormatter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataFieldName;
@@ -86,6 +87,7 @@ public class DOIMigrator {
             context.complete();
         } catch (SQLException sqle) {
             System.err.println("Cannot save changes to database: " + sqle.getMessage());
+            GracefulShutdown.register();
             System.exit(1);
         }
     }
@@ -117,6 +119,7 @@ public class DOIMigrator {
             line = parser.parse(options, args);
         } catch (ParseException ex) {
             LOG.fatal(ex);
+            GracefulShutdown.register();
             System.exit(1);
             return;
         }
@@ -145,6 +148,7 @@ public class DOIMigrator {
                 items = migrationItems(fromFieldName);
             } catch (Exception e) {
                 LOG.fatal(e);
+                GracefulShutdown.register();
                 System.exit(1);
                 return;
             }
@@ -164,6 +168,7 @@ public class DOIMigrator {
                     + "(1) --to and --from, plus either --only-prefix or --except-prefix, or "
                     + "(2) --rehydrate");
             helpFormatter.printHelp("dspace doi-migrate", null, options, null, true);
+            GracefulShutdown.register();
             System.exit(1);
             return;
         }

@@ -30,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.XMLUtils;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.cloud.GracefulShutdown;
 import org.dspace.content.BitstreamFormat;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BitstreamFormatService;
@@ -84,6 +85,7 @@ public class RegistryLoader {
             // Check if help option was entered or no options provided
             if (line.hasOption('h') || line.getOptions().length == 0) {
                 printHelp(options);
+                GracefulShutdown.register();
                 System.exit(0);
             }
 
@@ -100,6 +102,7 @@ public class RegistryLoader {
                     if (StringUtils.isEmpty(filename)) {
                         System.err.println("No file path provided for bitstream format registry");
                         printHelp(options);
+                        GracefulShutdown.register();
                         System.exit(1);
                     }
                     RegistryLoader.loadBitstreamFormats(context, filename);
@@ -108,6 +111,7 @@ public class RegistryLoader {
                     if (StringUtils.isEmpty(filename)) {
                         System.err.println("No file path provided for metadata registry");
                         printHelp(options);
+                        GracefulShutdown.register();
                         System.exit(1);
                     }
                     // Call MetadataImporter, as it handles Metadata schema updates
@@ -115,15 +119,18 @@ public class RegistryLoader {
                 } else {
                     System.err.println("No registry type specified");
                     printHelp(options);
+                    GracefulShutdown.register();
                     System.exit(1);
                 }
 
                 // Commit changes and close Context
                 context.complete();
+                GracefulShutdown.register();
                 System.exit(0);
             } catch (Exception e) {
                 log.fatal(LogHelper.getHeader(context, "error_loading_registries", ""), e);
                 System.err.println("Error: \n - " + e.getMessage());
+                GracefulShutdown.register();
                 System.exit(1);
             } finally {
                 // Clean up our context, if it still exists & it was never completed
@@ -134,6 +141,7 @@ public class RegistryLoader {
         } catch (ParseException e) {
             System.err.println("Error parsing command-line arguments: " + e.getMessage());
             printHelp(options);
+            GracefulShutdown.register();
             System.exit(1);
         }
     }

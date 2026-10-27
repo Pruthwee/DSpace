@@ -10,6 +10,8 @@ package org.dspace.harvest;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
@@ -28,7 +30,7 @@ public class HarvestSchedulingServiceImpl implements HarvestSchedulingService {
 
     /* The main harvesting thread */
     protected HarvestScheduler harvester;
-    protected Thread mainHarvestThread;
+    protected ExecutorService mainHarvestThread;
     protected HarvestScheduler harvestScheduler;
 
     @Autowired(required = true)
@@ -49,8 +51,8 @@ public class HarvestSchedulingServiceImpl implements HarvestSchedulingService {
         }
         harvester = new HarvestScheduler();
         HarvestScheduler.setInterrupt(HarvestScheduler.HARVESTER_INTERRUPT_NONE);
-        mainHarvestThread = new Thread(harvester);
-        mainHarvestThread.start();
+        mainHarvestThread = Executors.newSingleThreadExecutor();
+        mainHarvestThread.execute(harvester);
     }
 
     @Override
@@ -58,6 +60,10 @@ public class HarvestSchedulingServiceImpl implements HarvestSchedulingService {
         synchronized (HarvestScheduler.lock) {
             HarvestScheduler.setInterrupt(HarvestScheduler.HARVESTER_INTERRUPT_STOP);
             HarvestScheduler.lock.notify();
+        }
+        if (mainHarvestThread != null) {
+            // lets the scheduler loop finish its current iteration (it ends on the STOP interrupt)
+            mainHarvestThread.shutdown();
         }
         mainHarvestThread = null;
         harvester = null;
