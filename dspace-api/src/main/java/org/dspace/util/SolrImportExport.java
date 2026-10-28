@@ -44,6 +44,7 @@ import org.apache.solr.client.solrj.response.RangeFacet;
 import org.apache.solr.common.luke.FieldFlag;
 import org.apache.solr.common.params.CoreAdminParams;
 import org.apache.solr.common.params.FacetParams;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 
@@ -84,6 +85,7 @@ public class SolrImportExport {
      * @throws ParseException if the command-line arguments cannot be parsed
      */
     public static void main(String[] args) throws ParseException {
+        GracefulShutdown.register(SolrImportExport.class.getName());
         CommandLineParser parser = new DefaultParser();
         Options options = makeOptions();
 

@@ -18,9 +18,9 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.rmi.dgc.VMID;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -38,6 +38,7 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.Random;
 import java.util.StringTokenizer;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -82,7 +83,14 @@ public final class Utils {
 
     private static final Random random = new Random();
 
-    private static final VMID vmid = new VMID();
+    // Per-JVM unique identifier (replaces java.rmi.dgc.VMID), mixed into generated tokens
+    private static final UUID vmid = UUID.randomUUID();
+
+    /** Connect timeout, in milliseconds, for URLs opened by {@link #openStreamWithTimeouts(URL)}. */
+    public static final int URL_CONNECT_TIMEOUT_MS = 5000;
+
+    /** Read timeout, in milliseconds, for URLs opened by {@link #openStreamWithTimeouts(URL)}. */
+    public static final int URL_READ_TIMEOUT_MS = 60000;
 
     // for parseISO8601Date
     private static final DateTimeFormatter[] parseFmt = {
@@ -213,6 +221,34 @@ public final class Utils {
         String input = String.valueOf(vmid) + Instant.now().toEpochMilli() + Arrays.toString(junk) + counter++;
 
         return getMD5Bytes(input.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Read a deployment setting from the environment (for example one injected into the container from
+     * AWS Systems Manager Parameter Store), falling back to a default when it is not set.
+     *
+     * @param name         name of the environment variable
+     * @param defaultValue value to use when the variable is not set or empty
+     * @return the variable's value, or the default
+     */
+    public static String getEnvOrDefault(String name, String defaultValue) {
+        String value = System.getenv(name);
+        return StringUtils.isNotEmpty(value) ? value : defaultValue;
+    }
+
+    /**
+     * Open a stream on a URL, like {@link URL#openStream()}, but with explicit connect and read timeouts
+     * so that an unresponsive remote server cannot block the caller indefinitely.
+     *
+     * @param url the URL to read
+     * @return the stream of the URL's content
+     * @throws IOException if IO error
+     */
+    public static InputStream openStreamWithTimeouts(URL url) throws IOException {
+        URLConnection connection = url.openConnection();
+        connection.setConnectTimeout(URL_CONNECT_TIMEOUT_MS);
+        connection.setReadTimeout(URL_READ_TIMEOUT_MS);
+        return connection.getInputStream();
     }
 
     // The following two methods are taken from the Jakarta IOUtil class.

@@ -35,6 +35,7 @@ import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.core.factory.CoreServiceFactory;
 import org.jdom2.Content;
 import org.jdom2.Document;
@@ -272,6 +273,7 @@ public class XSLTIngestionCrosswalk
      * @throws Exception if error
      */
     public static void main(String[] argv) throws Exception {
+        GracefulShutdown.register(XSLTIngestionCrosswalk.class.getName());
         if (argv.length < 2) {
             System.err.println("Usage:  java XSLTIngestionCrosswalk [-l] <crosswalk-name> <input-file>");
             System.exit(1);

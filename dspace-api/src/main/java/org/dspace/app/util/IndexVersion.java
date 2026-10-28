@@ -16,6 +16,7 @@ import org.apache.lucene.index.SegmentInfos;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.dspace.core.GracefulShutdown;
 
 /**
  * This utility class simply determines the version of a given Solr/Lucene index,
@@ -38,6 +39,7 @@ public class IndexVersion {
 
     public static void main(String[] argv)
         throws IOException {
+        GracefulShutdown.register(IndexVersion.class.getName());
         // Usage checks
         if (argv.length < 1) {
             System.out.println("\nRequired Solr/Lucene index directory is missing.");

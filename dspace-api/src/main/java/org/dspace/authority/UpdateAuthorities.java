@@ -30,6 +30,7 @@ import org.dspace.content.MetadataValue;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 
@@ -64,6 +65,7 @@ public class UpdateAuthorities {
     }
 
     public static void main(String[] args) throws ParseException {
+        GracefulShutdown.register(UpdateAuthorities.class.getName());
 
         Context c = null;
         try {

@@ -35,6 +35,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.core.LogHelper;
 import org.dspace.core.Utils;
 import org.dspace.discovery.DiscoverQuery;
@@ -330,6 +331,7 @@ public class LogAnalyser {
      */
     public static void main(String[] argv)
         throws Exception, SQLException {
+        GracefulShutdown.register(LogAnalyser.class.getName());
         // first, start the processing clock
         startTime = Instant.now();
 

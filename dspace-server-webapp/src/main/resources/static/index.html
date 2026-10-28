@@ -12,6 +12,7 @@
 -->
 <!doctype html>
 <head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'nonce-{{CSP_NONCE}}'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: http:; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta charset="utf-8">
     <title>The HAL Browser (customized for DSpace)</title>
     <link rel="stylesheet" media="screen" href="webjars/bootstrap/dist/css/bootstrap.min.css" />
@@ -21,6 +22,21 @@
         }
         .sidebar-nav {
             padding: 9px 0;
+        }
+        .ssr-skeleton-line {
+            height: 1.5rem;
+            margin: 0.75rem 0;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%);
+            background-size: 200% 100%;
+            animation: ssr-skeleton-shimmer 1.5s infinite;
+        }
+        .ssr-skeleton-short {
+            width: 40%;
+        }
+        @keyframes ssr-skeleton-shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
     </style>
     <link rel="stylesheet" media="screen" href="styles.css" />
@@ -45,9 +61,16 @@
     </div>
 </nav>
 
-<div id="browser" class="container-fluid"></div>
+<div id="browser" class="container-fluid">
+    <!-- SSR skeleton placeholder: replaced by the HAL Browser view once it renders -->
+    <div class="ssr-skeleton" aria-busy="true" aria-label="Loading">
+        <div class="ssr-skeleton-line"></div>
+        <div class="ssr-skeleton-line"></div>
+        <div class="ssr-skeleton-line ssr-skeleton-short"></div>
+    </div>
+</div>
 
-<script id="location-bar-template" type="text/template">
+<script nonce="{{CSP_NONCE}}" id="location-bar-template" type="text/template">
     <form>
         <div class="input-group mb-3">
             <input type="text" class="form-control" id="appendedInputButton" type="text" value="<%= _.escape(url) %>">
@@ -58,7 +81,7 @@
     </form>
 </script>
 
-<script id="links-template" type="text/template">
+<script nonce="{{CSP_NONCE}}" id="links-template" type="text/template">
     <h2>Links</h2>
     <table class="table">
         <thead>
@@ -123,7 +146,7 @@
     </table>
 </script>
 
-<script id="properties-template" type="text/template">
+<script nonce="{{CSP_NONCE}}" id="properties-template" type="text/template">
     <h2>Properties</h2>
     <div class="card read-only">
         <div class="card-body">
@@ -132,14 +155,14 @@
     </div>
 </script>
 
-<script id="request-headers-template" type="text/template">
+<script nonce="{{CSP_NONCE}}" id="request-headers-template" type="text/template">
     <h2>Custom Request Headers</h2>
     <div class="input-group">
         <textarea class="form-control"></textarea>
     </div>
 </script>
 
-<script id="response-headers-template" type="text/template">
+<script nonce="{{CSP_NONCE}}" id="response-headers-template" type="text/template">
     <h2>Response Headers</h2>
     <div class="card read-only">
         <div class="card-body">
@@ -160,7 +183,7 @@
     </div>
 </script>
 
-<script id="response-body-template" type="text/template">
+<script nonce="{{CSP_NONCE}}" id="response-body-template" type="text/template">
     <h2>Response Body</h2>
     <div class="card read-only">
         <div class="card-body">
@@ -169,7 +192,7 @@
     </div>
 </script>
 
-<script id="query-uri-template" type="text/template">
+<script nonce="{{CSP_NONCE}}" id="query-uri-template" type="text/template">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -202,7 +225,7 @@
 </script>
 
 
-<script id="non-safe-request-template" type="text/template">
+<script nonce="{{CSP_NONCE}}" id="non-safe-request-template" type="text/template">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -235,7 +258,7 @@ Content-Type: application/json
     </div>
 </script>
 
-<script id="dynamic-request-template" type="text/template">
+<script nonce="{{CSP_NONCE}}" id="dynamic-request-template" type="text/template">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -267,11 +290,11 @@ Content-Type: application/json
     </div>
 </script>
 
-<script id="embedded-resources-template" type="text/template">
+<script nonce="{{CSP_NONCE}}" id="embedded-resources-template" type="text/template">
     <h2>Embedded Resources</h2>
 </script>
 
-<script id="embedded-resource-template" type="text/template">
+<script nonce="{{CSP_NONCE}}" id="embedded-resource-template" type="text/template">
     <div class="accordion-heading">
         <a class="accordion-toggle" href="#"><%= resource.identifier %><% if (resource.title) { %>: <span class="embedded-resource-title"><%- resource.title %></span><% } %>
             <% if (HAL.isUrl(resource.embed_rel)) { %>
@@ -324,7 +347,7 @@ Content-Type: application/json
 <script src="webjars/json-editor__json-editor/2.15.2/dist/jsoneditor.js"></script>
 <script src="js/vendor/CustomPostForm.js"></script>
 
-<script>
+<script nonce="{{CSP_NONCE}}">
     var browser = new HAL.Browser({
         container: $('#browser'),
         entryPoint: window.location.pathname + 'api'

@@ -32,6 +32,7 @@ import org.dspace.content.Item;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
@@ -121,6 +122,7 @@ public class ItemUpdate {
      * @param argv the command line arguments given
      */
     public static void main(String[] argv) {
+        GracefulShutdown.register(ItemUpdate.class.getName());
         // create an options object and populate it
         CommandLineParser parser = new DefaultParser();
 

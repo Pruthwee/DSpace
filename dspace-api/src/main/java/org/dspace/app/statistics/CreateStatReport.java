@@ -21,6 +21,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 
@@ -77,6 +78,7 @@ public class CreateStatReport {
      * Usage: java CreateStatReport -r <statistic to run>
      */
     public static void main(String[] argv) throws Exception {
+        GracefulShutdown.register(CreateStatReport.class.getName());
         ConfigurationService configurationService
                 = DSpaceServicesFactory.getInstance().getConfigurationService();
 

@@ -155,7 +155,9 @@ public class ClamScan extends AbstractCurationTask {
         socket = new Socket();
         try {
             logDebugMessage("Connecting to " + host + ":" + port);
-            socket.connect(new InetSocketAddress(host, port));
+            // host and port come from clamav.service.host / clamav.service.port (environment-overridable);
+            // the connect is bounded by the configured clamav.socket.timeout (milliseconds)
+            socket.connect(new InetSocketAddress(host, port), Math.max(timeout, 0));
         } catch (IOException e) {
             log.error("Failed to connect to clamd . . .", e);
             throw (e);

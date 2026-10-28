@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.core.LogHelper;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
@@ -53,6 +54,7 @@ public class RestartWorkflow {
     private RestartWorkflow() { }
 
     public static void main(String[] args) {
+        GracefulShutdown.register(RestartWorkflow.class.getName());
         try {
             System.out.println("All workflowitems will be sent back to the first workflow step.");
             Context context = new Context();

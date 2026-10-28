@@ -104,6 +104,7 @@ import org.dspace.core.Context;
 import org.dspace.core.Email;
 import org.dspace.core.I18nUtil;
 import org.dspace.core.LogHelper;
+import org.dspace.core.Utils;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.service.EPersonService;
@@ -2207,7 +2208,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
                         byte[] b = new byte[2048];
                         int length;
 
-                        InputStream is = new URL(theFilePath).openStream();
+                        InputStream is = Utils.openStreamWithTimeouts(new URL(theFilePath));
                         while ((length = is.read(b)) != -1) {
                             os.write(b, 0, length);
                         }

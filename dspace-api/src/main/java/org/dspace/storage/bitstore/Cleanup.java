@@ -19,6 +19,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.storage.bitstore.factory.StorageServiceFactory;
 import org.dspace.utils.DSpace;
 
@@ -44,6 +45,7 @@ public class Cleanup {
      * @param argv the command line arguments given
      */
     public static void main(String[] argv) {
+        GracefulShutdown.register(Cleanup.class.getName());
         int exitCode = mainInternal(argv);
         System.exit(exitCode);
     }

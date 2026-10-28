@@ -34,6 +34,7 @@ import org.dspace.app.statistics.LogAnalyser;
 import org.dspace.app.statistics.LogLine;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.handle.factory.HandleServiceFactory;
 
 /**
@@ -290,6 +291,7 @@ public class ClassicDSpaceLogConverter {
      * @param args the command line arguments given
      */
     public static void main(String[] args) {
+        GracefulShutdown.register(ClassicDSpaceLogConverter.class.getName());
         CommandLineParser parser = new DefaultParser();
 
         Options options = new Options();

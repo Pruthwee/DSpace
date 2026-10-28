@@ -21,6 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.XMLUtils;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.eperson.EPerson;
 import org.dspace.scripts.DSpaceRunnable;
 import org.dspace.scripts.DSpaceRunnable.StepResult;
@@ -66,6 +67,7 @@ public class ScriptLauncher {
      */
     public static void main(String[] args)
         throws FileNotFoundException, IOException, IllegalAccessException, InstantiationException {
+        GracefulShutdown.register(ScriptLauncher.class.getName());
         // Initialise the service manager kernel
         try {
             kernelImpl = DSpaceKernelInit.getKernel(null);

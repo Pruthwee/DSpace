@@ -25,6 +25,7 @@ import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.GroupService;
@@ -58,6 +59,7 @@ public class PolicySet {
      * @throws Exception if error
      */
     public static void main(String[] argv) throws Exception {
+        GracefulShutdown.register(PolicySet.class.getName());
         if (argv.length < 6) {
             System.out
                 .println("Args: containerType containerID contentType actionID groupID command [filter]");

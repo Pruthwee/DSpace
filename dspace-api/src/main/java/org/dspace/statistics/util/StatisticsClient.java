@@ -18,6 +18,7 @@ import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.Logger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Get;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.statistics.factory.StatisticsServiceFactory;
 import org.dspace.statistics.service.SolrLoggerService;
@@ -55,6 +56,7 @@ public class StatisticsClient {
      * @throws Exception If something goes wrong
      */
     public static void main(String[] args) throws Exception {
+        GracefulShutdown.register(StatisticsClient.class.getName());
         CommandLineParser parser = new DefaultParser();
 
         Options options = new Options();

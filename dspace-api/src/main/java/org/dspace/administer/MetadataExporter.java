@@ -27,6 +27,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.MetadataFieldService;
 import org.dspace.content.service.MetadataSchemaService;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -77,6 +78,7 @@ public class MetadataExporter {
     public static void main(String[] args)
         throws ParseException, SQLException, IOException, RegistryExportException,
             ClassNotFoundException, InstantiationException, IllegalAccessException {
+        GracefulShutdown.register(MetadataExporter.class.getName());
         // create an options object and populate it
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();

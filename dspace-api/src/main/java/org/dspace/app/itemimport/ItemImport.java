@@ -35,6 +35,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.Utils;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
@@ -344,8 +345,8 @@ public class ItemImport extends DSpaceRunnable<ItemImportScriptConfiguration> {
                 validationFileStream = handler.getFileStream(context, zipfilename);
             } else {
                 // manage zip via remote url
-                optionalFileStream = Optional.ofNullable(new URL(zipfilename).openStream());
-                validationFileStream = Optional.ofNullable(new URL(zipfilename).openStream());
+                optionalFileStream = Optional.ofNullable(Utils.openStreamWithTimeouts(new URL(zipfilename)));
+                validationFileStream = Optional.ofNullable(Utils.openStreamWithTimeouts(new URL(zipfilename)));
             }
 
             if (validationFileStream.isPresent()) {

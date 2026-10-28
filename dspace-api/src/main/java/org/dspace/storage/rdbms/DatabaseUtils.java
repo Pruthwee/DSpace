@@ -18,6 +18,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -30,6 +31,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.discovery.IndexingService;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.services.ConfigurationService;
@@ -91,6 +93,7 @@ public class DatabaseUtils {
      * @param argv the command line arguments given
      */
     public static void main(String[] argv) {
+        GracefulShutdown.register(DatabaseUtils.class.getName());
         // Usage checks
         if (argv.length < 1) {
             System.out.println("\nDatabase action argument is missing.");
@@ -352,7 +355,9 @@ public class DatabaseUtils {
                             String s = IOUtils.toString(sqlstream, StandardCharsets.UTF_8);
                             if (!s.isEmpty()) {
                                 System.out.println("Running " + sqlfile);
-                                connection.createStatement().execute(s);
+                                try (Statement statement = connection.createStatement()) {
+                                    statement.execute(s);
+                                }
                                 System.out.println("update-sequences complete");
                             } else {
                                 System.err.println(sqlfile + " contains no SQL to execute");

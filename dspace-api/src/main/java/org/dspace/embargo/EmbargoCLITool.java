@@ -27,6 +27,7 @@ import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.embargo.factory.EmbargoServiceFactory;
 import org.dspace.embargo.service.EmbargoService;
 import org.dspace.handle.factory.HandleServiceFactory;
@@ -80,6 +81,7 @@ public class EmbargoCLITool {
      * @param argv the command line arguments given
      */
     public static void main(String[] argv) {
+        GracefulShutdown.register(EmbargoCLITool.class.getName());
         int status = 0;
 
         Options options = new Options();

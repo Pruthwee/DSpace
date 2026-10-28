@@ -39,6 +39,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.Utils;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
@@ -160,7 +161,7 @@ public class GoogleMetadata {
         Properties properties = new Properties();
         InputStream is;
         try {
-            is = url.openStream();
+            is = Utils.openStreamWithTimeouts(url);
             properties.load(is);
 
         } catch (IOException iox) {

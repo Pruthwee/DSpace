@@ -34,6 +34,7 @@ import org.dspace.content.BitstreamFormat;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BitstreamFormatService;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.core.LogHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -74,6 +75,7 @@ public class RegistryLoader {
      * @throws Exception if error
      */
     public static void main(String[] argv) throws Exception {
+        GracefulShutdown.register(RegistryLoader.class.getName());
         // Set up command-line options and parse arguments
         CommandLineParser parser = new DefaultParser();
         Options options = createCommandLineOptions();

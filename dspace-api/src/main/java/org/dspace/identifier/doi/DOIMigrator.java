@@ -43,6 +43,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.MetadataFieldService;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 
 public class DOIMigrator {
     private static final Pattern looksLikeDOI = Pattern
@@ -68,6 +69,7 @@ public class DOIMigrator {
     }
 
     public static void main(String[] args) {
+        GracefulShutdown.register(DOIMigrator.class.getName());
         // setup Context
         Context context = new Context();
 

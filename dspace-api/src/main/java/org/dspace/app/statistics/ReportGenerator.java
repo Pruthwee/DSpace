@@ -36,6 +36,7 @@ import org.dspace.content.MetadataValue;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.handle.service.HandleService;
 import org.dspace.services.ConfigurationService;
@@ -215,6 +216,7 @@ public class ReportGenerator {
      */
     public static void main(String[] argv)
         throws Exception, SQLException {
+        GracefulShutdown.register(ReportGenerator.class.getName());
         // create context as super user
         Context context = new Context();
         context.turnOffAuthorisationSystem();

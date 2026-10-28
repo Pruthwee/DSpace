@@ -56,6 +56,7 @@ import org.dspace.content.service.CommunityService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.CrisConstants;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.handle.factory.HandleServiceFactory;
@@ -163,6 +164,7 @@ public class StructBuilder {
     public static void main(String[] argv)
         throws ParserConfigurationException, SQLException,
         IOException, TransformerException, XPathExpressionException {
+        GracefulShutdown.register(StructBuilder.class.getName());
         // Define command line options.
         Options options = new Options();
 

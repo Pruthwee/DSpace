@@ -24,6 +24,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CommunityService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.handle.service.HandleService;
 
@@ -50,6 +51,7 @@ public class CommunityFiliator {
      * @throws Exception if error
      */
     public static void main(String[] argv) throws Exception {
+        GracefulShutdown.register(CommunityFiliator.class.getName());
         // create an options object and populate it
         CommandLineParser parser = new DefaultParser();
 

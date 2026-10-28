@@ -25,6 +25,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.core.Email;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.core.factory.CoreServiceFactory;
 import org.dspace.core.service.PluginService;
 import org.dspace.services.ConfigurationService;
@@ -124,6 +125,7 @@ public class Report {
     //
 
     public static void main(String[] args) {
+        GracefulShutdown.register(Report.class.getName());
         log.info("Starting healthcheck report...");
 
         final String option_help = "h";

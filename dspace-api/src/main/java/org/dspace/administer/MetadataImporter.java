@@ -32,6 +32,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.MetadataFieldService;
 import org.dspace.content.service.MetadataSchemaService;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -95,6 +96,7 @@ public class MetadataImporter {
         throws ParseException, SQLException, IOException, TransformerException,
         ParserConfigurationException, AuthorizeException, SAXException,
         NonUniqueMetadataException, RegistryImportException, XPathExpressionException {
+        GracefulShutdown.register(MetadataImporter.class.getName());
 
         // create an options object and populate it
         CommandLineParser parser = new DefaultParser();

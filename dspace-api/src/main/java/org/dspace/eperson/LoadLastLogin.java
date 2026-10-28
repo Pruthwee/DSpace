@@ -36,6 +36,7 @@ import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Options;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 
@@ -55,6 +56,7 @@ public class LoadLastLogin {
 
     public static void main(String[] argv)
         throws IOException, SQLException, AuthorizeException {
+        GracefulShutdown.register(LoadLastLogin.class.getName());
         final String USAGE = "LoadLastLogin [options] path...path\n\n"
             + "'path's are paths to DSpace log files";
 

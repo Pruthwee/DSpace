@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.itemimport.service.ItemImportService;
 import org.dspace.content.Collection;
 import org.dspace.core.Context;
+import org.dspace.core.Utils;
 import org.dspace.eperson.EPerson;
 import org.dspace.storage.secure.SecureFileAccess;
 
@@ -131,8 +132,10 @@ public class ItemImportCLI extends ItemImport {
                 sourcedir = itemImportService.unzip(myZipFile, workDir.getAbsolutePath());
             } else {
                 // manage zip via remote url
-                Optional<InputStream> optionalFileStream = Optional.ofNullable(new URL(zipfilename).openStream());
-                Optional<InputStream> validationFileStream = Optional.ofNullable(new URL(zipfilename).openStream());
+                Optional<InputStream> optionalFileStream =
+                    Optional.ofNullable(Utils.openStreamWithTimeouts(new URL(zipfilename)));
+                Optional<InputStream> validationFileStream =
+                    Optional.ofNullable(Utils.openStreamWithTimeouts(new URL(zipfilename)));
                 try {
                     if (optionalFileStream.isPresent()) {
                         // validate zip file via url

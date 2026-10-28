@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.dspace.core.GracefulShutdown;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 
@@ -125,6 +126,7 @@ public class HTMLReport implements Report {
             out.close();
         } catch (IOException e) {
             System.out.println("Unable to write to output file " + output);
+            GracefulShutdown.register(HTMLReport.class.getName());
             System.exit(0);
         }
 

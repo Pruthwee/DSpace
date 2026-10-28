@@ -22,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dspace.core.Utils;
 import org.dspace.scripts.handler.DSpaceRunnableHandler;
 import org.dspace.services.factory.DSpaceServicesFactory;
 
@@ -195,7 +196,7 @@ public class ImportFileUtil {
 
     protected InputStream openStream(URL url) {
         try {
-            return url.openStream();
+            return Utils.openStreamWithTimeouts(url);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -211,6 +212,8 @@ public class ImportFileUtil {
             return Optional.empty();
         }
         URLConnection urlConnection = urlObject.openConnection();
+        urlConnection.setConnectTimeout(Utils.URL_CONNECT_TIMEOUT_MS);
+        urlConnection.setReadTimeout(Utils.URL_READ_TIMEOUT_MS);
         InputStream inputStream = urlConnection.getInputStream();
         if (inputStream == null) {
             logError(

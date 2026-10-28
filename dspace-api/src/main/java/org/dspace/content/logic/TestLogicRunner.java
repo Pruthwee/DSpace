@@ -24,6 +24,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.handle.service.HandleService;
 import org.dspace.kernel.ServiceManager;
@@ -48,6 +49,7 @@ public class TestLogicRunner {
      * @param argv  array of command-line arguments
      */
     public static void main(String[] argv) {
+        GracefulShutdown.register(TestLogicRunner.class.getName());
         System.out.println("Starting impl of main() test spring logic item filter");
 
         // initialize options

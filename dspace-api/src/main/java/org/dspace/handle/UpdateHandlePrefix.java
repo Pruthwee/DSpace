@@ -18,6 +18,7 @@ import org.dspace.content.MetadataValue;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.MetadataValueService;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.handle.service.HandleService;
 import org.dspace.services.ConfigurationService;
@@ -49,6 +50,7 @@ public class UpdateHandlePrefix {
      * @throws Exception on generic exception
      */
     public static void main(String[] args) throws Exception {
+        GracefulShutdown.register(UpdateHandlePrefix.class.getName());
         // There should be two parameters
         if (args.length < 2) {
             System.out.println("\nUsage: update-handle-prefix <old handle> <new handle>\n");

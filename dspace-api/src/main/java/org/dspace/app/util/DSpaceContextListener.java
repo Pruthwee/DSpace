@@ -17,6 +17,7 @@ import java.util.Enumeration;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import org.apache.logging.log4j.Logger;
+import org.dspace.core.Utils;
 
 /**
  * Class to initialize / cleanup resources used by DSpace when the web application
@@ -40,6 +41,8 @@ public class DSpaceContextListener implements ServletContextListener {
             if (osName != null && osName.toLowerCase().contains("windows")) {
                 URL url = new URL("http://localhost/");
                 URLConnection urlConn = url.openConnection();
+                urlConn.setConnectTimeout(Utils.URL_CONNECT_TIMEOUT_MS);
+                urlConn.setReadTimeout(Utils.URL_READ_TIMEOUT_MS);
                 urlConn.setDefaultUseCaches(false);
             }
         } catch (RuntimeException e) {

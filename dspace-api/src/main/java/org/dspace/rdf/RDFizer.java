@@ -38,6 +38,7 @@ import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.handle.service.HandleService;
 import org.dspace.rdf.factory.RDFFactory;
@@ -763,6 +764,7 @@ public class RDFizer {
     }
 
     public static void main(String[] args) {
+        GracefulShutdown.register(RDFizer.class.getName());
         // get a context from an anonymous user.
         // don't switch off authorization system! We'll export the converted
         // data into a triple store that provides a public sparql endpoint.

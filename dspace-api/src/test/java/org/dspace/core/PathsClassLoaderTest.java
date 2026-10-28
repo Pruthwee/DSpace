@@ -66,6 +66,7 @@ public class PathsClassLoaderTest {
             classFile.deleteOnExit();
         } catch (IOException e) {
             System.err.println(e.getMessage());
+            GracefulShutdown.register(PathsClassLoaderTest.class.getName());
             System.exit(1);
         }
 
@@ -83,6 +84,7 @@ public class PathsClassLoaderTest {
             cg.getJavaClass().dump(classFile);
         } catch (IOException e) {
             System.err.println(e.getMessage());
+            GracefulShutdown.register(PathsClassLoaderTest.class.getName());
             System.exit(1);
         }
 
@@ -106,6 +108,7 @@ public class PathsClassLoaderTest {
             jar.close();
         } catch (IOException e) {
             System.err.println(e.getMessage());
+            GracefulShutdown.register(PathsClassLoaderTest.class.getName());
             System.exit(1);
         }
     }

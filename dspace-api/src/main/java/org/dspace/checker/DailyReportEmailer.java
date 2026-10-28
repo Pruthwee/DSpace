@@ -27,6 +27,7 @@ import org.dspace.checker.factory.CheckerServiceFactory;
 import org.dspace.checker.service.SimpleReporterService;
 import org.dspace.core.Context;
 import org.dspace.core.Email;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.core.Utils;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
@@ -102,6 +103,7 @@ public class DailyReportEmailer {
      * @param args the command line arguments given
      */
     public static void main(String[] args) {
+        GracefulShutdown.register(DailyReportEmailer.class.getName());
         // set up command line parser
         CommandLineParser parser = new DefaultParser();
         CommandLine line = null;

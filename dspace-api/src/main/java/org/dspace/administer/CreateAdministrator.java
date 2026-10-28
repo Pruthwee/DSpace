@@ -18,6 +18,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.core.I18nUtil;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
@@ -63,6 +64,7 @@ public final class CreateAdministrator {
      */
     public static void main(String[] argv)
             throws Exception {
+        GracefulShutdown.register(CreateAdministrator.class.getName());
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
 

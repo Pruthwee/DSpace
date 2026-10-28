@@ -52,6 +52,7 @@ import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.DSpaceObjectLegacySupportService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.services.ConfigurationService;
@@ -420,6 +421,7 @@ public class StatisticsImporter {
      * @throws Exception If something goes wrong
      */
     public static void main(String[] args) throws Exception {
+        GracefulShutdown.register(StatisticsImporter.class.getName());
         CommandLineParser parser = new DefaultParser();
 
         Options options = new Options();

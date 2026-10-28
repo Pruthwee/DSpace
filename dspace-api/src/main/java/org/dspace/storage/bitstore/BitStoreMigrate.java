@@ -16,6 +16,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.storage.bitstore.factory.StorageServiceFactory;
 import org.dspace.storage.bitstore.service.BitstreamStorageService;
 
@@ -43,6 +44,7 @@ public class BitStoreMigrate {
      * @param argv the command line arguments given
      */
     public static void main(String[] argv) {
+        GracefulShutdown.register(BitStoreMigrate.class.getName());
         try {
             log.info("Migrate Assetstore");
 

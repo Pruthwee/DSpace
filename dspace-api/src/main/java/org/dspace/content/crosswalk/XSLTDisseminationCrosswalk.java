@@ -40,6 +40,7 @@ import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.core.factory.CoreServiceFactory;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.services.ConfigurationService;
@@ -514,6 +515,7 @@ public class XSLTDisseminationCrosswalk
      * @throws Exception if error
      */
     public static void main(String[] argv) throws Exception {
+        GracefulShutdown.register(XSLTDisseminationCrosswalk.class.getName());
         LOG.error("started.");
         if (argv.length < 2 || argv.length > 3) {
             System.err.println("Usage:  java XSLTDisseminationCrosswalk <crosswalk-name> <handle> [output-file]");

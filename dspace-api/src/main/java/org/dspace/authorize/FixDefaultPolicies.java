@@ -20,6 +20,7 @@ import org.dspace.content.DSpaceObject;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 
@@ -45,6 +46,7 @@ public class FixDefaultPolicies {
      * @throws Exception if error
      */
     public static void main(String[] argv) throws Exception {
+        GracefulShutdown.register(FixDefaultPolicies.class.getName());
         Context c = new Context();
 
         // turn off authorization

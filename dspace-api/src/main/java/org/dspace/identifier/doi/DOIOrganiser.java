@@ -36,6 +36,7 @@ import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.Email;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.core.I18nUtil;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.handle.service.HandleService;
@@ -107,6 +108,7 @@ public class DOIOrganiser {
      * @param args  - the command line arguments to parse as parameters
      */
     public static void main(String[] args) {
+        GracefulShutdown.register(DOIOrganiser.class.getName());
         LOG.debug("Starting DOI organiser ");
 
         // setup Context

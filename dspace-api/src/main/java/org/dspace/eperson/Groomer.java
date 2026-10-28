@@ -27,6 +27,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 
@@ -51,6 +52,7 @@ public class Groomer {
      */
     static public void main(String[] argv)
         throws SQLException {
+        GracefulShutdown.register(Groomer.class.getName());
         final String USAGE = "Groomer -verb [option...]";
 
         OptionGroup verbs = new OptionGroup();

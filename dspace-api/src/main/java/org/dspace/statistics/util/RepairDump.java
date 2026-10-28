@@ -26,6 +26,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
+import org.dspace.core.GracefulShutdown;
 
 /**
  * Repair various problems in a statistics core export CSV.
@@ -40,6 +41,7 @@ public class RepairDump {
      * @param args
      */
     public static void main( String[] args ) {
+        GracefulShutdown.register(RepairDump.class.getName());
         long recordCount = 0; // Input record counter.
         long repairCount = 0; // Repaired records counter.
 

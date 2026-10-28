@@ -21,6 +21,7 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.harvest.factory.HarvestServiceFactory;
@@ -156,6 +157,9 @@ public class HarvestScheduler implements Runnable {
     }
 
     protected void scheduleLoop() {
+        // On SIGTERM (ECS/EKS) ask the scheduler loop to stop, as an administrator's "stop" request does
+        GracefulShutdown.register(HarvestScheduler.class.getName(),
+                                  () -> setInterrupt(HARVESTER_INTERRUPT_STOP));
         long i = 0;
         while (true) {
             try {

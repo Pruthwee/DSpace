@@ -625,6 +625,7 @@ public class Email {
      *              message is sent.
      */
     public static void main(String[] args) {
+        GracefulShutdown.register(Email.class.getName());
         ConfigurationService config
                 = DSpaceServicesFactory.getInstance().getConfigurationService();
         String to = config.getProperty("mail.admin");

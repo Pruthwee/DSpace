@@ -36,6 +36,7 @@ import org.dspace.content.Bitstream;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BitstreamService;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.core.Utils;
 
 /**
@@ -84,6 +85,7 @@ public final class ChecksumChecker {
      * @throws SQLException if error
      */
     public static void main(String[] args) throws SQLException {
+        GracefulShutdown.register(ChecksumChecker.class.getName());
         // set up command line parser
         CommandLineParser parser = new DefaultParser();
         CommandLine line = null;

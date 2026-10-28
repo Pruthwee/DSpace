@@ -42,6 +42,7 @@ import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.GracefulShutdown;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.factory.EPersonServiceFactory;
@@ -321,6 +322,7 @@ public class SolrUpgradePre6xStatistics {
      *             if the command-line arguments cannot be parsed
      */
     public static void main(String[] args) throws ParseException {
+        GracefulShutdown.register(SolrUpgradePre6xStatistics.class.getName());
         CommandLineParser parser = new DefaultParser();
         Options options = makeOptions();
 
