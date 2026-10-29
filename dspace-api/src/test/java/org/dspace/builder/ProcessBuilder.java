@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Set;
 
@@ -74,9 +74,9 @@ public class ProcessBuilder extends AbstractBuilder<Process, ProcessService> {
      */
     public ProcessBuilder withStartAndEndTime(String startTime, String endTime) {
         process.setStartTime(startTime == null ? null : LocalDate.parse(startTime).atStartOfDay()
-                                                                 .atZone(ZoneId.systemDefault()).toInstant());
+                                                                 .atZone(ZoneOffset.UTC).toInstant());
         process.setFinishedTime(endTime == null ? null : LocalDate.parse(endTime).atStartOfDay()
-                                                                  .atZone(ZoneId.systemDefault()).toInstant());
+                                                                  .atZone(ZoneOffset.UTC).toInstant());
         return this;
     }
 

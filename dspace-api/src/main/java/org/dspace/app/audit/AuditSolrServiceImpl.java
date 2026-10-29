@@ -510,7 +510,7 @@ public class AuditSolrServiceImpl implements AuditService {
             fromDate = "*";
         } else {
             fromDate = SolrUtils.getDateFormatter().format(
-                from.toInstant().atZone(java.time.ZoneId.systemDefault())
+                from.toInstant().atZone(java.time.ZoneOffset.UTC)
             );
         }
         String toDate;
@@ -518,7 +518,7 @@ public class AuditSolrServiceImpl implements AuditService {
             toDate = "*";
         } else {
             toDate = SolrUtils.getDateFormatter().format(
-                to.toInstant().atZone(java.time.ZoneId.systemDefault())
+                to.toInstant().atZone(java.time.ZoneOffset.UTC)
             );
         }
         return DATETIME_FIELD + ":[" + fromDate + " TO " + toDate + "]";

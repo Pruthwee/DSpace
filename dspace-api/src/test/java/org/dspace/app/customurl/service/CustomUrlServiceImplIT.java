@@ -12,6 +12,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -188,7 +189,7 @@ public class CustomUrlServiceImplIT extends AbstractIntegrationTestWithDatabase 
     @Test
     public void testGenerateUniqueUrl_SuffixLogic() throws Exception {
         context.turnOffAuthorisationSystem();
-        String base = "suffix-test-" + System.currentTimeMillis();
+        String base = "suffix-test-" + Instant.now().toEpochMilli();
         Item item1 = ItemBuilder.createItem(context, collection).build();
         Item item2 = ItemBuilder.createItem(context, collection).build();
 

@@ -12,7 +12,6 @@ import static org.junit.Assert.assertNull;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 
 import org.junit.Test;
@@ -36,7 +35,7 @@ public class AuthorityValueTest {
 
         // Test a date-time without zone or offset.
         expected = LocalDateTime.of(1957, 01, 27, 01, 23, 45)
-                                .atZone(ZoneId.systemDefault())
+                                .atZone(ZoneOffset.UTC)
                                 .toInstant();
         actual = AuthorityValue.stringToDate("1957-01-27T01:23:45");
         assertEquals("Local date-time should convert", expected, actual);

@@ -11,6 +11,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-CSP_NONCE_PLACEHOLDER'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self'">
     <meta charset="utf-8">
     <title>Sign in - HAL Browser</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,7 +65,7 @@
     </form>
 </div>
 
-<script>
+<script nonce="CSP_NONCE_PLACEHOLDER">
     $(document).ready(function() {
         var successHandler = function(result, status, xhr) {
             // look for Authorization header & save to a MyHalBrowserToken cookie

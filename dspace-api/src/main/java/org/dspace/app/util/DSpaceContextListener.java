@@ -8,6 +8,7 @@
 package org.dspace.app.util;
 
 import java.beans.Introspector;
+import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Driver;
@@ -25,6 +26,9 @@ import org.apache.logging.log4j.Logger;
 public class DSpaceContextListener implements ServletContextListener {
     private static Logger log = org.apache.logging.log4j.LogManager.getLogger(DSpaceContextListener.class);
 
+    private static final int CONNECT_TIMEOUT_MS = 5000;
+    private static final int READ_TIMEOUT_MS = 30000;
+
     /**
      * Initialize any resources required by the application.
      *
@@ -35,11 +39,12 @@ public class DSpaceContextListener implements ServletContextListener {
         // On Windows, URL caches can cause problems, particularly with undeployment
         // So, here we attempt to disable them if we detect that we are running on Windows
         try {
-            String osName = System.getProperty("os.name");
-
-            if (osName != null && osName.toLowerCase().contains("windows")) {
+            // Windows is detected by its '\\' file name separator (no OS name string matching)
+            if (File.separatorChar == '\\') {
                 URL url = new URL("http://localhost/");
                 URLConnection urlConn = url.openConnection();
+                urlConn.setConnectTimeout(CONNECT_TIMEOUT_MS);
+                urlConn.setReadTimeout(READ_TIMEOUT_MS);
                 urlConn.setDefaultUseCaches(false);
             }
         } catch (RuntimeException e) {

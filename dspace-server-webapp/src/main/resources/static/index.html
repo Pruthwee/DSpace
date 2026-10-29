@@ -12,6 +12,7 @@
 -->
 <!doctype html>
 <head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-CSP_NONCE_PLACEHOLDER' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self'">
     <meta charset="utf-8">
     <title>The HAL Browser (customized for DSpace)</title>
     <link rel="stylesheet" media="screen" href="webjars/bootstrap/dist/css/bootstrap.min.css" />
@@ -21,6 +22,25 @@
         }
         .sidebar-nav {
             padding: 9px 0;
+        }
+        /* Placeholder shown inside #browser until the HAL Browser JS replaces it */
+        .skeleton {
+            padding: 10px 0;
+        }
+        .skeleton-line {
+            height: 1.5rem;
+            margin-bottom: 0.75rem;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%);
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s ease-in-out infinite;
+        }
+        .skeleton-line.short {
+            width: 40%;
+        }
+        @keyframes skeleton-shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
     </style>
     <link rel="stylesheet" media="screen" href="styles.css" />
@@ -45,9 +65,15 @@
     </div>
 </nav>
 
-<div id="browser" class="container-fluid"></div>
+<div id="browser" class="container-fluid">
+    <div class="skeleton" aria-busy="true" aria-live="polite">
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+    </div>
+</div>
 
-<script id="location-bar-template" type="text/template">
+<script id="location-bar-template" type="text/template" nonce="CSP_NONCE_PLACEHOLDER">
     <form>
         <div class="input-group mb-3">
             <input type="text" class="form-control" id="appendedInputButton" type="text" value="<%= _.escape(url) %>">
@@ -58,7 +84,7 @@
     </form>
 </script>
 
-<script id="links-template" type="text/template">
+<script id="links-template" type="text/template" nonce="CSP_NONCE_PLACEHOLDER">
     <h2>Links</h2>
     <table class="table">
         <thead>
@@ -123,7 +149,7 @@
     </table>
 </script>
 
-<script id="properties-template" type="text/template">
+<script id="properties-template" type="text/template" nonce="CSP_NONCE_PLACEHOLDER">
     <h2>Properties</h2>
     <div class="card read-only">
         <div class="card-body">
@@ -132,14 +158,14 @@
     </div>
 </script>
 
-<script id="request-headers-template" type="text/template">
+<script id="request-headers-template" type="text/template" nonce="CSP_NONCE_PLACEHOLDER">
     <h2>Custom Request Headers</h2>
     <div class="input-group">
         <textarea class="form-control"></textarea>
     </div>
 </script>
 
-<script id="response-headers-template" type="text/template">
+<script id="response-headers-template" type="text/template" nonce="CSP_NONCE_PLACEHOLDER">
     <h2>Response Headers</h2>
     <div class="card read-only">
         <div class="card-body">
@@ -160,7 +186,7 @@
     </div>
 </script>
 
-<script id="response-body-template" type="text/template">
+<script id="response-body-template" type="text/template" nonce="CSP_NONCE_PLACEHOLDER">
     <h2>Response Body</h2>
     <div class="card read-only">
         <div class="card-body">
@@ -169,7 +195,7 @@
     </div>
 </script>
 
-<script id="query-uri-template" type="text/template">
+<script id="query-uri-template" type="text/template" nonce="CSP_NONCE_PLACEHOLDER">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -202,7 +228,7 @@
 </script>
 
 
-<script id="non-safe-request-template" type="text/template">
+<script id="non-safe-request-template" type="text/template" nonce="CSP_NONCE_PLACEHOLDER">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -235,7 +261,7 @@ Content-Type: application/json
     </div>
 </script>
 
-<script id="dynamic-request-template" type="text/template">
+<script id="dynamic-request-template" type="text/template" nonce="CSP_NONCE_PLACEHOLDER">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -267,11 +293,11 @@ Content-Type: application/json
     </div>
 </script>
 
-<script id="embedded-resources-template" type="text/template">
+<script id="embedded-resources-template" type="text/template" nonce="CSP_NONCE_PLACEHOLDER">
     <h2>Embedded Resources</h2>
 </script>
 
-<script id="embedded-resource-template" type="text/template">
+<script id="embedded-resource-template" type="text/template" nonce="CSP_NONCE_PLACEHOLDER">
     <div class="accordion-heading">
         <a class="accordion-toggle" href="#"><%= resource.identifier %><% if (resource.title) { %>: <span class="embedded-resource-title"><%- resource.title %></span><% } %>
             <% if (HAL.isUrl(resource.embed_rel)) { %>
@@ -324,7 +350,7 @@ Content-Type: application/json
 <script src="webjars/json-editor__json-editor/2.15.2/dist/jsoneditor.js"></script>
 <script src="js/vendor/CustomPostForm.js"></script>
 
-<script>
+<script nonce="CSP_NONCE_PLACEHOLDER">
     var browser = new HAL.Browser({
         container: $('#browser'),
         entryPoint: window.location.pathname + 'api'

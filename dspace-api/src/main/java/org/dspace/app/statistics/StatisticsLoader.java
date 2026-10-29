@@ -44,8 +44,9 @@ public class StatisticsLoader {
     private static Pattern reportMonthlyPattern;
     private static Pattern reportGeneralPattern;
 
-    private static ThreadLocal<DateTimeFormatter> monthlySDF;
-    private static ThreadLocal<DateTimeFormatter> generalSDF;
+    // DateTimeFormatter is immutable and thread-safe, so it can be shared between threads
+    private static final DateTimeFormatter monthlySDF = DateTimeFormatter.ofPattern("yyyy'-'M");
+    private static final DateTimeFormatter generalSDF = DateTimeFormatter.ofPattern("yyyy'-'M'-'dd");
 
     // one time initialisation of the regex patterns and formatters we will use
     static {
@@ -53,20 +54,6 @@ public class StatisticsLoader {
         analysisGeneralPattern = Pattern.compile("dspace-log-general-([0-9]+-[0-9]+-[0-9]+)\\.dat");
         reportMonthlyPattern = Pattern.compile("report-([0-9][0-9][0-9][0-9]-[0-9]+)\\.html");
         reportGeneralPattern = Pattern.compile("report-general-([0-9]+-[0-9]+-[0-9]+)\\.html");
-
-        monthlySDF = new ThreadLocal<DateTimeFormatter>() {
-            @Override
-            protected DateTimeFormatter initialValue() {
-                return DateTimeFormatter.ofPattern("yyyy'-'M");
-            }
-        };
-
-        generalSDF = new ThreadLocal<DateTimeFormatter>() {
-            @Override
-            protected DateTimeFormatter initialValue() {
-                return DateTimeFormatter.ofPattern("yyyy'-'M'-'dd");
-            }
-        };
     }
 
     /**
@@ -104,7 +91,7 @@ public class StatisticsLoader {
         int i = 0;
         for (String date : keys) {
             try {
-                dates[i] = YearMonth.parse(date, monthlySDF.get()).atDay(1);
+                dates[i] = YearMonth.parse(date, monthlySDF).atDay(1);
             } catch (DateTimeParseException pe) {
                 //ignore
             }
@@ -234,7 +221,7 @@ public class StatisticsLoader {
                 // If we haven't identified this file yet
                 if (statsFile == null) {
                     // See if it is a monthly analysis file
-                    statsFile = makeStatsFile(thisFile, analysisMonthlyPattern, monthlySDF.get());
+                    statsFile = makeStatsFile(thisFile, analysisMonthlyPattern, monthlySDF);
                     if (statsFile != null) {
                         // If it is, add it to the map
                         newMonthlyAnalysis.put(statsFile.dateStr, statsFile);
@@ -244,7 +231,7 @@ public class StatisticsLoader {
                 // If we haven't identified this file yet
                 if (statsFile == null) {
                     // See if it is a monthly report file
-                    statsFile = makeStatsFile(thisFile, reportMonthlyPattern, monthlySDF.get());
+                    statsFile = makeStatsFile(thisFile, reportMonthlyPattern, monthlySDF);
                     if (statsFile != null) {
                         // If it is, add it to the map
                         newMonthlyReports.put(statsFile.dateStr, statsFile);
@@ -254,7 +241,7 @@ public class StatisticsLoader {
                 // If we haven't identified this file yet
                 if (statsFile == null) {
                     // See if it is a general analysis file
-                    statsFile = makeStatsFile(thisFile, analysisGeneralPattern, generalSDF.get());
+                    statsFile = makeStatsFile(thisFile, analysisGeneralPattern, generalSDF);
                     if (statsFile != null) {
                         // If it is, ensure that we are pointing to the most recent file
                         if (newGeneralAnalysis == null || statsFile.date.isAfter(newGeneralAnalysis.date)) {
@@ -266,7 +253,7 @@ public class StatisticsLoader {
                 // If we haven't identified this file yet
                 if (statsFile == null) {
                     // See if it is a general report file
-                    statsFile = makeStatsFile(thisFile, reportGeneralPattern, generalSDF.get());
+                    statsFile = makeStatsFile(thisFile, reportGeneralPattern, generalSDF);
                     if (statsFile != null) {
                         // If it is, ensure that we are pointing to the most recent file
                         if (newGeneralReport == null || statsFile.date.isAfter(newGeneralReport.date)) {

@@ -131,8 +131,10 @@ public class ItemImportCLI extends ItemImport {
                 sourcedir = itemImportService.unzip(myZipFile, workDir.getAbsolutePath());
             } else {
                 // manage zip via remote url
-                Optional<InputStream> optionalFileStream = Optional.ofNullable(new URL(zipfilename).openStream());
-                Optional<InputStream> validationFileStream = Optional.ofNullable(new URL(zipfilename).openStream());
+                Optional<InputStream> optionalFileStream =
+                    Optional.ofNullable(openStreamWithTimeouts(new URL(zipfilename)));
+                Optional<InputStream> validationFileStream =
+                    Optional.ofNullable(openStreamWithTimeouts(new URL(zipfilename)));
                 try {
                     if (optionalFileStream.isPresent()) {
                         // validate zip file via url

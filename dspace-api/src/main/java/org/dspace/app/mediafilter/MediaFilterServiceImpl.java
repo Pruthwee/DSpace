@@ -10,7 +10,7 @@ package org.dspace.app.mediafilter;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -128,7 +128,7 @@ public class MediaFilterServiceImpl implements MediaFilterService, InitializingB
             Iterator<Item> itemIterator =
                     itemService.findByLastModifiedSince(
                             context,
-                            fromDate.atStartOfDay(ZoneId.systemDefault()).toInstant()
+                            fromDate.atStartOfDay(ZoneOffset.UTC).toInstant()
                     );
             while (itemIterator.hasNext() && processed < max2Process) {
                 applyFiltersItem(context, itemIterator.next());

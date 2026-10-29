@@ -47,6 +47,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OpenAireImportMetadataSourceServiceImpl extends AbstractImportMetadataSourceService<Element>
         implements QuerySource {
 
+    private static final String DEFAULT_SEARCH_URL = "https://api.openaire.eu/search/publications";
+
+    private static String getDefaultSearchUrl() {
+        String envUrl = System.getenv("OPENAIRE_PUBLICATIONS_URL");
+        return (envUrl == null || envUrl.isBlank()) ? DEFAULT_SEARCH_URL : envUrl;
+    }
+
     @Autowired(required = true)
     protected ConfigurationService configurationService;
 
@@ -188,7 +195,7 @@ public class OpenAireImportMetadataSourceServiceImpl extends AbstractImportMetad
         Client client = ClientBuilder.newClient();
         if (baseAddress == null) {
             baseAddress = configurationService.getProperty("openaire.search.url",
-                                                           "https://api.openaire.eu/search/publications");
+                                                           getDefaultSearchUrl());
         }
         if (queryParam == null) {
             queryParam = "title";

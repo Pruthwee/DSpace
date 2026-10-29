@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -1092,9 +1092,9 @@ public class LogAnalyser {
      */
     public static Instant convertDate(LocalDate date, boolean startOfDay) {
         if (startOfDay) {
-            return date.atStartOfDay(ZoneId.systemDefault()).toInstant();
+            return date.atStartOfDay(ZoneOffset.UTC).toInstant();
         } else {
-            return date.atTime(LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant();
+            return date.atTime(LocalTime.MAX).atZone(ZoneOffset.UTC).toInstant();
         }
     }
 

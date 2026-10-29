@@ -32,9 +32,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -3185,9 +3186,9 @@ public class BitstreamRestRepositoryIT extends AbstractControllerIntegrationTest
         Date restDateToFormat = Date.from(new DCDate(dateRef.get()).toDate().toInstant());
 
         // Format the dates to compare them accordingly
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String local = sdf.format(rpDateToFormat);
-        String rest = sdf.format(restDateToFormat);
+        DateTimeFormatter sdf = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.systemDefault());
+        String local = sdf.format(rpDateToFormat.toInstant());
+        String rest = sdf.format(restDateToFormat.toInstant());
         Assert.assertEquals(local, rest);
     }
 

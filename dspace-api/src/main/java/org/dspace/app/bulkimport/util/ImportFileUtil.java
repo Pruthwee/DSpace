@@ -30,6 +30,9 @@ import org.dspace.services.factory.DSpaceServicesFactory;
  */
 public class ImportFileUtil {
 
+    private static final int CONNECT_TIMEOUT_MS = 5000;
+    private static final int READ_TIMEOUT_MS = 30000;
+
     public static final String REMOTE = "REMOTE";
     public static final String FTP = "FTP";
     private static final Logger log = LogManager.getLogger(ImportFileUtil.class);
@@ -195,7 +198,10 @@ public class ImportFileUtil {
 
     protected InputStream openStream(URL url) {
         try {
-            return url.openStream();
+            URLConnection connection = url.openConnection();
+            connection.setConnectTimeout(CONNECT_TIMEOUT_MS);
+            connection.setReadTimeout(READ_TIMEOUT_MS);
+            return connection.getInputStream();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -211,6 +217,8 @@ public class ImportFileUtil {
             return Optional.empty();
         }
         URLConnection urlConnection = urlObject.openConnection();
+        urlConnection.setConnectTimeout(CONNECT_TIMEOUT_MS);
+        urlConnection.setReadTimeout(READ_TIMEOUT_MS);
         InputStream inputStream = urlConnection.getInputStream();
         if (inputStream == null) {
             logError(

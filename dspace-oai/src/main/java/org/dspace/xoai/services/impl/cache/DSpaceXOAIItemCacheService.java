@@ -64,13 +64,11 @@ public class DSpaceXOAIItemCacheService implements XOAIItemCacheService {
     public Metadata get(Item item) throws IOException {
         System.out.println(FileUtils.readFileToString(getMetadataCache(item)));
         Metadata metadata;
-        FileInputStream input = new FileInputStream(getMetadataCache(item));
-        try {
+        try (FileInputStream input = new FileInputStream(getMetadataCache(item))) {
             metadata = XOAIParser.parse(input);
         } catch (XMLStreamException e) {
             throw new IOException(e);
         }
-        input.close();
 
         return metadata;
     }

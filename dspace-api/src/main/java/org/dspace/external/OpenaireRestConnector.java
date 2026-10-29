@@ -51,11 +51,13 @@ public class OpenaireRestConnector {
      */
     private static Logger log = org.apache.logging.log4j.LogManager.getLogger(OpenaireRestConnector.class);
 
+    private static final String DEFAULT_URL = "https://api.openaire.eu";
+
     /**
      * Openaire API Url
      *  and can be configured with: openaire.api.url
      */
-    private String url = "https://api.openaire.eu";
+    private String url = resolveDefaultUrl();
 
     /**
      * Boolean with token usage definition true if we want to use a token
@@ -86,6 +88,11 @@ public class OpenaireRestConnector {
      */
     private String clientSecret;
 
+
+    private static String resolveDefaultUrl() {
+        String envUrl = System.getenv("OPENAIRE_API_URL");
+        return (envUrl == null || envUrl.isBlank()) ? DEFAULT_URL : envUrl;
+    }
 
     public OpenaireRestConnector(String url) {
         this.url = url;

@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.random.RandomGenerator;
@@ -120,7 +121,7 @@ public class AltchaCaptchaRestController implements InitializingBean {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.put("Cache-Control", Collections.singletonList("private,no-cache"));
             httpHeaders.put("Expires", Collections.singletonList(FastHttpDateFormat.formatDate(
-                    System.currentTimeMillis() + DEFAULT_EXPIRE_TIME)));
+                    Instant.now().toEpochMilli() + DEFAULT_EXPIRE_TIME)));
             httpHeaders.put("Content-Type", Collections.singletonList("application/json"));
             httpHeaders.put("Content-Length", Collections.singletonList(
                     String.valueOf(body.getBytes(StandardCharsets.UTF_8).length)));

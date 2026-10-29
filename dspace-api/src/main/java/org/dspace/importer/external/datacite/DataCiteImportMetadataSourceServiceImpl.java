@@ -46,6 +46,13 @@ public class DataCiteImportMetadataSourceServiceImpl
         extends AbstractImportMetadataSourceService<String> implements QuerySource {
     private final static Logger log = LogManager.getLogger();
 
+    private static final String DEFAULT_URL = "https://api.datacite.org/dois/";
+
+    private static String getDefaultUrl() {
+        String envUrl = System.getenv("DATACITE_URL");
+        return (envUrl == null || envUrl.isBlank()) ? DEFAULT_URL : envUrl;
+    }
+
     @Autowired
     private LiveImportClient liveImportClient;
 
@@ -95,7 +102,7 @@ public class DataCiteImportMetadataSourceServiceImpl
         uriParameters.put("query", id);
         uriParameters.put("page[size]", "1");
         int timeoutMs = configurationService.getIntProperty("datacite.timeout", 180000);
-        String url = configurationService.getProperty("datacite.url", "https://api.datacite.org/dois/");
+        String url = configurationService.getProperty("datacite.url", getDefaultUrl());
         String responseString = liveImportClient.executeHttpGetRequest(timeoutMs, url, params);
         JsonNode jsonNode = convertStringJsonToJsonNode(responseString);
         if (jsonNode == null) {
@@ -146,7 +153,7 @@ public class DataCiteImportMetadataSourceServiceImpl
         }
 
         int timeoutMs = configurationService.getIntProperty("datacite.timeout", 180000);
-        String url = configurationService.getProperty("datacite.url", "https://api.datacite.org/dois/");
+        String url = configurationService.getProperty("datacite.url", getDefaultUrl());
         String responseString = liveImportClient.executeHttpGetRequest(timeoutMs, url, params);
         JsonNode jsonNode = convertStringJsonToJsonNode(responseString);
         if (jsonNode == null) {

@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,6 +53,9 @@ import org.jdom2.Element;
 
 @SuppressWarnings("deprecation")
 public class GoogleMetadata {
+
+    private static final int CONNECT_TIMEOUT_MS = 5000;
+    private static final int READ_TIMEOUT_MS = 30000;
 
     private final static Logger log = LogManager.getLogger(GoogleMetadata.class);
 
@@ -160,7 +164,10 @@ public class GoogleMetadata {
         Properties properties = new Properties();
         InputStream is;
         try {
-            is = url.openStream();
+            URLConnection urlConnection = url.openConnection();
+            urlConnection.setConnectTimeout(CONNECT_TIMEOUT_MS);
+            urlConnection.setReadTimeout(READ_TIMEOUT_MS);
+            is = urlConnection.getInputStream();
             properties.load(is);
 
         } catch (IOException iox) {

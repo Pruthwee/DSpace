@@ -45,6 +45,8 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public class OpenPolicyFinderService {
 
+    private static final String DEFAULT_ENDPOINT = "https://api.openpolicyfinder.jisc.ac.uk/retrieve";
+
     private int maxNumberOfTries;
     private long sleepBetweenTimeouts;
     private int timeout = 5000;
@@ -73,7 +75,8 @@ public class OpenPolicyFinderService {
             log.warn("Configuration property 'sherpa.romeo.url' is deprecated. "
                 + "Please use 'openpolicyfinder.url' instead.");
         } else {
-            endpoint = "https://api.openpolicyfinder.jisc.ac.uk/retrieve";
+            String envUrl = System.getenv("OPEN_POLICY_FINDER_URL");
+            endpoint = (envUrl == null || envUrl.isBlank()) ? DEFAULT_ENDPOINT : envUrl;
         }
 
         String newApiKey = configurationService.getProperty("openpolicyfinder.apikey");

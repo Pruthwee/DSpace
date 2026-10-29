@@ -10,7 +10,7 @@ package org.dspace.authority;
 import java.sql.SQLException;
 import java.time.DateTimeException;
 import java.time.Instant;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -278,7 +278,7 @@ public class AuthorityValue {
         List<java.time.format.DateTimeFormatter> list = new ArrayList<>();
         list.add(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSS]X"));
         list.add(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
-                .withZone(ZoneId.systemDefault().normalized()));
+                .withZone(ZoneOffset.UTC));
         return list;
     }
 

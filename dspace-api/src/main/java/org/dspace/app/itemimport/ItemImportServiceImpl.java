@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -140,6 +141,9 @@ import org.xml.sax.SAXException;
  * allow the registration of files (bitstreams) into DSpace.
  */
 public class ItemImportServiceImpl implements ItemImportService, InitializingBean {
+
+    private static final int CONNECT_TIMEOUT_MS = 5000;
+    private static final int READ_TIMEOUT_MS = 30000;
     private final Logger log = LogManager.getLogger();
 
     private DSpaceRunnableHandler handler;
@@ -2207,7 +2211,10 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
                         byte[] b = new byte[2048];
                         int length;
 
-                        InputStream is = new URL(theFilePath).openStream();
+                        URLConnection urlConnection = new URL(theFilePath).openConnection();
+                        urlConnection.setConnectTimeout(CONNECT_TIMEOUT_MS);
+                        urlConnection.setReadTimeout(READ_TIMEOUT_MS);
+                        InputStream is = urlConnection.getInputStream();
                         while ((length = is.read(b)) != -1) {
                             os.write(b, 0, length);
                         }
