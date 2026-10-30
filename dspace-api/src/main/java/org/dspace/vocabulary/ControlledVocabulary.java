@@ -64,9 +64,9 @@ public class ControlledVocabulary {
         ConfigurationService configurationService
                 = DSpaceServicesFactory.getInstance().getConfigurationService();
         filePath.append(configurationService.getProperty("dspace.dir"))
-                .append(File.separatorChar).append("config")
-                .append(File.separatorChar).append("controlled-vocabularies")
-                .append(File.separator).append(fileName)
+                .append("/").append("config")
+                .append("/").append("controlled-vocabularies")
+                .append("/").append(fileName)
                 .append(".xml");
 
         File controlledVocFile = new File(filePath.toString());

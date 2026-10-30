@@ -69,7 +69,7 @@ public class AnonymizeStatistics {
             DSpaceServicesFactory.getInstance().getConfigurationService();
 
     private static int batchSize = 100;
-    private static int threads = 2;
+    private static int threads = Integer.parseInt(System.getenv().getOrDefault("ANONYMIZE_STATISTICS_THREADS", "2"));
 
     private static final Object DNS_MASK =
             configurationService.getProperty("anonymize_statistics.dns_mask", "anonymized");

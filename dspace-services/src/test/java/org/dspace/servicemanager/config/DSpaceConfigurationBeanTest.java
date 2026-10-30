@@ -36,8 +36,8 @@ public class DSpaceConfigurationBeanTest
     @Before
     public void init() {
         // Save the path to our main test configuration file
-        propertyFilePath = new DSpaceConfigurationService().getDSpaceHome(null) + File.separatorChar
-            + DSpaceConfigurationService.DEFAULT_CONFIG_DIR + File.separatorChar + "local.properties";
+        propertyFilePath = new DSpaceConfigurationService().getDSpaceHome(null) + "/"
+            + DSpaceConfigurationService.DEFAULT_CONFIG_DIR + "/" + "local.properties";
     }
 
     /**

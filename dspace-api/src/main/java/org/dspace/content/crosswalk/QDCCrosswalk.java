@@ -251,7 +251,7 @@ public class QDCCrosswalk extends SelfNamedPlugin
         }
 
         String parent = configurationService.getProperty("dspace.dir") +
-            File.separator + "config" + File.separator;
+            "/" + "config" + "/";
         File propsFile = new File(parent, propsFilename);
         Properties qdcProps = new Properties();
         FileInputStream pfs = null;

@@ -159,7 +159,7 @@ public class ItemExportServiceImpl implements ItemExportService {
         while (i.hasNext()) {
             if (SUBDIR_LIMIT > 0 && ++counter == SUBDIR_LIMIT) {
                 subdir = Integer.toString(subDirSuffix++);
-                fullPath = destDirName + File.separatorChar + subdir;
+                fullPath = destDirName + "/" + subdir;
                 counter = 0;
 
                 if (!new File(fullPath).mkdirs()) {
@@ -797,7 +797,7 @@ public class ItemExportServiceImpl implements ItemExportService {
                 "A dspace.cfg entry for 'org.dspace.app.itemexport.work.dir' does not exist.");
         }
         // clean work dir path from duplicate separators
-        return Strings.CS.replace(exportDir, File.separator + File.separator, File.separator);
+        return Strings.CS.replace(exportDir, "/" + "/", "/");
     }
 
     @Override
@@ -1057,7 +1057,7 @@ public class ItemExportServiceImpl implements ItemExportService {
                 }
                 String strAbsPath = cpFile.getPath();
                 int startIndex = strSource.length();
-                if (!Strings.CS.endsWith(strSource, File.separator)) {
+                if (!Strings.CS.endsWith(strSource, "/")) {
                     startIndex++;
                 }
                 String strZipEntryName = strAbsPath.substring(startIndex, strAbsPath.length());

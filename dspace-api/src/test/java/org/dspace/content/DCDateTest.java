@@ -48,7 +48,7 @@ public class DCDateTest {
     public void init() {
         // Set the default timezone for all tests to GMT-8
         // This will also ensure ZoneId.systemDefault() returns GMT-8
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT-8"));
+        TimeZone.setDefault(TimeZone.getTimeZone(System.getenv().getOrDefault("APP_TIMEZONE", "GMT-8")));
     }
 
     /**

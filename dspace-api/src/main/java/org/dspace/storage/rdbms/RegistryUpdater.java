@@ -65,8 +65,8 @@ public class RegistryUpdater implements Callback {
             context.turnOffAuthorisationSystem();
 
             String base = config.getProperty("dspace.dir")
-                + File.separator + "config" + File.separator
-                + "registries" + File.separator;
+                + "/" + "config" + "/"
+                + "registries" + "/";
 
             // Load updates to Bitstream format registry (if any)
             log.info("Updating Bitstream Format Registry based on {}bitstream-formats.xml", base);

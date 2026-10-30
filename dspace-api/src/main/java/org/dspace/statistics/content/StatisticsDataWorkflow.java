@@ -203,8 +203,8 @@ public class StatisticsDataWorkflow extends StatisticsData {
                     // Also store it in the solr-statics configuration file, the reason for this being that the sort
                     // query can be very time consuming & we do not want this delay each time we want to see workflow
                     // statistics
-                    String solrConfigDir = configurationService.getProperty("dspace.dir") + File.separator + "config"
-                        + File.separator + "modules" + File.separator + "usage-statistics.cfg";
+                    String solrConfigDir = configurationService.getProperty("dspace.dir") + "/" + "config"
+                        + "/" + "modules" + "/" + "usage-statistics.cfg";
                     FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new Configurations()
                         .propertiesBuilder(solrConfigDir);
                     PropertiesConfiguration config = builder.getConfiguration();

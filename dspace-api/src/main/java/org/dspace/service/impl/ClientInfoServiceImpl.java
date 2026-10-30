@@ -109,7 +109,7 @@ public class ClientInfoServiceImpl implements ClientInfoService {
      * @return IPTable of trusted IP addresses/ranges, or null if none could be found.
      */
     private IPTable parseTrustedProxyRanges() {
-        String localhostIP = "127.0.0.1";
+        String localhostIP = System.getenv().getOrDefault("LOCALHOST_IP", "127.0.0.1");
         IPTable ipTable = new IPTable();
 
         // Get list of trusted proxy IP ranges
@@ -220,7 +220,7 @@ public class ClientInfoServiceImpl implements ClientInfoService {
         }
 
         if (bytes == 4) {
-            return "0.0.0.0";
+            return System.getenv().getOrDefault("WILDCARD_IP", "0.0.0.0");
         }
 
         String zeroSuffix = StringUtils.repeat(".0", bytes);

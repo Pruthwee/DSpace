@@ -288,7 +288,7 @@ public class LogAnalyser {
      * the configuration file from which to configure the analyser
      */
     private static String configFile = configurationService.getProperty("dspace.dir")
-            + File.separator + "config" + File.separator + "dstat.cfg";
+            + "/" + "config" + "/" + "dstat.cfg";
 
     /**
      * the output file to which to write aggregation data
@@ -686,7 +686,7 @@ public class LogAnalyser {
         if (myOutFile != null) {
             outFile = myOutFile;
         } else {
-            outFile = configurationService.getProperty("log.report.dir") + File.separator + "dstat.dat";
+            outFile = configurationService.getProperty("log.report.dir") + "/" + "dstat.dat";
         }
     }
 

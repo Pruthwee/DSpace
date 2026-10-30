@@ -32,16 +32,11 @@ public class DSpaceContextListener implements ServletContextListener {
      */
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        // On Windows, URL caches can cause problems, particularly with undeployment
-        // So, here we attempt to disable them if we detect that we are running on Windows
+        // Disable URL caches to prevent issues with undeployment
         try {
-            String osName = System.getProperty("os.name");
-
-            if (osName != null && osName.toLowerCase().contains("windows")) {
-                URL url = new URL("http://localhost/");
-                URLConnection urlConn = url.openConnection();
-                urlConn.setDefaultUseCaches(false);
-            }
+            URL url = new URL("http://localhost/");
+            URLConnection urlConn = url.openConnection();
+            urlConn.setDefaultUseCaches(false);
         } catch (RuntimeException e) {
             // Any errors thrown in disabling the caches aren't significant to
             // the normal execution of the application, so we ignore them

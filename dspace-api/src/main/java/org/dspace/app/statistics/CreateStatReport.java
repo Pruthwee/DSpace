@@ -82,7 +82,7 @@ public class CreateStatReport {
 
         // Open the statistics config file
         final String configFile = configurationService.getProperty("dspace.dir")
-                + File.separator + "config" + File.separator + "dstat.cfg";
+                + "/" + "config" + "/" + "dstat.cfg";
         FileInputStream fis = new java.io.FileInputStream(new File(configFile));
         Properties config = new Properties();
         config.load(fis);
@@ -108,8 +108,8 @@ public class CreateStatReport {
         context.turnOffAuthorisationSystem();
 
         //get paths to directories
-        outputLogDirectory = configurationService.getProperty("log.report.dir") + File.separator;
-        outputReportDirectory = configurationService.getProperty("report.dir") + File.separator;
+        outputLogDirectory = configurationService.getProperty("log.report.dir") + "/";
+        outputReportDirectory = configurationService.getProperty("report.dir") + "/";
 
         //read in command line variable to determine which statistic to run
         CommandLineParser parser = new DefaultParser();

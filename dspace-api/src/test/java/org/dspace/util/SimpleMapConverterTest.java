@@ -113,7 +113,7 @@ public class SimpleMapConverterTest {
             () -> simpleMapConverter.init());
 
         // Get path separator used for this platform (eg. / for Linux, \ for Windows)
-        String separator = File.separator;
+        String separator = "/";
 
         assertThat(exception.getMessage(),
             is("An error occurs parsing " + dspaceDir.getAbsolutePath() + separator + "config" + separator

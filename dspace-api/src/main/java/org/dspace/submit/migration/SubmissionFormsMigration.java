@@ -45,17 +45,17 @@ public class SubmissionFormsMigration extends DSpaceRunnable<SubmissionFormsMigr
 
     private static final String PATH_OUT_CONFIG =
         DSpaceServicesFactory.getInstance().getConfigurationService().getProperty("dspace.dir")
-        + File.separator + "config";
+        + "/" + "config";
 
     private static final String PATH_XSL_SUBMISSION_FORMS =
-        PATH_OUT_CONFIG + File.separator + "migration" + File.separator + "submission-forms.xsl";
+        PATH_OUT_CONFIG + "/" + "migration" + "/" + "submission-forms.xsl";
     private static final String PATH_XSL_ITEM_SUBMISSION =
-        PATH_OUT_CONFIG + File.separator + "migration" + File.separator + "item-submissions.xsl";
+        PATH_OUT_CONFIG + "/" + "migration" + "/" + "item-submissions.xsl";
 
     private static final String PATH_OUT_INPUT_FORMS =
-        PATH_OUT_CONFIG + File.separator + "submission-forms.xml.migrated";
+        PATH_OUT_CONFIG + "/" + "submission-forms.xml.migrated";
     private static final String PATH_OUT_ITEM_SUBMISSION =
-        PATH_OUT_CONFIG + File.separator + "item-submission.xml.migrated";
+        PATH_OUT_CONFIG + "/" + "item-submission.xml.migrated";
 
     private static final String NAME_DTD_INPUT_FORMS = "input-forms.dtd";
     private static final String NAME_DTD_ITEM_SUBMISSION = "item-submission.dtd";
@@ -152,10 +152,10 @@ public class SubmissionFormsMigration extends DSpaceRunnable<SubmissionFormsMigr
     }
 
     private void createDummyFileIfNotPresent(String fileInInputDir, String dummyFileName, String dummyContent) {
-        String dir = StringUtils.substringBeforeLast(fileInInputDir, File.separator);
-        File dummyFile = new File (dir + File.separator + dummyFileName);
+        String dir = StringUtils.substringBeforeLast(fileInInputDir, "/");
+        File dummyFile = new File (dir + "/" + dummyFileName);
         if (!dummyFile.isFile()) {
-            Path path = Paths.get(dir + File.separator + dummyFileName);
+            Path path = Paths.get(dir + "/" + dummyFileName);
             byte[] strToBytes = dummyContent.getBytes();
 
             try {

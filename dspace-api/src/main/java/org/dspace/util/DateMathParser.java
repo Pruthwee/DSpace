@@ -101,7 +101,8 @@ public class DateMathParser {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    public static final TimeZone UTC = TimeZone.getTimeZone(ZoneOffset.UTC);
+    public static final TimeZone UTC = TimeZone.getTimeZone(
+        System.getenv().getOrDefault("APP_TIMEZONE", "UTC"));
 
     /**
      * Default TimeZone for DateMath rounding (UTC)

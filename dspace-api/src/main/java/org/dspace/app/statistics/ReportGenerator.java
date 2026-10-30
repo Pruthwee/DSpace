@@ -293,7 +293,7 @@ public class ReportGenerator {
             map = myMap;
         } else {
             map = configurationService.getProperty("dspace.dir")
-                    + File.separator + "config" + File.separator + "dstat.map";
+                    + "/" + "config" + "/" + "dstat.map";
         }
 
         // create the relevant report type

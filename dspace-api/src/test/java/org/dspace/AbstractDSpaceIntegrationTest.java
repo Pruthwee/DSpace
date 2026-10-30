@@ -79,12 +79,13 @@ public class AbstractDSpaceIntegrationTest {
             // All tests should assume UTC timezone by default (unless overridden in the test itself)
             // This ensures that Spring doesn't attempt to change the timezone of dates that are read from the
             // database (via Hibernate). We store all dates in the database as UTC.
-            TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
+            TimeZone.setDefault(TimeZone.getTimeZone(System.getenv().getOrDefault("APP_TIMEZONE", "UTC")));
 
             //load the properties of the tests
             testProps = new Properties();
+            String testConfigPath = System.getenv().getOrDefault("TEST_CONFIG_PATH", "test-config.properties");
             URL properties = AbstractDSpaceIntegrationTest.class.getClassLoader()
-                                                                .getResource("test-config.properties");
+                                                                .getResource(testConfigPath);
             testProps.load(properties.openStream());
 
             // Get a reference to current Kernel

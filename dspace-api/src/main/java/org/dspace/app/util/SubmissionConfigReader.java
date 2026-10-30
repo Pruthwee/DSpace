@@ -87,7 +87,7 @@ public class SubmissionConfigReader {
      */
     private String configDir = DSpaceServicesFactory.getInstance()
                                                     .getConfigurationService().getProperty("dspace.dir")
-        + File.separator + "config" + File.separator;
+        + "/" + "config" + "/";
 
     /**
      * Hashmap which stores which submission process configuration is used by

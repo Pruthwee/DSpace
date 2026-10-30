@@ -46,7 +46,7 @@ public class SimpleMapConverter {
         Assert.notNull(configurationService, "No configuration service provided");
 
         String mappingFile = configurationService.getProperty(
-            "dspace.dir") + File.separator + "config" + File.separator + "crosswalks" + File.separator +
+            "dspace.dir") + "/" + "config" + "/" + "crosswalks" + "/" +
             converterNameFile;
 
         try (FileInputStream fis = new FileInputStream(new File(mappingFile))) {

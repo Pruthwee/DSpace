@@ -207,7 +207,7 @@ public class Curation extends DSpaceRunnable<CurationScriptConfiguration> {
         List<String> allowedReporterBasePaths = Arrays.stream(
             DSpaceServicesFactory.getInstance()
             .getConfigurationService().getArrayProperty("curate.reporter.base",
-                    new String[]{dspaceDir + File.separatorChar + "log"})).toList();
+                    new String[]{dspaceDir + "/" + "log"})).toList();
         if (null == this.reporter) {
             reporterStream = NullOutputStream.INSTANCE;
         } else if ("-".equals(this.reporter)) {

@@ -126,8 +126,8 @@ public class ItemImportCLI extends ItemImport {
                     IOUtils.closeQuietly(validationFileStream);
                 }
 
-                workDir = new File(itemImportService.getTempWorkDir() + File.separator + TEMP_DIR
-                        + File.separator + context.getCurrentUser().getID());
+                workDir = new File(itemImportService.getTempWorkDir() + "/" + TEMP_DIR
+                        + "/" + context.getCurrentUser().getID());
                 sourcedir = itemImportService.unzip(myZipFile, workDir.getAbsolutePath());
             } else {
                 // manage zip via remote url
@@ -153,8 +153,8 @@ public class ItemImportCLI extends ItemImport {
 
                         workFile = validatedZipPath.toFile();
                         FileUtils.copyInputStreamToFile(optionalFileStream.get(), workFile);
-                        workDir = new File(tempWorkDir + File.separator + TEMP_DIR
-                                + File.separator + context.getCurrentUser().getID());
+                        workDir = new File(tempWorkDir + "/" + TEMP_DIR
+                                + "/" + context.getCurrentUser().getID());
                         sourcedir = itemImportService.unzip(workFile, workDir.getAbsolutePath());
                     } else {
                         throw new IllegalArgumentException(

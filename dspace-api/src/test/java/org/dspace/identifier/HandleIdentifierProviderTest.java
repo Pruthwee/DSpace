@@ -138,7 +138,8 @@ public class HandleIdentifierProviderTest
         // Load the test cases
         Properties forms = new Properties();
         try {
-            forms.load(this.getClass().getResourceAsStream("handle-forms.properties"));
+            forms.load(this.getClass().getResourceAsStream(
+                System.getenv().getOrDefault("HANDLE_FORMS_CONFIG", "handle-forms.properties")));
         } catch (IOException e) {
             System.err.format("Could not load handle-forms.properties:  %s%n", e.getMessage());
             return;

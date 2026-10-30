@@ -1158,7 +1158,7 @@ public class SolrLoggerServiceImpl implements SolrLoggerService, InitializingBea
 
         //Create a temp directory to store our files in !
         File tempDirectory = new File(
-            configurationService.getProperty("dspace.dir") + File.separator + "temp" + File.separator);
+            configurationService.getProperty("dspace.dir") + "/" + "temp" + "/");
         tempDirectory.mkdirs();
 
 
@@ -1210,7 +1210,7 @@ public class SolrLoggerServiceImpl implements SolrLoggerService, InitializingBea
                 HttpGet get = new HttpGet(solrRequestUrl);
                 InputStream csvInputstream;
                 File csvFile = new File(tempDirectory.getPath()
-                        + File.separatorChar
+                        + "/"
                         + "temp."
                         + dcStart.getYearUTC()
                         + "."
@@ -1342,7 +1342,7 @@ public class SolrLoggerServiceImpl implements SolrLoggerService, InitializingBea
             long totalRecords = solr.query(query).getResults().getNumFound();
 
             File tempDirectory = new File(
-                configurationService.getProperty("dspace.dir") + File.separator + "temp" + File.separator);
+                configurationService.getProperty("dspace.dir") + "/" + "temp" + "/");
             tempDirectory.mkdirs();
             List<File> tempCsvFiles = new ArrayList<>();
             for (int i = 0; i < totalRecords; i += 10000) {
@@ -1374,7 +1374,7 @@ public class SolrLoggerServiceImpl implements SolrLoggerService, InitializingBea
                     }
                 }
 
-                File tempCsv = new File(tempDirectory.getPath() + File.separatorChar + "temp." + i + ".csv");
+                File tempCsv = new File(tempDirectory.getPath() + "/" + "temp." + i + ".csv");
                 tempCsvFiles.add(tempCsv);
                 CSVWriter csvp = new CSVWriter(new FileWriter(tempCsv));
                 //csvp.setAlwaysQuote(false);
@@ -1457,7 +1457,7 @@ public class SolrLoggerServiceImpl implements SolrLoggerService, InitializingBea
         Context context = new Context();
 
         File tempDirectory = new File(
-            configurationService.getProperty("dspace.dir") + File.separator + "temp" + File.separator);
+            configurationService.getProperty("dspace.dir") + "/" + "temp" + "/");
         tempDirectory.mkdirs();
 
         try {
@@ -1479,7 +1479,7 @@ public class SolrLoggerServiceImpl implements SolrLoggerService, InitializingBea
                 QueryResponse queryResponse = solr.query(solrParams);
                 SolrDocumentList docs = queryResponse.getResults();
 
-                File exportOutput = new File(tempDirectory.getPath() + File.separatorChar + "usagestats_" + i + ".csv");
+                File exportOutput = new File(tempDirectory.getPath() + "/" + "usagestats_" + i + ".csv");
                 exportOutput.delete();
 
                 //export docs
@@ -1505,7 +1505,7 @@ public class SolrLoggerServiceImpl implements SolrLoggerService, InitializingBea
         for (SolrDocument doc : docs) {
             String ip = doc.get("ip").toString();
             if (ip.equals("::1")) {
-                ip = "127.0.0.1";
+                ip = System.getenv().getOrDefault("LOCALHOST_IP", "127.0.0.1");
             }
 
             String id = doc.get("id").toString();

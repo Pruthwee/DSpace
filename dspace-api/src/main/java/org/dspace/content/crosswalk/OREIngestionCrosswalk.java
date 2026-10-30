@@ -385,7 +385,10 @@ public class OREIngestionCrosswalk
         if (forbiddenHostUrls == null) {
             String dspaceServerUrl = configurationService.getProperty("dspace.server.url");
             String dspaceUiUrl = configurationService.getProperty("dspace.ui.url");
-            String[] localAndEC2Hosts = {"localhost", "127.0.0.1", "[::1]", "169.254.169.254", "[fd00:ec2::254]"};
+            String[] localAndEC2Hosts = {"localhost", System.getenv().getOrDefault("LOCALHOST_IP", "127.0.0.1"),
+                System.getenv().getOrDefault("IPV6_LOCALHOST", "[::1]"),
+                System.getenv().getOrDefault("EC2_METADATA_IP", "169.254.169.254"),
+                System.getenv().getOrDefault("EC2_METADATA_IPV6", "[fd00:ec2::254]")};
             List<String> defaultForbiddenUrlPrefixes = new ArrayList<>();
             Collections.addAll(defaultForbiddenUrlPrefixes, localAndEC2Hosts);
             if (StringUtils.isNotBlank(dspaceServerUrl)) {

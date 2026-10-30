@@ -69,7 +69,7 @@ public class HTMLReport implements Report {
         ConfigurationService configurationService
                 = DSpaceServicesFactory.getInstance().getConfigurationService();
         output = configurationService.getProperty("dspace.dir")
-                + File.separator + "log" + File.separator + "report";
+                + "/" + "log" + "/" + "report";
     }
 
     /**

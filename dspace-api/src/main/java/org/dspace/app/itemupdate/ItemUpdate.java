@@ -98,7 +98,7 @@ public class ItemUpdate {
     static FilenameFilter directoryFilter = new FilenameFilter() {
         @Override
         public boolean accept(File dir, String n) {
-            File f = new File(dir.getAbsolutePath() + File.separatorChar + n);
+            File f = new File(dir.getAbsolutePath() + "/" + n);
             return f.isDirectory();
         }
     };
@@ -107,7 +107,7 @@ public class ItemUpdate {
     static FilenameFilter fileFilter = new FilenameFilter() {
         @Override
         public boolean accept(File dir, String n) {
-            File f = new File(dir.getAbsolutePath() + File.separatorChar + n);
+            File f = new File(dir.getAbsolutePath() + "/" + n);
             return (f.isFile());
         }
     };
@@ -292,7 +292,7 @@ public class ItemUpdate {
                         try {
                             // TODO try multiple relative locations, e.g. source dir
                             if (!filterPropertiesName.startsWith("/")) {
-                                filterPropertiesName = sourcedir + File.separator + filterPropertiesName;
+                                filterPropertiesName = sourcedir + "/" + filterPropertiesName;
                             }
 
                             filter.initProperties(filterPropertiesName);

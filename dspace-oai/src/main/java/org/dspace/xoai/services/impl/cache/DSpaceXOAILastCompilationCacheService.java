@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class DSpaceXOAILastCompilationCacheService implements XOAILastCompilationCacheService {
 
-    private static final String DATEFILE = File.separator + "date.file";
+    private static final String DATEFILE = "/" + "date.file";
 
     private static File file = null;
 

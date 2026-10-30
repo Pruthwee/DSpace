@@ -8,8 +8,6 @@
 package org.dspace.util;
 
 import java.io.File;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -90,14 +88,7 @@ public class DSpaceKernelInitializer
         // necessary to start the kernel.
         String providedHome = environment.getProperty(DSpaceConfigurationService.DSPACE_HOME);
 
-        String dspaceHome = null;
-        try {
-            // Allow ability to override home directory via JNDI
-            Context ctx = new InitialContext();
-            dspaceHome = (String) ctx.lookup("java:/comp/env/" + DSpaceConfigurationService.DSPACE_HOME);
-        } catch (Exception e) {
-            // do nothing
-        }
+        String dspaceHome = System.getenv(DSpaceConfigurationService.DSPACE_HOME);
 
         // Otherwise, verify the 'providedHome' value is non-empty, exists and includes DSpace configs
         if (dspaceHome == null) {

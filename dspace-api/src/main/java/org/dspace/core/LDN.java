@@ -65,7 +65,7 @@ public class LDN {
         DSpaceServicesFactory.getInstance().getConfigurationService();
     private static final String dspaceDir = configurationService.getProperty("dspace.dir", "/dspace");
     private static final String[] DEFAULT_TEMPLATE_PATHS = new String[]{
-        dspaceDir + File.separatorChar + "config" + File.separatorChar + "ldn"};
+        dspaceDir + "/" + "config" + "/" + "ldn"};
 
     /**
      * Create a new ldn message.

@@ -126,7 +126,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public String getNewsFilePath() {
         String filePath = DSpaceServicesFactory.getInstance().getConfigurationService().getProperty("dspace.dir")
-            + File.separator + "config" + File.separator;
+            + "/" + "config" + "/";
         return filePath;
     }
 

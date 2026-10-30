@@ -53,8 +53,8 @@ public class DSpaceConfigurationServiceTest {
         configurationService = new DSpaceConfigurationService();
 
         // Save the path to our main test configuration file
-        propertyFilePath = configurationService.getDSpaceHome(null) + File.separatorChar
-            + DSpaceConfigurationService.DEFAULT_CONFIG_DIR + File.separatorChar + "local.properties";
+        propertyFilePath = configurationService.getDSpaceHome(null) + "/"
+            + DSpaceConfigurationService.DEFAULT_CONFIG_DIR + "/" + "local.properties";
 
         // clear out default configs (leaves us with an empty Configuration)
         configurationService.clear();

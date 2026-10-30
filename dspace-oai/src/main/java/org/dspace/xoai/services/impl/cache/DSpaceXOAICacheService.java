@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class DSpaceXOAICacheService implements XOAICacheService {
-    private static final String REQUEST_DIR = File.separator + "requests";
+    private static final String REQUEST_DIR = "/" + "requests";
     private static String baseDir;
     private static String staticHead;
 
@@ -75,7 +75,7 @@ public class DSpaceXOAICacheService implements XOAICacheService {
             dir.mkdirs();
         }
 
-        String name = File.separator + Base64Utils.encode(id);
+        String name = "/" + Base64Utils.encode(id);
         return new File(getBaseDir() + name);
     }
 

@@ -48,7 +48,7 @@ public class SimpleZipContentDisseminator implements SwordContentDisseminator {
             String tempDir = configurationService
                 .getProperty("upload.temp.dir");
             String fn =
-                tempDir + File.separator + "SWORD." + item.getID() + "." +
+                tempDir + "/" + "SWORD." + item.getID() + "." +
                     UUID.randomUUID().toString() + ".zip";
             OutputStream outStream = new FileOutputStream(new File(fn));
             ZipOutputStream zip = new ZipOutputStream(outStream);

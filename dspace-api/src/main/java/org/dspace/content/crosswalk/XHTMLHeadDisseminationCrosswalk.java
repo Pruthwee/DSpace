@@ -80,11 +80,11 @@ public class XHTMLHeadDisseminationCrosswalk
      * Location of configuration file
      */
     private final String config = configurationService.getProperty("dspace.dir")
-        + File.separator
+        + "/"
         + "config"
-        + File.separator
+        + "/"
         + "crosswalks"
-        + File.separator + "xhtml-head-item.properties";
+        + "/" + "xhtml-head-item.properties";
 
     /**
      * Maps DSpace metadata field to name to use in XHTML head element, e.g.

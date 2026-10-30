@@ -232,7 +232,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
             throw new CrosswalkInternalException(msg);
         } else {
             String parent = configurationService.getProperty("dspace.dir") +
-                File.separator + "config" + File.separator;
+                "/" + "config" + "/";
             File propsFile = new File(parent, propsFilename);
             Properties modsConfig = new Properties();
             FileInputStream pfs = null;

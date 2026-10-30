@@ -404,8 +404,9 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     private File getLogsDirectory() {
-        String pathStr = configurationService.getProperty("dspace.dir")
-            + File.separator + "log" + File.separator + "processes";
+        String pathStr = System.getenv().getOrDefault("DSPACE_LOG_DIR",
+            configurationService.getProperty("dspace.dir")
+            + "/" + "log" + "/" + "processes");
         File logsDir = new File(pathStr);
         if (!logsDir.exists()) {
             if (!logsDir.mkdirs()) {

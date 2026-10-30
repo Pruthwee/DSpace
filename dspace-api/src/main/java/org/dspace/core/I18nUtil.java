@@ -220,7 +220,7 @@ public class I18nUtil {
         final String FORM_DEF_FILE = "submission-forms";
         final String FILE_TYPE = ".xml";
         String defsFilename = DSpaceServicesFactory.getInstance().getConfigurationService().getProperty("dspace.dir")
-            + File.separator + "config" + File.separator + FORM_DEF_FILE;
+            + "/" + "config" + "/" + FORM_DEF_FILE;
         String fileName = getFilename(locale, defsFilename, FILE_TYPE);
         return fileName;
     }
@@ -289,7 +289,7 @@ public class I18nUtil {
         final String DEF_LIC_FILE = "default";
         final String FILE_TYPE = ".license";
         String defsFilename = DSpaceServicesFactory.getInstance().getConfigurationService().getProperty("dspace.dir")
-            + File.separator + "config" + File.separator + DEF_LIC_FILE;
+            + "/" + "config" + "/" + DEF_LIC_FILE;
 
         String fileName = getFilename(locale, defsFilename, FILE_TYPE);
 
@@ -370,8 +370,8 @@ public class I18nUtil {
      */
     public static String getEmailFilename(Locale locale, String name) {
         String templateFile = DSpaceServicesFactory.getInstance().getConfigurationService().getProperty("dspace.dir")
-            + File.separator + "config" + File.separator + "emails"
-            + File.separator + name;
+            + "/" + "config" + "/" + "emails"
+            + "/" + name;
 
         String templateName = getFilename(locale, templateFile, "");
         return templateName;
@@ -388,7 +388,7 @@ public class I18nUtil {
     public static String getLDNFilename(Locale locale, String name) {
         String templateFile =
             DSpaceServicesFactory.getInstance().getConfigurationService().getProperty("dspace.dir") +
-                File.separator + "config" + File.separator + "ldn" + File.separator + name;
+                "/" + "config" + "/" + "ldn" + "/" + name;
 
         return getFilename(locale, templateFile, "");
     }

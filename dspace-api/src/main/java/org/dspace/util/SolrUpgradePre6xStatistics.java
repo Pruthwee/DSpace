@@ -303,7 +303,7 @@ public class SolrUpgradePre6xStatistics {
         System.out.println("");
         System.out.println("\tUse the -n option to manage the workload on your server. ");
         System.out.println("\t\tTo process all records, set -n to 10000000 or to 100000000 (10M or 100M)");
-        System.out.println("\tIf possible, please allocate 2GB of memory to this process (e.g. -Xmx2000m)");
+        System.out.println("\tIf possible, please allocate " + System.getenv().getOrDefault("SOLR_UPGRADE_MEMORY", "2GB") + " of memory to this process (e.g. -Xmx2000m)");
         System.out.println("");
         System.out.println("\tThis process will rewrite most solr statistics records and may temporarily double ");
         System.out.println(

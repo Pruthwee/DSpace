@@ -59,10 +59,10 @@ public final class DSpaceConfigurationService implements ConfigurationService {
     public static final String DSPACE_HOME = DSPACE + ".dir";
     public static final String DEFAULT_CONFIG_DIR = "config";
     public static final String DEFAULT_CONFIG_DEFINITION_FILE = "config-definition.xml";
-    public static final String DSPACE_CONFIG_DEFINITION_PATH = DEFAULT_CONFIG_DIR + File.separatorChar +
+    public static final String DSPACE_CONFIG_DEFINITION_PATH = DEFAULT_CONFIG_DIR + "/" +
             DEFAULT_CONFIG_DEFINITION_FILE;
 
-    public static final String DSPACE_CONFIG_PATH = DEFAULT_CONFIG_DIR + File.separatorChar + DSPACE + DOT_CONFIG;
+    public static final String DSPACE_CONFIG_PATH = DEFAULT_CONFIG_DIR + "/" + DSPACE + DOT_CONFIG;
 
     // The DSpace Server ID configuration
     public static final String DSPACE_SERVER_ID = "serverId";
@@ -521,7 +521,7 @@ public final class DSpaceConfigurationService implements ConfigurationService {
         this.homePath = getDSpaceHome(providedHome);
 
         // Based on homePath get full path to the configuration definition
-        this.configDefinition = this.homePath + File.separatorChar + DSPACE_CONFIG_DEFINITION_PATH;
+        this.configDefinition = this.homePath + "/" + DSPACE_CONFIG_DEFINITION_PATH;
 
         // Check if our configuration definition exists in the homePath
         File configDefFile = new File(this.configDefinition);
@@ -621,7 +621,7 @@ public final class DSpaceConfigurationService implements ConfigurationService {
         int size = props != null ? props.size() : 0;
 
         // Return the configuration directory and number of configs loaded
-        return "ConfigDir=" + getConfiguration().getString(DSPACE_HOME) + File.separatorChar
+        return "ConfigDir=" + getConfiguration().getString(DSPACE_HOME) + "/"
                 + DEFAULT_CONFIG_DIR + ", Size=" + size;
     }
 
@@ -687,7 +687,7 @@ public final class DSpaceConfigurationService implements ConfigurationService {
 
         // If none of the above worked, DSpace Kernel will fail to start.
         throw new RuntimeException("DSpace home directory could not be determined. It MUST include a subpath of " +
-                "'" + File.separatorChar + DSPACE_CONFIG_DEFINITION_PATH + "'. " +
+                "'" + "/" + DSPACE_CONFIG_DEFINITION_PATH + "'. " +
                 "Please consider setting the '" + DSPACE_HOME + "' system property or ensure " +
                 "the dspace-api.jar is being run from [dspace]/lib/.");
     }
@@ -706,7 +706,7 @@ public final class DSpaceConfigurationService implements ConfigurationService {
         }
 
         // Based on path get full path to the configuration definition
-        String configDefinition = path + File.separatorChar + DSPACE_CONFIG_DEFINITION_PATH;
+        String configDefinition = path + "/" + DSPACE_CONFIG_DEFINITION_PATH;
         File configDefFile = new File(configDefinition);
 
         // Check if the required config exists

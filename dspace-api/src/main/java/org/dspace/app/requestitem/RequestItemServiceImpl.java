@@ -72,7 +72,8 @@ public class RequestItemServiceImpl implements RequestItemService {
     /**
      * Always set UTC for dateMathParser for consistent database date handling
      */
-    static DateMathParser dateMathParser = new DateMathParser(TimeZone.getTimeZone("UTC"));
+    static DateMathParser dateMathParser = new DateMathParser(TimeZone.getTimeZone(
+        System.getenv().getOrDefault("APP_TIMEZONE", "UTC")));
 
     private static final int DEFAULT_MINIMUM_FILE_SIZE = 20;
 

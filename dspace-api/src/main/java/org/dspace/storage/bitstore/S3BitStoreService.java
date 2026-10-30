@@ -175,7 +175,8 @@ public class S3BitStoreService extends BaseBitStoreService {
             int maxConcurrency;
             if (concurrency == null) {
                 log.warn("maxConcurrency is not set, defaulting to number of available processors");
-                maxConcurrency = Runtime.getRuntime().availableProcessors();
+                maxConcurrency = Integer.parseInt(System.getenv().getOrDefault("S3_BITSTORE_MAX_CONCURRENCY",
+                    String.valueOf(Runtime.getRuntime().availableProcessors())));
             } else {
                 maxConcurrency = concurrency;
             }

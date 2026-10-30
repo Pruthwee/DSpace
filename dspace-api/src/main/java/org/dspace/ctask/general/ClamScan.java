@@ -61,7 +61,7 @@ public class ClamScan extends AbstractCurationTask {
     private static final Logger log = LogManager.getLogger();
 
     protected String host = null;
-    protected int port = 0;
+    protected int port = Integer.parseInt(System.getenv().getOrDefault("CLAMD_PORT", "3310"));
     protected int timeout = 0;
     protected boolean failfast = true;
 

@@ -109,7 +109,7 @@ public class DCInputsReader {
         throws DCInputsReaderException {
         // Load from default file
         String defsFile = DSpaceServicesFactory.getInstance().getConfigurationService().getProperty("dspace.dir")
-            + File.separator + "config" + File.separator + FORM_DEF_FILE;
+            + "/" + "config" + "/" + FORM_DEF_FILE;
 
         buildInputs(defsFile);
     }
