@@ -211,7 +211,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
             }
         }
         // clean work dir path from duplicate separators
-        tempWorkDir = Strings.CS.replace(tempWorkDir, File.separator + File.separator, File.separator);
+        tempWorkDir = Strings.CS.replace(tempWorkDir, "/" + "/", "/");
     }
 
     // File listing filter to look for metadata files
@@ -221,7 +221,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
     protected FilenameFilter directoryFilter = new FilenameFilter() {
         @Override
         public boolean accept(File dir, String n) {
-            File item = new File(dir.getAbsolutePath() + File.separatorChar + n);
+            File item = new File(dir.getAbsolutePath() + '/' + n);
             return item.isDirectory();
         }
     };
@@ -250,6 +250,12 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
         // create the mapfile
         File outFile = null;
         PrintWriter mapOut = null;
+
+        // Allow sourceDir to be overridden by environment variable for containerized deployments
+        String sourceDirEnv = System.getenv("DSPACE_IMPORT_SOURCE_DIR");
+        if (StringUtils.isNotBlank(sourceDirEnv)) {
+            sourceDir = sourceDirEnv;
+        }
 
         try {
             Map<String, String> skipItems = new HashMap<>(); // set of items to skip if in 'resume'
@@ -300,7 +306,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
                 } else {
                     List<Collection> clist;
                     if (directoryFileCollections) {
-                        String path = sourceDir + File.separatorChar + dircontents[i];
+                        String path = sourceDir + '/' + dircontents[i];
                         try {
                             List<Collection> cols = processCollectionFile(c, path, "collections");
                             if (cols == null) {
@@ -348,7 +354,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
         for (Map.Entry<String, Item> itemEntry : itemFolderMap.entrySet()) {
 
             String folderName = itemEntry.getKey();
-            String path = sourceDir + File.separatorChar + folderName;
+            String path = sourceDir + '/' + folderName;
             Item item = itemEntry.getValue();
 
             //look for a 'relationship' manifest
@@ -470,7 +476,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
      */
     protected Map<String, List<String>> processRelationshipFile(String path, String filename) throws Exception {
 
-        File file = new File(path + File.separatorChar + filename);
+        File file = new File(path + '/' + filename);
         Map<String, List<String>> result = new HashMap<>();
 
         if (file.exists()) {
@@ -680,7 +686,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
              * As a commit does not occur until after a successful add, it is safe to
              * do a delete as any error results in an aborted transaction without harming
              * the original item */
-            File handleFile = new File(sourceDir + File.separatorChar + newItemName + File.separatorChar + "handle");
+            File handleFile = new File(sourceDir + '/' + newItemName + '/' + "handle");
             PrintWriter handleOut = new PrintWriter(new FileWriter(handleFile, true));
 
             handleOut.println(oldHandle);
@@ -749,13 +755,13 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
         }
 
         // normalize and validate path to make sure itemname doesn't contain path traversal
-        Path itemPath = new File(path + File.separatorChar + itemname + File.separatorChar)
+        Path itemPath = new File(path + '/' + itemname + '/')
             .toPath().normalize();
         if (!itemPath.startsWith(path)) {
             throw new IOException("Illegal item metadata path: '" + itemPath);
         }
         // Normalization chops off the last separator, and we need to put it back
-        String itemPathDir = itemPath.toString() + File.separatorChar;
+        String itemPathDir = itemPath.toString() + '/';
 
         // now fill out dublin core for item
         loadMetadata(c, myitem, itemPathDir);
@@ -1057,7 +1063,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
 
     protected List<Collection> processCollectionFile(Context c, String path, String filename)
         throws IOException, SQLException {
-        File file = new File(path + File.separatorChar + filename);
+        File file = new File(path + '/' + filename);
         ArrayList<Collection> collections = new ArrayList<>();
         List<Collection> result = null;
         logInfo("Processing collections file: " + filename);
@@ -1112,7 +1118,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
      * @return handle file contents or null if doesn't exist
      */
     protected String processHandleFile(Context c, Item i, String path, String filename) {
-        File file = new File(path + File.separatorChar + filename);
+        File file = new File(path + '/' + filename);
         String result = null;
 
         logInfo("Processing handle file: " + filename);
@@ -1166,7 +1172,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
     protected List<String> processContentsFile(Context c, Item i, String path,
                                                String filename) throws SQLException, IOException,
         AuthorizeException {
-        File contentsFile = new File(path + File.separatorChar + filename);
+        File contentsFile = new File(path + '/' + filename);
         String line = "";
         List<String> options = new ArrayList<>();
 
@@ -1456,7 +1462,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
         }
 
         validateFilePath(path, fileName);
-        String fullpath = path + File.separatorChar + fileName;
+        String fullpath = path + '/' + fileName;
 
         // get an input stream
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(
@@ -2086,7 +2092,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
 
     @Override
     public String unzip(String sourcedir, String zipfilename) throws IOException {
-        File zipfile = new File(sourcedir + File.separator + zipfilename);
+        File zipfile = new File(sourcedir + "/" + zipfilename);
         return unzip(zipfile);
     }
 
@@ -2158,10 +2164,10 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
                     }
 
                     importDir = configurationService.getProperty(
-                        "org.dspace.app.batchitemimport.work.dir") + File.separator + "batchuploads" + File.separator
+                        "org.dspace.app.batchitemimport.work.dir") + "/" + "batchuploads" + "/"
                         + context
                         .getCurrentUser()
-                        .getID() + File.separator + (isResume ? theResumeDir : Instant.now().toEpochMilli());
+                        .getID() + "/" + (isResume ? theResumeDir : Instant.now().toEpochMilli());
                     File importDirFile = new File(importDir);
                     if (!importDirFile.exists()) {
                         boolean success = importDirFile.mkdirs();
@@ -2175,16 +2181,16 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
                     String dataDir = null;
 
                     if (theInputType.equals("saf")) { //In case of Simple Archive Format import (from remote url)
-                        dataPath = importDirFile + File.separator + "data.zip";
-                        dataDir = importDirFile + File.separator + "data_unzipped2" + File.separator;
+                        dataPath = importDirFile + "/" + "data.zip";
+                        dataDir = importDirFile + "/" + "data_unzipped2" + "/";
                     } else if (theInputType
                         .equals("safupload")) { //In case of Simple Archive Format import (from upload file)
                         FileUtils.copyFileToDirectory(new File(theFilePath), importDirFile);
-                        dataPath = importDirFile + File.separator + (new File(theFilePath)).getName();
-                        dataDir = importDirFile + File.separator + "data_unzipped2" + File.separator;
+                        dataPath = importDirFile + "/" + (new File(theFilePath)).getName();
+                        dataDir = importDirFile + "/" + "data_unzipped2" + "/";
                     } else { // For all other imports
-                        dataPath = importDirFile + File.separator + (new File(theFilePath)).getName();
-                        dataDir = importDirFile + File.separator + "data" + File.separator;
+                        dataPath = importDirFile + "/" + (new File(theFilePath)).getName();
+                        dataDir = importDirFile + "/" + "data" + "/";
                     }
 
                     //Clear these files, if a resume
@@ -2192,10 +2198,10 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
                         if (!theInputType.equals("safupload")) {
                             (new File(dataPath)).delete();
                         }
-                        (new File(importDirFile + File.separator + "error.txt")).delete();
+                        (new File(importDirFile + "/" + "error.txt")).delete();
                         FileDeleteStrategy.FORCE.delete(new File(dataDir));
                         FileDeleteStrategy.FORCE
-                            .delete(new File(importDirFile + File.separator + "data_unzipped" + File.separator));
+                            .delete(new File(importDirFile + "/" + "data_unzipped" + "/"));
                     }
 
                     //In case of Simple Archive Format import we need an extra effort to download the zip file and
@@ -2219,20 +2225,20 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
 
                         //Move files to the required folder
                         FileUtils.moveDirectory(new File(sourcePath), new File(
-                            importDirFile + File.separator + "data_unzipped" + File.separator));
+                            importDirFile + "/" + "data_unzipped" + "/"));
                         FileDeleteStrategy.FORCE.delete(new File(dataDir));
-                        dataDir = importDirFile + File.separator + "data_unzipped" + File.separator;
+                        dataDir = importDirFile + "/" + "data_unzipped" + "/";
                     } else if (theInputType.equals("safupload")) {
                         sourcePath = unzip(new File(dataPath), dataDir);
                         //Move files to the required folder
                         FileUtils.moveDirectory(new File(sourcePath), new File(
-                            importDirFile + File.separator + "data_unzipped" + File.separator));
+                            importDirFile + "/" + "data_unzipped" + "/"));
                         FileDeleteStrategy.FORCE.delete(new File(dataDir));
-                        dataDir = importDirFile + File.separator + "data_unzipped" + File.separator;
+                        dataDir = importDirFile + "/" + "data_unzipped" + "/";
                     }
 
                     //Create mapfile path
-                    String mapFilePath = importDirFile + File.separator + "mapfile";
+                    String mapFilePath = importDirFile + "/" + "mapfile";
 
                     List<Collection> finalCollections = null;
                     if (theOwningCollection != null) {
@@ -2260,7 +2266,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
                     String exceptionString = ExceptionUtils.getStackTrace(e);
 
                     try {
-                        File importDirFile = new File(importDir + File.separator + "error.txt");
+                        File importDirFile = new File(importDir + "/" + "error.txt");
                         PrintWriter errorWriter = new PrintWriter(importDirFile);
                         errorWriter.print(exceptionString);
                         errorWriter.close();
@@ -2330,7 +2336,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
         Map<String, BatchUpload> fileNames = new TreeMap<>();
 
         for (String fileName : uploadDir.list()) {
-            File file = new File(uploadDir + File.separator + fileName);
+            File file = new File(uploadDir + "/" + fileName);
             if (file.isDirectory()) {
 
                 BatchUpload upload = new BatchUpload(file);
@@ -2354,7 +2360,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
             throw new Exception(
                 "A dspace.cfg entry for 'org.dspace.app.batchitemimport.work.dir' does not exist.");
         }
-        String uploadDirBasePath = uploadDir + File.separator + "batchuploads" + File.separator;
+        String uploadDirBasePath = uploadDir + "/" + "batchuploads" + "/";
         //Check for backwards compatibility with the old identifier
         File uploadDirectory = new File(uploadDirBasePath + ePerson.getLegacyId());
         if (!uploadDirectory.exists()) {
@@ -2370,8 +2376,8 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
         String uploadDir = null;
         String mapFilePath = null;
 
-        uploadDir = getImportUploadableDirectory(c.getCurrentUser()) + File.separator + uploadId;
-        mapFilePath = uploadDir + File.separator + "mapfile";
+        uploadDir = getImportUploadableDirectory(c.getCurrentUser()) + "/" + uploadId;
+        mapFilePath = uploadDir + "/" + "mapfile";
 
         this.deleteItems(c, mapFilePath);
         FileDeleteStrategy.FORCE.delete(new File(uploadDir));

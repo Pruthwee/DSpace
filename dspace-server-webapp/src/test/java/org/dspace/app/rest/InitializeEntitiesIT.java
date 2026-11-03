@@ -61,7 +61,7 @@ public class InitializeEntitiesIT extends AbstractControllerIntegrationTest {
 
         //Set up the database for the next test
         String pathToFile = configurationService.getProperty("dspace.dir") +
-            File.separator + "config" + File.separator + "entities" + File.separator + "relationship-types.xml";
+            "/" + "config" + "/" + "entities" + "/" + "relationship-types.xml";
         runDSpaceScript("initialize-entities", "-f", pathToFile);
 
     }
@@ -139,7 +139,7 @@ public class InitializeEntitiesIT extends AbstractControllerIntegrationTest {
 
         //Update the relationships using a different test XML with the initialize-entities script
         String pathToFile = configurationService.getProperty("dspace.dir") +
-            File.separator + "config" + File.separator + "entities" + File.separator + "relationship-types-update.xml";
+            "/" + "config" + "/" + "entities" + "/" + "relationship-types-update.xml";
         runDSpaceScript("initialize-entities", "-f", pathToFile);
 
         // This is a helper object to compare whether the update was successful. We're simply taking the first

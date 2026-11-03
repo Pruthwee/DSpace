@@ -229,7 +229,7 @@ public class ItemExport extends DSpaceRunnable<ItemExportScriptConfiguration> {
      * Set the destination directory option
      */
     protected void setDestDirName(Context context, ItemExportService itemExportService) throws Exception {
-        destDirName = itemExportService.getExportWorkDirectory() + File.separator + TEMP_DIR;
+        destDirName = itemExportService.getExportWorkDirectory() + "/" + TEMP_DIR;
     }
 
     /**

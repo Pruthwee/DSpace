@@ -19,7 +19,7 @@ import java.util.UUID;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.core.Response;
-import org.apache.catalina.connector.ClientAbortException;
+import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.requestitem.RequestItem;
@@ -249,7 +249,7 @@ public class BitstreamRestController {
                 return ResponseEntity.ok().headers(httpHeaders).body(bitstreamResource);
             }
 
-        } catch (ClientAbortException ex) {
+        } catch (IOException ex) {
             log.debug("Client aborted the request before the download was completed. " +
                           "Client is probably switching to a Range request.", ex);
         }

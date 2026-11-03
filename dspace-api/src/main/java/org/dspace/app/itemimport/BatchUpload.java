@@ -66,7 +66,7 @@ public class BatchUpload {
         this.date = Instant.ofEpochMilli(timeMillis);
 
         try {
-            this.itemsImported = countLines(dir + File.separator + "mapfile");
+            this.itemsImported = countLines(dir + "/" + "mapfile");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,10 +81,10 @@ public class BatchUpload {
 
         //Parse possible error message
 
-        File errorFile = new File(dir + File.separator + "error.txt");
+        File errorFile = new File(dir + "/" + "error.txt");
         if (errorFile.exists()) {
             try {
-                readFile(dir + File.separator + "error.txt");
+                readFile(dir + "/" + "error.txt");
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

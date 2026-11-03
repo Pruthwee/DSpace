@@ -21,7 +21,10 @@ import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tomcat.util.http.FastHttpDateFormat;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.Instant;
+import java.util.Locale;
 import org.dspace.services.ConfigurationService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.InitializingBean;
@@ -119,8 +122,10 @@ public class AltchaCaptchaRestController implements InitializingBean {
             String body = jsonObject.toString();
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.put("Cache-Control", Collections.singletonList("private,no-cache"));
-            httpHeaders.put("Expires", Collections.singletonList(FastHttpDateFormat.formatDate(
-                    System.currentTimeMillis() + DEFAULT_EXPIRE_TIME)));
+            httpHeaders.put("Expires", Collections.singletonList(DateTimeFormatter.RFC_1123_DATE_TIME
+                    .withLocale(Locale.US)
+                    .format(Instant.ofEpochMilli(System.currentTimeMillis() + DEFAULT_EXPIRE_TIME)
+                    .atZone(ZoneOffset.UTC))));
             httpHeaders.put("Content-Type", Collections.singletonList("application/json"));
             httpHeaders.put("Content-Length", Collections.singletonList(
                     String.valueOf(body.getBytes(StandardCharsets.UTF_8).length)));

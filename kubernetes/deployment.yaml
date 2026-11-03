@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dspace
+  namespace: dspace
+  labels:
+    app: dspace
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dspace
+  template:
+    metadata:
+      labels:
+        app: dspace
+    spec:
+      containers:
+        - name: dspace
+          image: "{{IMAGE_URI}}"
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: dspace__P__dir
+              value: "/dspace"
+            - name: db__P__url
+              value: "{{DB_URL}}"
+            - name: db__P__username
+              value: "{{DB_USERNAME}}"
+            - name: db__P__password
+              valueFrom:
+                secretKeyRef:
+                  name: dspace-secrets
+                  key: db-password
+            - name: solr__P__server
+              value: "{{SOLR_SERVER}}"
+            - name: dspace__P__server__P__url
+              value: "{{DSPACE_SERVER_URL}}"
+            - name: dspace__P__ui__P__url
+              value: "{{DSPACE_UI_URL}}"
+            - name: JAVA_OPTS
+              value: "-Xmx512m -Xms256m -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: TZ
+              value: "UTC"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+          livenessProbe:
+            httpGet:
+              path: /server/actuator/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /server/actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3

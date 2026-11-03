@@ -16,7 +16,6 @@ import java.sql.SQLException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.catalina.connector.ClientAbortException;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.rest.utils.ContextUtil;
 import org.dspace.app.rest.utils.HttpHeadersInitializer;
@@ -146,7 +145,7 @@ public class SitemapRestController {
 
             }
 
-        } catch (ClientAbortException e) {
+        } catch (IOException e) {
             log.debug("Client aborted the request before the download was completed. " +
                       "Client is probably switching to a Range request.", e);
         }

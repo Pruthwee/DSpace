@@ -370,8 +370,8 @@ public class ItemImport extends DSpaceRunnable<ItemImportScriptConfiguration> {
                         "Error reading file, the file couldn't be found for filename: " + zipfilename);
             }
 
-            workDir = new File(itemImportService.getTempWorkDir() + File.separator + TEMP_DIR
-                    + File.separator + context.getCurrentUser().getID());
+            workDir = new File(itemImportService.getTempWorkDir() + "/" + TEMP_DIR
+                    + "/" + context.getCurrentUser().getID());
             sourcedir = itemImportService.unzip(workFile, workDir.getAbsolutePath());
         } finally {
             optionalFileStream.ifPresent(IOUtils::closeQuietly);

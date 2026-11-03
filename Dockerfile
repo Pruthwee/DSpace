@@ -1,71 +1,53 @@
-# This image will be published as dspace/dspace
-# See https://github.com/DSpace/DSpace/tree/main/dspace/src/main/docker for usage details
-#
-# - note: default tag for branch: dspace/dspace: dspace/dspace:latest
+# Multi-stage build for DSpace Server Webapp (Spring Boot)
+# Build stage: Maven with Java 21
+FROM maven:3.9.4-eclipse-temurin-21 AS build
+WORKDIR /workspace
 
-# This Dockerfile uses JDK21 by default.
-# To build with other versions, use "--build-arg JDK_VERSION=[value]"
-ARG JDK_VERSION=21
-# The Docker version tag to build from
-ARG DSPACE_VERSION=latest
-# The Docker registry to use for DSpace images. Defaults to "docker.io"
-# NOTE: non-DSpace images are hardcoded to use "docker.io" and are not impacted by this build argument
-ARG DOCKER_REGISTRY=docker.io
+# Copy root pom.xml and install dependencies first for better caching
+COPY pom.xml .
+COPY dspace/pom.xml dspace/pom.xml
+COPY dspace-api/pom.xml dspace-api/pom.xml
+COPY dspace-services/pom.xml dspace-services/pom.xml
+COPY dspace-server-webapp/pom.xml dspace-server-webapp/pom.xml
+COPY dspace-oai/pom.xml dspace-oai/pom.xml
+COPY dspace-saml2/pom.xml dspace-saml2/pom.xml
+COPY dspace-sword/pom.xml dspace-sword/pom.xml
+COPY dspace-swordv2/pom.xml dspace-swordv2/pom.xml
+COPY dspace-rdf/pom.xml dspace-rdf/pom.xml
+COPY dspace-iiif/pom.xml dspace-iiif/pom.xml
+COPY dspace/modules/pom.xml dspace/modules/pom.xml
+COPY dspace/modules/additions/pom.xml dspace/modules/additions/pom.xml
+COPY dspace/modules/server/pom.xml dspace/modules/server/pom.xml
+COPY dspace/modules/server-boot/pom.xml dspace/modules/server-boot/pom.xml
 
-# Step 1 - Run Maven Build
-FROM ${DOCKER_REGISTRY}/dspace/dspace-dependencies:${DSPACE_VERSION} AS build
-ARG TARGET_DIR=dspace-installer
+RUN mvn dependency:go-offline -DskipTests -DskipChecks -Dmaven.enforcer.skip=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dlicense.skip=true -Dxml.skip=true
+
+# Copy source and build
+COPY . .
+RUN mvn clean package -DskipTests -DskipChecks -Dmaven.enforcer.skip=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dlicense.skip=true -Dxml.skip=true -pl dspace/modules/server-boot -am
+
+# Runtime stage
+FROM amazoncorretto:21
 WORKDIR /app
-# The dspace-installer directory will be written to /install
-USER root
-RUN mkdir /install \
-    && chown -Rv dspace: /install \
-    && chown -Rv dspace: /app
+
+# Create non-root user
+RUN groupadd -r dspace && useradd -r -g dspace dspace
+
+# Copy the Spring Boot executable JAR
+COPY --from=build /workspace/dspace/modules/server-boot/target/server-boot-*.jar app.jar
+
+# Environment variables
+ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+ENV TZ=UTC
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV SPRING_PROFILES_ACTIVE=prod
+
+# Expose the application port
+EXPOSE 8080
+
+# Run as non-root user
 USER dspace
-# Copy the DSpace source code (from local machine) into the workdir (excluding .dockerignore contents)
-COPY --chown=dspace . /app/
-# Build DSpace
-# Copy the dspace-installer directory to /install.  Clean up the build to keep the docker image small
-# Maven flags here ensure that we skip building test environment and skip all code verification checks.
-# These flags speed up this compilation as much as reasonably possible.
-ENV MAVEN_FLAGS="-P-test-environment -Denforcer.skip=true -Dcheckstyle.skip=true -Dlicense.skip=true -Dxml.skip=true"
-RUN mvn --no-transfer-progress package ${MAVEN_FLAGS} && \
-  mv /app/dspace/target/${TARGET_DIR}/* /install && \
-  mvn clean
-# Remove the server webapp to keep image small.
-RUN rm -rf /install/webapps/server/
 
-# Step 2 - Run Ant Deploy
-FROM docker.io/eclipse-temurin:${JDK_VERSION} AS ant_build
-ARG TARGET_DIR=dspace-installer
-# COPY the /install directory from 'build' container to /dspace-src in this container
-COPY --from=build /install /dspace-src
-WORKDIR /dspace-src
-# Install Apache Ant
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends ant \
-    && apt-get purge -y --auto-remove \
-    && rm -rf /var/lib/apt/lists/*
-# Run necessary 'ant' deploy scripts
-RUN ant init_installation update_configs update_code update_webapps
-
-# Step 3 - Start up DSpace via Runnable JAR
-FROM docker.io/eclipse-temurin:${JDK_VERSION}
-# Below syntax may look odd, but it is how to override dspace.cfg settings via env variables.
-# See https://github.com/DSpace/DSpace/blob/main/dspace/config/config-definition.xml
-# "dspace__P__dir" is setting the value of the "dspace.dir" configuration. This is our installation directory.
-ENV dspace__P__dir=/dspace
-# Copy the /dspace directory from 'ant_build' container to /dspace in this container
-COPY --from=ant_build /dspace $dspace__P__dir
-WORKDIR $dspace__P__dir
-# Need host command for "[dspace]/bin/make-handle-config"
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends host \
-    && apt-get purge -y --auto-remove \
-    && rm -rf /var/lib/apt/lists/*
-# Expose Tomcat port (8080) & Handle Server HTTP port (8000)
-EXPOSE 8080 8000
-# Give java extra memory (2GB)
-ENV JAVA_OPTS=-Xmx2000m
-# On startup, run DSpace Runnable JAR (uses the "dspace.dir" setting defined in "dspace__P__dir" env variable)
-ENTRYPOINT ["java", "-jar", "webapps/server-boot.jar"]
+# Use exec form for proper signal handling
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar /app/app.jar"]

@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class DSpaceXOAIItemCacheService implements XOAIItemCacheService {
-    private static final String ITEMDIR = File.separator + "items";
+    private static final String ITEMDIR = "/" + "items";
 
     @Autowired
     ConfigurationService configurationService;
@@ -49,7 +49,7 @@ public class DSpaceXOAIItemCacheService implements XOAIItemCacheService {
             dir.mkdirs();
         }
 
-        String name = File.separator + item.getHandle().replace('/', '_');
+        String name = "/" + item.getHandle().replace('/', '_');
         return new File(getBaseDir() + name);
     }
 

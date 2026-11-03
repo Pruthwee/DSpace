@@ -20,7 +20,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.rmi.dgc.VMID;
+import java.time.temporal.TemporalAccessor;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -38,6 +38,7 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.Random;
 import java.util.StringTokenizer;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -82,7 +83,7 @@ public final class Utils {
 
     private static final Random random = new Random();
 
-    private static final VMID vmid = new VMID();
+    private static final UUID uuid = UUID.randomUUID();
 
     // for parseISO8601Date
     private static final DateTimeFormatter[] parseFmt = {
@@ -210,7 +211,7 @@ public final class Utils {
         byte[] junk = new byte[16];
 
         random.nextBytes(junk);
-        String input = String.valueOf(vmid) + Instant.now().toEpochMilli() + Arrays.toString(junk) + counter++;
+        String input = String.valueOf(uuid) + Instant.now().toEpochMilli() + Arrays.toString(junk) + counter++;
 
         return getMD5Bytes(input.getBytes(StandardCharsets.UTF_8));
     }

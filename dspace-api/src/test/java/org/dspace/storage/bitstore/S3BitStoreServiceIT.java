@@ -294,7 +294,7 @@ public class S3BitStoreServiceIT extends AbstractIntegrationTestWithDatabase {
     public void givenBitStreamIdentifierLongerThanPossibleWhenIntermediatePathIsComputedThenIsSplittedAndTruncated() {
         String path = "01234567890123456789";
         String computedPath = this.s3BitStoreService.getIntermediatePath(path);
-        String expectedPath = "01" + File.separator + "23" + File.separator + "45" + File.separator;
+        String expectedPath = "01" + "/" + "23" + "/" + "45" + "/";
         assertThat(computedPath, equalTo(expectedPath));
     }
 
@@ -302,7 +302,7 @@ public class S3BitStoreServiceIT extends AbstractIntegrationTestWithDatabase {
     public void givenBitStreamIdentifierShorterThanAFolderLengthWhenIntermediatePathIsComputedThenIsSingleFolder() {
         String path = "0";
         String computedPath = this.s3BitStoreService.getIntermediatePath(path);
-        String expectedPath = "0" + File.separator;
+        String expectedPath = "0" + "/";
         assertThat(computedPath, equalTo(expectedPath));
     }
 
@@ -310,7 +310,7 @@ public class S3BitStoreServiceIT extends AbstractIntegrationTestWithDatabase {
     public void givenPartialBitStreamIdentifierWhenIntermediatePathIsComputedThenIsCompletlySplitted() {
         String path = "01234";
         String computedPath = this.s3BitStoreService.getIntermediatePath(path);
-        String expectedPath = "01" + File.separator + "23" + File.separator + "4" + File.separator;
+        String expectedPath = "01" + "/" + "23" + "/" + "4" + "/";
         assertThat(computedPath, equalTo(expectedPath));
     }
 
@@ -318,7 +318,7 @@ public class S3BitStoreServiceIT extends AbstractIntegrationTestWithDatabase {
     public void givenMaxLengthBitStreamIdentifierWhenIntermediatePathIsComputedThenIsSplittedAllAsSubfolder() {
         String path = "012345";
         String computedPath = this.s3BitStoreService.getIntermediatePath(path);
-        String expectedPath = "01" + File.separator + "23" + File.separator + "45" + File.separator;
+        String expectedPath = "01" + "/" + "23" + "/" + "45" + "/";
         assertThat(computedPath, equalTo(expectedPath));
     }
 
@@ -327,24 +327,24 @@ public class S3BitStoreServiceIT extends AbstractIntegrationTestWithDatabase {
         StringBuilder path = new StringBuilder("01");
         String computedPath = this.s3BitStoreService.getIntermediatePath(path.toString());
         int slashes = computeSlashes(path.toString());
-        assertThat(computedPath, Matchers.endsWith(File.separator));
+        assertThat(computedPath, Matchers.endsWith("/"));
         assertThat(countPathElements(computedPath), Matchers.equalTo(slashes));
 
         path.append("2");
         computedPath = this.s3BitStoreService.getIntermediatePath(path.toString());
-        assertThat(computedPath, Matchers.not(Matchers.endsWith(File.separator + File.separator)));
+        assertThat(computedPath, Matchers.not(Matchers.endsWith("/" + "/")));
 
         path.append("3");
         computedPath = this.s3BitStoreService.getIntermediatePath(path.toString());
-        assertThat(computedPath, Matchers.not(Matchers.endsWith(File.separator + File.separator)));
+        assertThat(computedPath, Matchers.not(Matchers.endsWith("/" + "/")));
 
         path.append("4");
         computedPath = this.s3BitStoreService.getIntermediatePath(path.toString());
-        assertThat(computedPath, Matchers.not(Matchers.endsWith(File.separator + File.separator)));
+        assertThat(computedPath, Matchers.not(Matchers.endsWith("/" + "/")));
 
         path.append("56789");
         computedPath = this.s3BitStoreService.getIntermediatePath(path.toString());
-        assertThat(computedPath, Matchers.not(Matchers.endsWith(File.separator + File.separator)));
+        assertThat(computedPath, Matchers.not(Matchers.endsWith("/" + "/")));
     }
 
     @Test
@@ -352,48 +352,48 @@ public class S3BitStoreServiceIT extends AbstractIntegrationTestWithDatabase {
         StringBuilder path = new StringBuilder("01");
         String computedPath = this.s3BitStoreService.getIntermediatePath(path.toString());
         int slashes = computeSlashes(path.toString());
-        assertThat(computedPath, Matchers.endsWith(File.separator));
+        assertThat(computedPath, Matchers.endsWith("/"));
         assertThat(countPathElements(computedPath), Matchers.equalTo(slashes));
 
         path.append("2");
         computedPath = this.s3BitStoreService.getIntermediatePath(path.toString());
         slashes = computeSlashes(path.toString());
-        assertThat(computedPath, Matchers.endsWith(File.separator));
+        assertThat(computedPath, Matchers.endsWith("/"));
         assertThat(countPathElements(computedPath), Matchers.equalTo(slashes));
 
         path.append("3");
         computedPath = this.s3BitStoreService.getIntermediatePath(path.toString());
         slashes = computeSlashes(path.toString());
-        assertThat(computedPath, Matchers.endsWith(File.separator));
+        assertThat(computedPath, Matchers.endsWith("/"));
         assertThat(countPathElements(computedPath), Matchers.equalTo(slashes));
 
         path.append("4");
         computedPath = this.s3BitStoreService.getIntermediatePath(path.toString());
         slashes = computeSlashes(path.toString());
-        assertThat(computedPath, Matchers.endsWith(File.separator));
+        assertThat(computedPath, Matchers.endsWith("/"));
         assertThat(countPathElements(computedPath), Matchers.equalTo(slashes));
 
         path.append("56789");
         computedPath = this.s3BitStoreService.getIntermediatePath(path.toString());
         slashes = computeSlashes(path.toString());
-        assertThat(computedPath, Matchers.endsWith(File.separator));
+        assertThat(computedPath, Matchers.endsWith("/"));
         assertThat(countPathElements(computedPath), Matchers.equalTo(slashes));
     }
 
     @Test
     public void givenBitStreamIdentifierWithSlashesWhenSanitizedThenSlashesMustBeRemoved() {
         String sInternalId = new StringBuilder("01")
-                                .append(File.separator)
+                                .append("/")
                                 .append("22")
-                                .append(File.separator)
+                                .append("/")
                                 .append("33")
-                                .append(File.separator)
+                                .append("/")
                                 .append("4455")
                                 .toString();
         String computedPath = this.s3BitStoreService.sanitizeIdentifier(sInternalId);
-        assertThat(computedPath, Matchers.not(Matchers.startsWith(File.separator)));
-        assertThat(computedPath, Matchers.not(Matchers.endsWith(File.separator)));
-        assertThat(computedPath, Matchers.not(Matchers.containsString(File.separator)));
+        assertThat(computedPath, Matchers.not(Matchers.startsWith("/")));
+        assertThat(computedPath, Matchers.not(Matchers.endsWith("/")));
+        assertThat(computedPath, Matchers.not(Matchers.containsString("/")));
     }
 
     @Test

@@ -214,8 +214,8 @@ public class ResourceFinder {
             }
         }
         String absPath = f.getAbsolutePath();
-        if (!absPath.endsWith(File.separatorChar + "")) {
-            absPath += File.separatorChar;
+        if (!absPath.endsWith('/' + "")) {
+            absPath += '/';
         }
         return absPath;
     }
@@ -229,7 +229,7 @@ public class ResourceFinder {
                 if (container == null) {
                     container = "";
                 }
-                envPath = container + File.separatorChar + DSpaceConfigurationService.DSPACE + File.separatorChar;
+                envPath = container + '/' + DSpaceConfigurationService.DSPACE + '/';
             }
         }
         return envPath;
@@ -241,9 +241,9 @@ public class ResourceFinder {
      * @return the container home if one can be found
      */
     public static String getContainerHome() {
-        String catalina = System.getProperty("catalina.base");
+        String catalina = System.getenv("CATALINA_BASE");
         if (catalina == null) {
-            catalina = System.getProperty("catalina.home");
+            catalina = System.getenv("CATALINA_HOME");
         }
         return catalina;
     }

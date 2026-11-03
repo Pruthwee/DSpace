@@ -233,7 +233,7 @@ public class ItemImportCLIIT extends AbstractIntegrationTestWithDatabase {
         checkBitstream();
 
         // confirm that TEMP_DIR still exists
-        File workTempDir = new File(workDir + File.separator + TEMP_DIR);
+        File workTempDir = new File(workDir + "/" + TEMP_DIR);
         assertTrue(workTempDir.exists());
     }
 

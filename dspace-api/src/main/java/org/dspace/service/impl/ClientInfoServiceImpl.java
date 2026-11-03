@@ -109,7 +109,7 @@ public class ClientInfoServiceImpl implements ClientInfoService {
      * @return IPTable of trusted IP addresses/ranges, or null if none could be found.
      */
     private IPTable parseTrustedProxyRanges() {
-        String localhostIP = "127.0.0.1";
+        String localhostIP = configurationService.getProperty("proxies.trusted.localhost.ip", "127.0.0.1");
         IPTable ipTable = new IPTable();
 
         // Get list of trusted proxy IP ranges

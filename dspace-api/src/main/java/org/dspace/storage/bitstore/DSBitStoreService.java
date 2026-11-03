@@ -245,7 +245,7 @@ public class DSBitStoreService extends BaseBitStoreService {
 
         StringBuilder bufFilename = new StringBuilder();
         bufFilename.append(baseDir.getCanonicalFile());
-        bufFilename.append(File.separator);
+        bufFilename.append("/");
         bufFilename.append(sIntermediatePath);
         bufFilename.append(sInternalId);
         if (log.isDebugEnabled()) {

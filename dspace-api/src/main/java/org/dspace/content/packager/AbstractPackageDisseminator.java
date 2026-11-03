@@ -111,8 +111,8 @@ public abstract class AbstractPackageDisseminator
                 //Determine where first file package was disseminated to, as all
                 //others will be written to same directory
                 String pkgDirectory = pkgFile.getCanonicalFile().getParent();
-                if (!pkgDirectory.endsWith(File.separator)) {
-                    pkgDirectory += File.separator;
+                if (!pkgDirectory.endsWith("/")) {
+                    pkgDirectory += "/";
                 }
                 String fileExtension = PackageUtils.getFileExtension(pkgFile.getName());
 

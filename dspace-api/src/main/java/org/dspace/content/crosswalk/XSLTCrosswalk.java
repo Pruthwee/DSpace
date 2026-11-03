@@ -159,7 +159,7 @@ public abstract class XSLTCrosswalk extends SelfNamedPlugin {
                 return null;
             } else {
                 String parent = configurationService.getProperty("dspace.dir") +
-                    File.separator + "config" + File.separator;
+                    "/" + "config" + "/";
                 transformFile = new File(parent, fname);
             }
         }

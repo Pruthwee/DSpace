@@ -63,7 +63,7 @@ public abstract class BaseBitStoreService implements BitStoreService {
     protected String getIntermediatePath(String internalId) {
         StringBuilder path = new StringBuilder();
         if (StringUtils.isEmpty(internalId) || internalId.length() <= digitsPerLevel) {
-            return path.append(internalId).append(File.separator).toString();
+            return path.append(internalId).append("/").toString();
         }
         populatePathSplittingId(internalId, path);
         appendSeparator(path);
@@ -80,8 +80,8 @@ public abstract class BaseBitStoreService implements BitStoreService {
      * @return Sanitized id
      */
     protected String sanitizeIdentifier(String sInternalId) {
-        if (sInternalId.contains(File.separator)) {
-            sInternalId = sInternalId.substring(sInternalId.lastIndexOf(File.separator) + 1);
+        if (sInternalId.contains("/")) {
+            sInternalId = sInternalId.substring(sInternalId.lastIndexOf("/") + 1);
         }
         return sInternalId;
     }
@@ -93,7 +93,7 @@ public abstract class BaseBitStoreService implements BitStoreService {
      */
     protected void appendSeparator(StringBuilder path) {
         if (!endsWithSeparator(path)) {
-            path.append(File.separator);
+            path.append("/");
         }
     }
 
@@ -104,7 +104,7 @@ public abstract class BaseBitStoreService implements BitStoreService {
      * @return
      */
     protected boolean endsWithSeparator(StringBuilder bufFilename) {
-        return bufFilename.lastIndexOf(File.separator) == bufFilename.length() - 1;
+        return bufFilename.lastIndexOf("/") == bufFilename.length() - 1;
     }
 
     /**
@@ -120,7 +120,7 @@ public abstract class BaseBitStoreService implements BitStoreService {
         path.append(extractSubstringFrom(internalId, digits, digits + digitsPerLevel));
         for (int i = 1; i < directoryLevels && !isLonger(internalId, digits + digitsPerLevel); i++) {
             digits = i * digitsPerLevel;
-            path.append(File.separator);
+            path.append("/");
             path.append(extractSubstringFrom(internalId, digits, digits + digitsPerLevel));
         }
     }

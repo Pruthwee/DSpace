@@ -24,7 +24,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tomcat.util.http.FastHttpDateFormat;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import org.springframework.http.HttpHeaders;
 
 /**
@@ -150,9 +152,13 @@ public class HttpHeadersInitializer {
         if (Objects.nonNull((Long.valueOf(this.length)))) {
             httpHeaders.put(HttpHeaders.CONTENT_LENGTH, Collections.singletonList(String.valueOf(this.length)));
         }
-        httpHeaders.put(LAST_MODIFIED, Collections.singletonList(FastHttpDateFormat.formatDate(lastModified)));
-        httpHeaders.put(EXPIRES, Collections.singletonList(FastHttpDateFormat.formatDate(
-            Instant.now().toEpochMilli() + DEFAULT_EXPIRE_TIME)));
+        httpHeaders.put(LAST_MODIFIED, Collections.singletonList(DateTimeFormatter.RFC_1123_DATE_TIME
+            .withLocale(Locale.US)
+            .format(Instant.ofEpochMilli(lastModified).atZone(ZoneOffset.UTC))));
+        httpHeaders.put(EXPIRES, Collections.singletonList(DateTimeFormatter.RFC_1123_DATE_TIME
+            .withLocale(Locale.US)
+            .format(Instant.ofEpochMilli(Instant.now().toEpochMilli() + DEFAULT_EXPIRE_TIME)
+            .atZone(ZoneOffset.UTC))));
 
         //No-cache so that we can log every download
         httpHeaders.put(CACHE_CONTROL, Collections.singletonList(CACHE_CONTROL_SETTING));

@@ -1020,7 +1020,7 @@ public class ITDSpaceAIP extends AbstractIntegrationTest {
             // Export file (this is placed in JUnit's temporary folder, so that it can be cleaned up after tests
             // complete)
             File exportAIPFile = new File(
-                aipTempFolder.getRoot().getAbsolutePath() + File.separator + PackageUtils.getPackageName(dso, "zip"));
+                aipTempFolder.getRoot().getAbsolutePath() + "/" + PackageUtils.getPackageName(dso, "zip"));
 
             // If unspecified, set default PackageParameters
             if (pkgParams == null) {

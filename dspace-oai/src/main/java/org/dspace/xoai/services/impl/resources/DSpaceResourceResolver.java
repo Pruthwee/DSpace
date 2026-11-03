@@ -33,9 +33,9 @@ public class DSpaceResourceResolver implements ResourceResolver {
         basePath = configurationService.getProperty("oai.config.dir");
         // additional path for crosswalks which may be used by XSLT templates
         crosswalksPath = configurationService.getProperty("dspace.dir")
-            + File.separator
+            + "/"
             + "config"
-            + File.separator
+            + "/"
             + "crosswalks";
     }
 

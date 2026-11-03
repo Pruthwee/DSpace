@@ -68,10 +68,10 @@ public class DatabaseUtils {
     // See also setReindexDiscovery()/getReindexDiscover()
     private static final String reindexDiscoveryFilePath = DSpaceServicesFactory.getInstance().getConfigurationService()
                                                                                 .getProperty("dspace.dir") +
-        File.separator + "solr" +
-        File.separator + "search" +
-        File.separator + "conf" +
-        File.separator + "reindex.flag";
+        "/" + "solr" +
+        "/" + "search" +
+        "/" + "conf" +
+        "/" + "reindex.flag";
 
     // Types of databases supported by DSpace. See getDbType()
     public static final String DBMS_POSTGRES = "postgres";

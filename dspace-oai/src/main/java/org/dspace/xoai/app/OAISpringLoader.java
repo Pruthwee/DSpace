@@ -24,13 +24,13 @@ public class OAISpringLoader implements SpringLoader {
     public String[] getResourcePaths(ConfigurationService configurationService) {
         StringBuffer filePath = new StringBuffer();
         filePath.append(configurationService.getProperty("dspace.dir"));
-        filePath.append(File.separator);
+        filePath.append("/");
         filePath.append("config");
-        filePath.append(File.separator);
+        filePath.append("/");
         filePath.append("spring");
-        filePath.append(File.separator);
+        filePath.append("/");
         filePath.append("oai");
-        filePath.append(File.separator);
+        filePath.append("/");
 
         try {
             return new String[] { new File(filePath.toString()).toURI().toURL().toString() + XML_SUFFIX };

@@ -9,16 +9,14 @@ package org.dspace.app.rest.test;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.Writer;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.Appender;
-import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.appender.WriterAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.config.Property;
@@ -38,47 +36,34 @@ public class WebappLoggingIT extends AbstractControllerIntegrationTest {
     private static final Logger logger = LogManager.getLogger(WebappLoggingIT.class);
     private static final String APPENDER_NAME = "DSpaceTestAppender";
 
-    static class InMemoryAppender extends AbstractAppender {
-        private final List<String> messages = new ArrayList<>();
-
-        protected InMemoryAppender(String name) {
-            super(
-                name,
-                null,
-                PatternLayout.newBuilder().withPattern("%m").build(),
-                false,
-                Property.EMPTY_ARRAY
-            );
-            start();
-        }
-
-        @Override
-        public void append(LogEvent event) {
-            messages.add(event.getMessage().getFormattedMessage());
-        }
-
-        public List<String> getMessages() {
-            return messages;
-        }
-    }
+    private final ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
+    private WriterAppender writerAppender;
 
     @Test
     public void testLogging() throws Exception {
         LoggerContext context = (LoggerContext) LogManager.getContext(false);
         Configuration config = context.getConfiguration();
 
-        InMemoryAppender appender = new InMemoryAppender(APPENDER_NAME);
-        config.addAppender(appender);
+        writerAppender = WriterAppender.newBuilder()
+            .setTarget(logOutputStream)
+            .setName(APPENDER_NAME)
+            .setLayout(PatternLayout.newBuilder().withPattern("%m").build())
+            .setFilter(null)
+            .setIgnoreExceptions(false)
+            .setProperties(Property.EMPTY_ARRAY)
+            .build();
+        writerAppender.start();
+        config.addAppender(writerAppender);
 
         LoggerConfig testLoggerConfig = new LoggerConfig(logger.getName(), Level.INFO, false);
-        testLoggerConfig.addAppender(appender, null, null);
+        testLoggerConfig.addAppender(writerAppender, null, null);
         config.addLogger(logger.getName(), testLoggerConfig);
         context.updateLoggers();
 
         logger.info("DSPACE TEST LOG ENTRY");
 
-        List<String> messages = appender.getMessages();
-        assertTrue(messages.stream().anyMatch(msg -> msg.contains("DSPACE TEST LOG ENTRY")));
+        String output = logOutputStream.toString();
+        assertTrue(output.contains("DSPACE TEST LOG ENTRY"));
     }
 
     @After
@@ -88,14 +73,12 @@ public class WebappLoggingIT extends AbstractControllerIntegrationTest {
 
         config.removeLogger(logger.getName());
 
-        Appender appender = config.getAppender(APPENDER_NAME);
-        if (appender != null) {
-            appender.stop();
+        if (writerAppender != null) {
+            writerAppender.stop();
             config.getAppenders().remove(APPENDER_NAME);
         }
 
         context.updateLoggers();
-}
-
+    }
 }
 
